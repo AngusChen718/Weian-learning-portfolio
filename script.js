@@ -92,28 +92,32 @@ async function generateLocalSummary(text) {
     `;
   } catch (error) {
     summaryOutput.innerHTML = `
-      <p class="output-title">AI Summary</p>
-      <p class="placeholder">目前無法產生摘要：${escapeHtml(error.message)}</p>
-    `;
+  <p class="output-title">AI Summary</p>
+  <div 
+    class="ai-summary" 
+    style="
+      height: 390px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 12px;
+      line-height: 1.75;
+    "
+  >
+    ${formatSummary(data.summary)}
+  </div>
+`;
   }
 }
 
 function formatSummary(text) {
   return escapeHtml(text)
-    // 刪掉 Gemini 常常產生的分隔線 ---
     .replace(/^---$/gm, "")
-
-    // Markdown 標題
+    .replace(/^\s*---\s*$/gm, "")
     .replace(/^### (.*)$/gm, "<h3>$1</h3>")
     .replace(/^## (.*)$/gm, "<h2>$1</h2>")
-
-    // 粗體標題，例如 **1. 一句話摘要**
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-
-    // 條列
     .replace(/^- (.*)$/gm, "<li>$1</li>")
-
-    // 換行
     .replace(/\n{3,}/g, "\n\n")
     .replace(/\n/g, "<br>");
 }
