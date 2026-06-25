@@ -397,10 +397,14 @@ textarea {
 }
 
 .summary-output {
-  min-height: 150px;
+  min-height: 260px;
+  max-height: 650px;   /* 超過650px就開始出現卷軸 */
+  overflow-y: auto;
+  overflow-x: hidden;
+
   border: 1px solid var(--line);
   border-radius: 22px;
-  padding: 22px;
+  padding: 28px;
   background: var(--soft);
 }
 
@@ -547,4 +551,20 @@ textarea {
 .ai-summary li {
   margin-left: 22px;
   margin-bottom: 8px;
+}
+.summary-output::-webkit-scrollbar {
+  width: 8px;
+}
+
+.summary-output::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.summary-output::-webkit-scrollbar-thumb {
+  background: #cfcfcf;
+  border-radius: 20px;
+}
+
+.summary-output::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
