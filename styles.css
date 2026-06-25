@@ -198,7 +198,7 @@ a {
 .split {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    gap: 8px;
     align-items: center;
     margin-top: 26px;
 }
@@ -206,7 +206,7 @@ a {
 h2 {
   margin: 0;
   font-size: clamp(38px, 7vw, 86px);
-  line-height: 0.9;
+  line-height: 1.05;
   letter-spacing: -0.06em;
 }
 
