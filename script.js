@@ -100,11 +100,21 @@ async function generateLocalSummary(text) {
 
 function formatSummary(text) {
   return escapeHtml(text)
+    // 刪掉 Gemini 常常產生的分隔線 ---
+    .replace(/^---$/gm, "")
+
+    // Markdown 標題
     .replace(/^### (.*)$/gm, "<h3>$1</h3>")
     .replace(/^## (.*)$/gm, "<h2>$1</h2>")
-    .replace(/^\*\*(.*?)\*\*/gm, "<strong>$1</strong>")
+
+    // 粗體標題，例如 **1. 一句話摘要**
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+
+    // 條列
     .replace(/^- (.*)$/gm, "<li>$1</li>")
+
+    // 換行
+    .replace(/\n{3,}/g, "\n\n")
     .replace(/\n/g, "<br>");
 }
 
