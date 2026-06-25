@@ -522,3 +522,29 @@ textarea {
     font-size: 18px;
   }
 }
+.ai-summary {
+  color: var(--muted);
+  line-height: 1.85;
+  font-size: 17px;
+}
+
+.ai-summary h2,
+.ai-summary h3 {
+  color: var(--text);
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+  margin: 22px 0 10px;
+}
+
+.ai-summary strong {
+  display: block;
+  color: var(--text);
+  margin: 18px 0 6px;
+  font-size: 18px;
+}
+
+.ai-summary li {
+  margin-left: 22px;
+  margin-bottom: 8px;
+}
