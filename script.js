@@ -100,8 +100,12 @@ async function generateLocalSummary(text) {
 
 function formatSummary(text) {
   return escapeHtml(text)
-    .replace(/\n/g, "<br>")
-    .replace(/(1\. 一句話摘要|2\. 三句重點摘要|3\. 研究目的 \/ 文章主旨|4\. 方法或主要論點|5\. 重要結果或結論|6\. 關鍵字|7\. 適合放進學習日誌的心得|8\. 如果我是大學生，我最需要記住什麼)/g, "<strong>$1</strong>");
+    .replace(/^### (.*)$/gm, "<h3>$1</h3>")
+    .replace(/^## (.*)$/gm, "<h2>$1</h2>")
+    .replace(/^\*\*(.*?)\*\*/gm, "<strong>$1</strong>")
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/^- (.*)$/gm, "<li>$1</li>")
+    .replace(/\n/g, "<br>");
 }
 
 function extractKeywords(text) {
