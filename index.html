@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>陳韋安｜Weian Chen — AI Learning Portfolio</title>
+  <meta name="description" content="陳韋安 Weian Chen 的 AI Learning Portfolio，記錄學習、研究、知識整理與 AI 工具探索。" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grain"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Back to home">Weian Chen</a>
+    <nav class="nav">
+      <a href="#about">About</a>
+      <a href="#journal">Journal</a>
+      <a href="#knowledge">Knowledge</a>
+      <a href="#literature">Literature</a>
+      <a href="#tools">AI Tools</a>
+      <a href="#projects">Projects</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">◐</button>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <p class="eyebrow">AI Learning Portfolio</p>
+      <h1>
+        陳韋安<br />
+        <span>Weian Chen</span>
+      </h1>
+      <p class="hero-subtitle">
+        A minimal digital space for learning, research, and creation.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href="#journal">Explore</a>
+        <a class="button ghost" href="#literature">Literature Hub</a>
+      </div>
+      <div class="scroll-indicator">Scroll ↓</div>
+    </section>
+
+    <section class="section about-section" id="about">
+      <div class="section-label">About</div>
+      <div class="split">
+        <div>
+          <h2>把每一次學習，整理成可以被累積的系統。</h2>
+        </div>
+        <div class="copy">
+          <p>
+            我是陳韋安。這個網站用來記錄我的自主學習、AI 應用、研究歷程與創作想法。
+            我希望 AI 不只是工具，而是協助我整理知識、分析資料、建立個人學習系統的夥伴。
+          </p>
+          <p>
+            目前網站仍在成長中。第一版以學習紀錄與作品集架構為主，未來會逐步加入文獻摘要、
+            筆記搜尋、PDF 分析與 AI 小工具。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dashboard">
+      <div class="metric-card">
+        <span class="metric-number">01</span>
+        <span class="metric-title">Website Launched</span>
+        <p>建立個人 AI 學習紀錄網站。</p>
+      </div>
+      <div class="metric-card">
+        <span class="metric-number">V1</span>
+        <span class="metric-title">Portfolio System</span>
+        <p>完成首頁、日誌、知識庫與研究中心框架。</p>
+      </div>
+      <div class="metric-card">
+        <span class="metric-number">Soon</span>
+        <span class="metric-title">AI Literature Analysis</span>
+        <p>未來加入論文與文章摘要功能。</p>
+      </div>
+    </section>
+
+    <section class="section" id="journal">
+      <div class="section-label">Learning Journal</div>
+      <div class="section-heading">
+        <h2>學習日誌</h2>
+        <p>記錄每一次學習進度、實作過程與反思。</p>
+      </div>
+
+      <div class="journal-grid">
+        <article class="journal-card">
+          <p class="date">2026.06.25</p>
+          <h3>建立第一個 AI Learning Portfolio</h3>
+          <p>
+            完成 GitHub Repository，開始規劃個人學習紀錄網站，並準備部署至 Cloudflare Pages。
+          </p>
+        </article>
+
+        <article class="journal-card muted">
+          <p class="date">Coming Soon</p>
+          <h3>文獻搜尋系統規劃</h3>
+          <p>
+            未來將建立可整理論文、文章與研究資料的 Literature Hub。
+          </p>
+        </article>
+
+        <article class="journal-card muted">
+          <p class="date">Coming Soon</p>
+          <h3>AI 工具實作紀錄</h3>
+          <p>
+            逐步加入摘要、翻譯、單字卡與測驗生成功能。
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="knowledge">
+      <div class="section-label">Knowledge Base</div>
+      <div class="section-heading">
+        <h2>知識庫</h2>
+        <p>把零散筆記分類，慢慢變成自己的第二大腦。</p>
+      </div>
+
+      <div class="knowledge-grid">
+        <div class="topic-card">
+          <span>Chemistry</span>
+          <h3>Organic & Physical Chemistry</h3>
+          <p>有機化學、物理化學、反應機構與考試整理。</p>
+        </div>
+        <div class="topic-card">
+          <span>English</span>
+          <h3>Language Learning</h3>
+          <p>文法、單字、口說與寫作訓練紀錄。</p>
+        </div>
+        <div class="topic-card">
+          <span>Design</span>
+          <h3>Fashion & Branding</h3>
+          <p>品牌故事、服裝設計、ESG 與作品集內容。</p>
+        </div>
+        <div class="topic-card">
+          <span>Research</span>
+          <h3>Reports & Literature</h3>
+          <p>文獻閱讀、資料分析與專題研究。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section literature-section" id="literature">
+      <div class="section-label">Literature Hub</div>
+      <div class="section-heading">
+        <h2>文獻摘要系統 Prototype</h2>
+        <p>
+          第一版先做介面與文字摘要示範。PDF / 論文 AI 摘要需要後續串接 API。
+        </p>
+      </div>
+
+      <div class="literature-panel">
+        <div class="upload-box">
+          <input type="file" id="fileInput" accept=".txt,.md,.pdf,.doc,.docx" hidden />
+          <button class="upload-button" id="uploadButton">Upload Paper or Article</button>
+          <p id="fileName">支援 TXT 示範摘要；PDF / DOC 會先顯示等待串接 AI。</p>
+        </div>
+
+        <div class="text-area-wrap">
+          <label for="articleText">或貼上一段文章：</label>
+          <textarea id="articleText" placeholder="Paste article text here..."></textarea>
+          <button class="button primary" id="summaryButton">Generate Summary</button>
+        </div>
+
+        <div class="summary-output" id="summaryOutput">
+          <p class="output-title">Summary Output</p>
+          <p class="placeholder">你的摘要結果會出現在這裡。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="tools">
+      <div class="section-label">AI Tools</div>
+      <div class="section-heading">
+        <h2>AI 工具箱</h2>
+        <p>先保留功能入口，未來逐步完成。</p>
+      </div>
+
+      <div class="tool-grid">
+        <div class="tool-card">
+          <h3>PDF Summary</h3>
+          <p>Upload PDF and generate structured summaries.</p>
+          <span>Coming Soon</span>
+        </div>
+        <div class="tool-card">
+          <h3>Flashcards</h3>
+          <p>Turn notes into flashcards for review.</p>
+          <span>Coming Soon</span>
+        </div>
+        <div class="tool-card">
+          <h3>Quiz Generator</h3>
+          <p>Create practice questions from learning notes.</p>
+          <span>Coming Soon</span>
+        </div>
+        <div class="tool-card">
+          <h3>Translator</h3>
+          <p>Translate learning materials into clear notes.</p>
+          <span>Coming Soon</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section projects-section" id="projects">
+      <div class="section-label">Projects</div>
+      <div class="empty-state">
+        <p class="tiny">Under Development</p>
+        <h2>Projects are currently taking shape.</h2>
+        <p>
+          這個區塊會保留給未來的專題、設計作品、研究成果與 AI 實作。
+          現在先保持留白，讓網站保有乾淨、完整的節奏。
+        </p>
+      </div>
+    </section>
+
+    <section class="section resources-section">
+      <div class="section-label">Resources</div>
+      <div class="section-heading">
+        <h2>常用資源</h2>
+        <p>學習、研究與創作用的入口。</p>
+      </div>
+
+      <div class="resource-row">
+        <a href="https://scholar.google.com/" target="_blank" rel="noreferrer">Google Scholar</a>
+        <a href="https://www.semanticscholar.org/" target="_blank" rel="noreferrer">Semantic Scholar</a>
+        <a href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://www.cloudflare.com/" target="_blank" rel="noreferrer">Cloudflare</a>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contact">
+      <p class="eyebrow">Contact</p>
+      <h2>Keep learning. Keep building.</h2>
+      <p>陳韋安｜Weian Chen</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Weian Chen. Built as an AI Learning Portfolio.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
