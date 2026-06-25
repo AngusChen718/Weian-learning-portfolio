@@ -17,6 +17,7 @@ const fileName = document.getElementById("fileName");
 const articleText = document.getElementById("articleText");
 const summaryButton = document.getElementById("summaryButton");
 const summaryOutput = document.getElementById("summaryOutput");
+const AI_API_URL = "https://weian-summary-api.fdr5hn7ry7.workers.dev/summarize";
 
 uploadButton.addEventListener("click", () => fileInput.click());
 
@@ -52,23 +53,55 @@ summaryButton.addEventListener("click", () => {
   generateLocalSummary(text);
 });
 
-function generateLocalSummary(text) {
+async function generateLocalSummary(text) {
   const clean = text.replace(/\s+/g, " ").trim();
-  const sentences = clean
-    .split(/(?<=[。！？.!?])\s+/)
-    .filter(sentence => sentence.length > 18);
 
-  const selected = sentences.slice(0, 3);
-  const words = extractKeywords(clean);
+  if (!clean) {
+    summaryOutput.innerHTML = `
+      <p class="output-title">Summary Output</p>
+      <p class="placeholder">請先貼上文章內容。</p>
+    `;
+    return;
+  }
 
   summaryOutput.innerHTML = `
-    <p class="output-title">Local Prototype Summary</p>
-    <ul>
-      ${selected.map(sentence => `<li>${escapeHtml(sentence)}</li>`).join("")}
-    </ul>
-    <p><strong>Possible Keywords:</strong> ${words.map(escapeHtml).join(" · ") || "尚無足夠文字可分析"}</p>
-    <p class="placeholder">註：這是本地端原型摘要，不是真正 AI 分析。未來可串接 OpenAI API 或其他模型。</p>
+    <p class="output-title">AI Summary</p>
+    <p class="placeholder">AI 正在整理文章，請稍等...</p>
   `;
+
+  try {
+    const response = await fetch(AI_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: clean,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "AI 摘要失敗。");
+    }
+
+    summaryOutput.innerHTML = `
+      <p class="output-title">AI Summary</p>
+      <div class="ai-summary">${formatSummary(data.summary)}</div>
+    `;
+  } catch (error) {
+    summaryOutput.innerHTML = `
+      <p class="output-title">AI Summary</p>
+      <p class="placeholder">目前無法產生摘要：${escapeHtml(error.message)}</p>
+    `;
+  }
+}
+
+function formatSummary(text) {
+  return escapeHtml(text)
+    .replace(/\n/g, "<br>")
+    .replace(/(1\. 一句話摘要|2\. 三句重點摘要|3\. 研究目的 \/ 文章主旨|4\. 方法或主要論點|5\. 重要結果或結論|6\. 關鍵字|7\. 適合放進學習日誌的心得|8\. 如果我是大學生，我最需要記住什麼)/g, "<strong>$1</strong>");
 }
 
 function extractKeywords(text) {
