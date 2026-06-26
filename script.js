@@ -127,34 +127,16 @@ async function generateLocalSummary(text) {
 
     summaryOutput.innerHTML = `
       <p class="output-title">AI Summary</p>
-      <div 
-        class="ai-summary" 
-        style="
-          height: 390px;
-          overflow-y: auto;
-          overflow-x: hidden;
-          -webkit-overflow-scrolling: touch;
-          padding-right: 12px;
-          line-height: 1.75;
-        "
-      >
+      <div class="ai-summary">
         ${formatSummary(data.summary)}
       </div>
     `;
+
+    scrollToSummaryOutput();
   } catch (error) {
     summaryOutput.innerHTML = `
       <p class="output-title">AI Summary</p>
-      <div 
-        class="ai-summary" 
-        style="
-          height: 390px;
-          overflow-y: auto;
-          overflow-x: hidden;
-          -webkit-overflow-scrolling: touch;
-          padding-right: 12px;
-          line-height: 1.75;
-        "
-      >
+      <div class="ai-summary">
         目前無法產生摘要：${escapeHtml(error.message)}
       </div>
     `;
