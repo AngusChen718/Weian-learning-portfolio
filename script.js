@@ -147,12 +147,16 @@ function formatSummary(text) {
   return escapeHtml(text)
     .replace(/^---$/gm, "")
     .replace(/^\s*---\s*$/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
     .replace(/^### (.*)$/gm, "<h3>$1</h3>")
     .replace(/^## (.*)$/gm, "<h2>$1</h2>")
+    .replace(/^\*\*(.*?)\*\*$/gm, "<h3>$1</h3>")
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/^\d+\.\s*(.*)$/gm, "<h3>$1</h3>")
     .replace(/^- (.*)$/gm, "<li>$1</li>")
-    .replace(/\n{3,}/g, "\n\n")
-    .replace(/\n/g, "<br>");
+    .split("\n")
+    .filter((line) => line.trim() !== "")
+    .join("<br>");
 }
 
 function escapeHtml(string) {
@@ -464,3 +468,18 @@ function updateClearButton() {
 }
 
 updateClearButton();
+
+function scrollToSummaryOutput() {
+  if (!summaryOutput) return;
+
+  requestAnimationFrame(() => {
+    const headerOffset = 120;
+    const targetPosition =
+      summaryOutput.getBoundingClientRect().top + window.scrollY - headerOffset;
+
+    window.scrollTo({
+      top: targetPosition,
+      behavior: "smooth",
+    });
+  });
+}
