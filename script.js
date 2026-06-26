@@ -243,6 +243,8 @@ renderPaperResults(lastPaperResults);
 
 function renderPaperResults(papers) {
   if (!papers.length) {
+    paperStatus.textContent = "找不到相關文獻。";
+
     paperResults.innerHTML = `
       <div class="paper-empty">
         找不到相關文獻，請換一個關鍵字。
@@ -251,8 +253,16 @@ function renderPaperResults(papers) {
     return;
   }
 
-  paperResults.innerHTML = papers
-    .map((paper, index) => {
+  const totalPages = Math.ceil(papers.length / PAPERS_PER_PAGE);
+  const startIndex = (currentPaperPage - 1) * PAPERS_PER_PAGE;
+  const visiblePapers = papers.slice(startIndex, startIndex + PAPERS_PER_PAGE);
+
+  paperStatus.textContent = `找到 ${papers.length} 篇文獻，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
+
+  const paperCards = visiblePapers
+    .map((paper, localIndex) => {
+      const index = startIndex + localIndex;
+
       const reasons = (paper.reasons || [])
         .slice(0, 3)
         .map((reason) => `<li>${escapeHtml(reason)}</li>`)
@@ -312,9 +322,56 @@ function renderPaperResults(papers) {
     })
     .join("");
 
+  const pagination = `
+    <div class="paper-pagination">
+      <button 
+        type="button" 
+        id="prevPaperPage" 
+        ${currentPaperPage === 1 ? "disabled" : ""}
+      >
+        ← Previous
+      </button>
+
+      <span>
+        Page ${currentPaperPage} of ${totalPages}
+      </span>
+
+      <button 
+        type="button" 
+        id="nextPaperPage" 
+        ${currentPaperPage === totalPages ? "disabled" : ""}
+      >
+        Next →
+      </button>
+    </div>
+  `;
+
+  paperResults.innerHTML = paperCards + pagination;
+
   paperResults.querySelectorAll("[data-action]").forEach((button) => {
     button.addEventListener("click", handlePaperAction);
   });
+
+  const prevButton = document.getElementById("prevPaperPage");
+  const nextButton = document.getElementById("nextPaperPage");
+
+  if (prevButton) {
+    prevButton.addEventListener("click", () => {
+      if (currentPaperPage > 1) {
+        currentPaperPage -= 1;
+        renderPaperResults(lastPaperResults);
+      }
+    });
+  }
+
+  if (nextButton) {
+    nextButton.addEventListener("click", () => {
+      if (currentPaperPage < totalPages) {
+        currentPaperPage += 1;
+        renderPaperResults(lastPaperResults);
+      }
+    });
+  }
 }
 
 function handlePaperAction(event) {
