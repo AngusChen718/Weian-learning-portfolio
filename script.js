@@ -391,7 +391,7 @@ function handlePaperAction(event) {
   }
 
   if (action === "analyze") {
-    const text = `
+  const text = `
 Title:
 ${paper.title}
 
@@ -415,19 +415,20 @@ ${(paper.reasons || []).join("、")}
 
 Abstract:
 ${paper.abstract}
-    `.trim();
+  `.trim();
 
-    articleText.value = text;
+  articleText.value = text;
 
-    summaryOutput.innerHTML = `
-      <p class="output-title">AI Summary</p>
-      <p class="placeholder">已將文獻資料放入下方分析框，正在產生摘要...</p>
-    `;
+  summaryOutput.innerHTML = `
+    <p class="output-title">AI Summary</p>
+    <p class="placeholder">已將文獻資料放入下方分析框，正在產生摘要...</p>
+  `;
 
-    summaryButton.click();
-  }
+  scrollToSummaryOutput();
+
+  summaryButton.click();
 }
-
+  
 function shortenText(text, maxLength) {
   if (!text) return "";
 
