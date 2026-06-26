@@ -386,7 +386,7 @@ function updateThemeIcon() {
   if (!themeToggle) return;
 
   if (root.classList.contains("dark")) {
-    themeToggle.textContent = "☀";
+    themeToggle.textContent = "☀︎";
   } else {
     themeToggle.textContent = "☾";
   }
