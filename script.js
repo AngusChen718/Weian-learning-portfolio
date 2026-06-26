@@ -8,30 +8,32 @@ if (savedTheme === "dark") {
 
 updateThemeIcon();
 
-themeToggle.addEventListener("click", () => {
-  root.classList.add("theme-changing");
-  themeToggle.classList.add("icon-fade");
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    root.classList.add("theme-changing");
+    themeToggle.classList.add("icon-fade");
 
-  void root.offsetWidth;
+    void root.offsetWidth;
 
-  requestAnimationFrame(() => {
-    root.classList.toggle("dark");
+    requestAnimationFrame(() => {
+      root.classList.toggle("dark");
 
-    localStorage.setItem(
-      "weian-theme",
-      root.classList.contains("dark") ? "dark" : "light"
-    );
+      localStorage.setItem(
+        "weian-theme",
+        root.classList.contains("dark") ? "dark" : "light"
+      );
 
-    setTimeout(() => {
-      updateThemeIcon();
-      themeToggle.classList.remove("icon-fade");
-    }, 120);
+      setTimeout(() => {
+        updateThemeIcon();
+        themeToggle.classList.remove("icon-fade");
+      }, 120);
 
-    setTimeout(() => {
-      root.classList.remove("theme-changing");
-    }, 450);
+      setTimeout(() => {
+        root.classList.remove("theme-changing");
+      }, 450);
+    });
   });
-});
+}
 
 const uploadButton = document.getElementById("uploadButton");
 const fileInput = document.getElementById("fileInput");
@@ -53,44 +55,50 @@ let lastPaperResults = [];
 let currentPaperPage = 1;
 const PAPERS_PER_PAGE = 5;
 
-uploadButton.addEventListener("click", () => fileInput.click());
+if (uploadButton && fileInput) {
+  uploadButton.addEventListener("click", () => fileInput.click());
+}
 
-fileInput.addEventListener("change", async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
+if (fileInput) {
+  fileInput.addEventListener("change", async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-  fileName.textContent = `Selected: ${file.name}`;
+    fileName.textContent = `Selected: ${file.name}`;
 
-  if (
-    file.type === "text/plain" ||
-    file.name.endsWith(".md") ||
-    file.name.endsWith(".txt")
-  ) {
-    const text = await file.text();
-    articleText.value = text.slice(0, 8000);
+    if (
+      file.type === "text/plain" ||
+      file.name.endsWith(".md") ||
+      file.name.endsWith(".txt")
+    ) {
+      const text = await file.text();
+      articleText.value = text.slice(0, 8000);
+      generateLocalSummary(text);
+    } else {
+      summaryOutput.innerHTML = `
+        <p class="output-title">Prototype Notice</p>
+        <p>已收到檔案：${escapeHtml(file.name)}</p>
+        <p>這個版本先完成上傳介面。PDF / Word 的真正 AI 摘要需要後續串接後端與 AI API。</p>
+      `;
+    }
+  });
+}
+
+if (summaryButton) {
+  summaryButton.addEventListener("click", () => {
+    const text = articleText.value.trim();
+
+    if (!text) {
+      summaryOutput.innerHTML = `
+        <p class="output-title">Summary Output</p>
+        <p class="placeholder">請先貼上文章內容，或上傳 TXT 檔。</p>
+      `;
+      return;
+    }
+
     generateLocalSummary(text);
-  } else {
-    summaryOutput.innerHTML = `
-      <p class="output-title">Prototype Notice</p>
-      <p>已收到檔案：${escapeHtml(file.name)}</p>
-      <p>這個版本先完成上傳介面。PDF / Word 的真正 AI 摘要需要後續串接後端與 AI API。</p>
-    `;
-  }
-});
-
-summaryButton.addEventListener("click", () => {
-  const text = articleText.value.trim();
-
-  if (!text) {
-    summaryOutput.innerHTML = `
-      <p class="output-title">Summary Output</p>
-      <p class="placeholder">請先貼上文章內容，或上傳 TXT 檔。</p>
-    `;
-    return;
-  }
-
-  generateLocalSummary(text);
-});
+  });
+}
 
 async function generateLocalSummary(text) {
   const clean = text.replace(/\s+/g, " ").trim();
@@ -145,24 +153,14 @@ async function generateLocalSummary(text) {
 
 function formatSummary(text) {
   return escapeHtml(text)
-    // 清掉分隔線
     .replace(/^---$/gm, "")
     .replace(/^\s*---\s*$/gm, "")
-
-    // 只讓 ## / ### 變成真正標題
     .replace(/^## (.*)$/gm, "<h2>$1</h2>")
     .replace(/^### (.*)$/gm, "<h3>$1</h3>")
-
-    // AI 常吐 **粗體**，這裡直接拿掉符號，不轉成粗黑
     .replace(/\*\*(.*?)\*\*/g, "$1")
-
-    // 編號項目改成普通段落，不要變大標題、不整句粗體
-    .replace(/^(\d+)\.\s*(.*)$/gm, '<p class="summary-point"><span>$1.</span> $2</p>')
-
-    // 條列項目也改成普通段落
-    .replace(/^- (.*)$/gm, '<p class="summary-point"><span>•</span> $1</p>')
-    .replace(/^•\s*(.*)$/gm, '<p class="summary-point"><span>•</span> $1</p>')
-
+    .replace(/^\s*(\d+)\.\s*(.*)$/gm, '<p class="summary-point"><span>$1.</span> $2</p>')
+    .replace(/^\s*- (.*)$/gm, '<p class="summary-point"><span>•</span> $1</p>')
+    .replace(/^\s*•\s*(.*)$/gm, '<p class="summary-point"><span>•</span> $1</p>')
     .replace(/\n{3,}/g, "\n\n")
     .split("\n")
     .filter((line) => line.trim() !== "")
@@ -177,6 +175,10 @@ function escapeHtml(string) {
     '"': "&quot;",
     "'": "&#039;",
   }[match]));
+}
+
+if (paperSearchButton) {
+  paperSearchButton.addEventListener("click", searchPapers);
 }
 
 if (paperClearButton) {
@@ -197,11 +199,14 @@ if (paperQuery) {
       searchPapers();
     }
   });
+
+  paperQuery.addEventListener("input", updateClearButton);
 }
 
 document.querySelectorAll("[data-topic]").forEach((button) => {
   button.addEventListener("click", () => {
     paperQuery.value = button.dataset.topic;
+    updateClearButton();
     searchPapers();
   });
 });
@@ -391,7 +396,7 @@ function handlePaperAction(event) {
   }
 
   if (action === "analyze") {
-  const text = `
+    const text = `
 Title:
 ${paper.title}
 
@@ -415,20 +420,20 @@ ${(paper.reasons || []).join("、")}
 
 Abstract:
 ${paper.abstract}
-  `.trim();
+    `.trim();
 
-  articleText.value = text;
+    articleText.value = text;
 
-  summaryOutput.innerHTML = `
-    <p class="output-title">AI Summary</p>
-    <p class="placeholder">已將文獻資料放入下方分析框，正在產生摘要...</p>
-  `;
+    summaryOutput.innerHTML = `
+      <p class="output-title">AI Summary</p>
+      <p class="placeholder">已將文獻資料放入下方分析框，正在產生摘要...</p>
+    `;
 
-  scrollToSummaryOutput();
-
-  summaryButton.click();
+    scrollToSummaryOutput();
+    summaryButton.click();
+  }
 }
-  
+
 function shortenText(text, maxLength) {
   if (!text) return "";
 
@@ -449,6 +454,16 @@ function updateThemeIcon() {
   }
 }
 
+function updateClearButton() {
+  if (!paperClearButton || !paperQuery) return;
+
+  if (paperQuery.value.trim()) {
+    paperClearButton.classList.add("show");
+  } else {
+    paperClearButton.classList.remove("show");
+  }
+}
+
 function scrollToPaperResultsTop() {
   if (!paperStatus) return;
 
@@ -464,22 +479,6 @@ function scrollToPaperResultsTop() {
   });
 }
 
-if (paperQuery) {
-  paperQuery.addEventListener("input", updateClearButton);
-}
-
-function updateClearButton() {
-  if (!paperClearButton || !paperQuery) return;
-
-  if (paperQuery.value.trim()) {
-    paperClearButton.classList.add("show");
-  } else {
-    paperClearButton.classList.remove("show");
-  }
-}
-
-updateClearButton();
-
 function scrollToSummaryOutput() {
   if (!summaryOutput) return;
 
@@ -494,3 +493,5 @@ function scrollToSummaryOutput() {
     });
   });
 }
+
+updateClearButton();
