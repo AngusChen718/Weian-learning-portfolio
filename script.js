@@ -47,6 +47,7 @@ const paperQuery = document.getElementById("paperQuery");
 const paperSearchButton = document.getElementById("paperSearchButton");
 const paperStatus = document.getElementById("paperStatus");
 const paperResults = document.getElementById("paperResults");
+const paperClearButton = document.getElementById("paperClearButton");
 
 let lastPaperResults = [];
 let currentPaperPage = 1;
