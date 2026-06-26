@@ -183,8 +183,16 @@ function escapeHtml(string) {
   }[match]));
 }
 
-if (paperSearchButton) {
-  paperSearchButton.addEventListener("click", searchPapers);
+if (paperClearButton) {
+  paperClearButton.addEventListener("click", () => {
+    paperQuery.value = "";
+    paperResults.innerHTML = "";
+    lastPaperResults = [];
+    currentPaperPage = 1;
+    paperStatus.textContent = "請輸入關鍵字開始搜尋。";
+    paperQuery.focus();
+    updateClearButton();
+  });
 }
 
 if (paperQuery) {
