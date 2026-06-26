@@ -7,9 +7,6 @@ if (savedTheme === "dark") {
 }
 
 updateThemeIcon();
-if (savedTheme === "dark") {
-  root.classList.add("dark");
-}
 
 themeToggle.addEventListener("click", () => {
   root.classList.add("theme-changing");
@@ -42,8 +39,8 @@ const fileName = document.getElementById("fileName");
 const articleText = document.getElementById("articleText");
 const summaryButton = document.getElementById("summaryButton");
 const summaryOutput = document.getElementById("summaryOutput");
-const AI_API_URL = "https://weian-summary-api.fdr5hn7ry7.workers.dev/summarize";
 
+const AI_API_URL = "https://weian-summary-api.fdr5hn7ry7.workers.dev/summarize";
 const PAPER_SEARCH_API_URL = "https://paper-search.fdr5hn7ry7.workers.dev/search";
 
 const paperQuery = document.getElementById("paperQuery");
@@ -63,7 +60,11 @@ fileInput.addEventListener("change", async (event) => {
 
   fileName.textContent = `Selected: ${file.name}`;
 
-  if (file.type === "text/plain" || file.name.endsWith(".md") || file.name.endsWith(".txt")) {
+  if (
+    file.type === "text/plain" ||
+    file.name.endsWith(".md") ||
+    file.name.endsWith(".txt")
+  ) {
     const text = await file.text();
     articleText.value = text.slice(0, 8000);
     generateLocalSummary(text);
@@ -78,6 +79,7 @@ fileInput.addEventListener("change", async (event) => {
 
 summaryButton.addEventListener("click", () => {
   const text = articleText.value.trim();
+
   if (!text) {
     summaryOutput.innerHTML = `
       <p class="output-title">Summary Output</p>
@@ -124,25 +126,37 @@ async function generateLocalSummary(text) {
 
     summaryOutput.innerHTML = `
       <p class="output-title">AI Summary</p>
-      <div class="ai-summary">${formatSummary(data.summary)}</div>
+      <div 
+        class="ai-summary" 
+        style="
+          height: 390px;
+          overflow-y: auto;
+          overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
+          padding-right: 12px;
+          line-height: 1.75;
+        "
+      >
+        ${formatSummary(data.summary)}
+      </div>
     `;
   } catch (error) {
     summaryOutput.innerHTML = `
-  <p class="output-title">AI Summary</p>
-  <div 
-    class="ai-summary" 
-    style="
-      height: 390px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      padding-right: 12px;
-      line-height: 1.75;
-    "
-  >
-    ${formatSummary(data.summary)}
-  </div>
-`;
+      <p class="output-title">AI Summary</p>
+      <div 
+        class="ai-summary" 
+        style="
+          height: 390px;
+          overflow-y: auto;
+          overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
+          padding-right: 12px;
+          line-height: 1.75;
+        "
+      >
+        目前無法產生摘要：${escapeHtml(error.message)}
+      </div>
+    `;
   }
 }
 
@@ -158,36 +172,13 @@ function formatSummary(text) {
     .replace(/\n/g, "<br>");
 }
 
-function extractKeywords(text) {
-  const stopwords = new Set([
-    "the","and","for","with","that","this","from","into","about","were","have","has","are","was","is","to","of","in","on","as","by","an","a",
-    "我們","以及","因為","所以","可以","透過","進行","一個","這個","主要","未來","目前","使用","建立","學習"
-  ]);
-
-  const tokens = text
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}\s]/gu, " ")
-    .split(/\s+/)
-    .filter(token => token.length > 2 && !stopwords.has(token));
-
-  const counts = {};
-  for (const token of tokens) {
-    counts[token] = (counts[token] || 0) + 1;
-  }
-
-  return Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 8)
-    .map(([word]) => word);
-}
-
 function escapeHtml(string) {
   return String(string).replace(/[&<>"']/g, (match) => ({
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
     '"': "&quot;",
-    "'": "&#039;"
+    "'": "&#039;",
   }[match]));
 }
 
@@ -233,9 +224,9 @@ async function searchPapers() {
     }
 
     lastPaperResults = data.papers || [];
-currentPaperPage = 1;
+    currentPaperPage = 1;
 
-renderPaperResults(lastPaperResults);
+    renderPaperResults(lastPaperResults);
   } catch (error) {
     paperStatus.textContent = `搜尋失敗：${error.message}`;
   }
@@ -356,23 +347,24 @@ function renderPaperResults(papers) {
   const nextButton = document.getElementById("nextPaperPage");
 
   if (prevButton) {
-  prevButton.addEventListener("click", () => {
-    if (currentPaperPage > 1) {
-      currentPaperPage -= 1;
-      renderPaperResults(lastPaperResults);
-      scrollToPaperResultsTop();
-    }
-  });
-}
+    prevButton.addEventListener("click", () => {
+      if (currentPaperPage > 1) {
+        currentPaperPage -= 1;
+        renderPaperResults(lastPaperResults);
+        scrollToPaperResultsTop();
+      }
+    });
+  }
 
-if (nextButton) {
-  nextButton.addEventListener("click", () => {
-    if (currentPaperPage < totalPages) {
-      currentPaperPage += 1;
-      renderPaperResults(lastPaperResults);
-      scrollToPaperResultsTop();
-    }
-  });
+  if (nextButton) {
+    nextButton.addEventListener("click", () => {
+      if (currentPaperPage < totalPages) {
+        currentPaperPage += 1;
+        renderPaperResults(lastPaperResults);
+        scrollToPaperResultsTop();
+      }
+    });
+  }
 }
 
 function handlePaperAction(event) {
