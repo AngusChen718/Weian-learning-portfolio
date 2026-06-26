@@ -7,8 +7,18 @@ if (savedTheme === "dark") {
 }
 
 themeToggle.addEventListener("click", () => {
+  root.classList.add("theme-changing");
+
   root.classList.toggle("dark");
-  localStorage.setItem("weian-theme", root.classList.contains("dark") ? "dark" : "light");
+
+  localStorage.setItem(
+    "weian-theme",
+    root.classList.contains("dark") ? "dark" : "light"
+  );
+
+  setTimeout(() => {
+    root.classList.remove("theme-changing");
+  }, 450);
 });
 
 const uploadButton = document.getElementById("uploadButton");
