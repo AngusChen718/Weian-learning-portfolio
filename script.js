@@ -233,10 +233,9 @@ async function searchPapers() {
     }
 
     lastPaperResults = data.papers || [];
+currentPaperPage = 1;
 
-    paperStatus.textContent = `找到 ${lastPaperResults.length} 篇文獻，已依閱讀優先度排序。`;
-
-    renderPaperResults(lastPaperResults);
+renderPaperResults(lastPaperResults);
   } catch (error) {
     paperStatus.textContent = `搜尋失敗：${error.message}`;
   }
