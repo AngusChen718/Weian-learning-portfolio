@@ -9,16 +9,21 @@ if (savedTheme === "dark") {
 themeToggle.addEventListener("click", () => {
   root.classList.add("theme-changing");
 
-  root.classList.toggle("dark");
+  // 強迫瀏覽器先套用 transition，不然會瞬間變色
+  void root.offsetWidth;
 
-  localStorage.setItem(
-    "weian-theme",
-    root.classList.contains("dark") ? "dark" : "light"
-  );
+  requestAnimationFrame(() => {
+    root.classList.toggle("dark");
 
-  setTimeout(() => {
-    root.classList.remove("theme-changing");
-  }, 450);
+    localStorage.setItem(
+      "weian-theme",
+      root.classList.contains("dark") ? "dark" : "light"
+    );
+
+    setTimeout(() => {
+      root.classList.remove("theme-changing");
+    }, 650);
+  });
 });
 
 const uploadButton = document.getElementById("uploadButton");
