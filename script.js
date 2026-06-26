@@ -466,3 +466,19 @@ function scrollToPaperResultsTop() {
     });
   });
 }
+
+if (paperQuery) {
+  paperQuery.addEventListener("input", updateClearButton);
+}
+
+function updateClearButton() {
+  if (!paperClearButton || !paperQuery) return;
+
+  if (paperQuery.value.trim()) {
+    paperClearButton.classList.add("show");
+  } else {
+    paperClearButton.classList.remove("show");
+  }
+}
+
+updateClearButton();
