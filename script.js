@@ -6,10 +6,14 @@ if (savedTheme === "dark") {
   root.classList.add("dark");
 }
 
+updateThemeIcon();
+if (savedTheme === "dark") {
+  root.classList.add("dark");
+}
+
 themeToggle.addEventListener("click", () => {
   root.classList.add("theme-changing");
 
-  // 強迫瀏覽器先套用 transition，不然會瞬間變色
   void root.offsetWidth;
 
   requestAnimationFrame(() => {
@@ -19,6 +23,8 @@ themeToggle.addEventListener("click", () => {
       "weian-theme",
       root.classList.contains("dark") ? "dark" : "light"
     );
+
+    updateThemeIcon();
 
     setTimeout(() => {
       root.classList.remove("theme-changing");
@@ -370,4 +376,14 @@ function shortenText(text, maxLength) {
   }
 
   return text.slice(0, maxLength).trim() + "...";
+}
+
+function updateThemeIcon() {
+  if (!themeToggle) return;
+
+  if (root.classList.contains("dark")) {
+    themeToggle.textContent = "☀";
+  } else {
+    themeToggle.textContent = "☾";
+  }
 }
