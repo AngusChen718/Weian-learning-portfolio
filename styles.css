@@ -996,3 +996,27 @@ html.theme-changing .theme-toggle {
   font-weight: 600;
   line-height: 1;
 }
+
+.theme-toggle {
+  color: var(--text) !important;
+  background: var(--soft);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease !important;
+}
+
+.theme-toggle:active {
+  transform: scale(0.92);
+}
+
+.theme-toggle.icon-fade {
+  opacity: 0;
+  transform: scale(0.86);
+}
+
+html.theme-changing .theme-toggle {
+  transform: none !important;
+}
