@@ -166,14 +166,25 @@ Growing.
       </p>
     </div>
 
-    <div class="paper-search-bar">
-      <input
-        type="text"
-        id="paperQuery"
-        placeholder="例如：high entropy alloy, density functional theory, catalysis"
-      />
-      <button class="button primary" id="paperSearchButton">Search Papers</button>
-    </div>
+   <div class="paper-search-bar">
+  <div class="paper-input-wrap">
+    <input
+      type="text"
+      id="paperQuery"
+      placeholder="例如：high entropy alloy, density functional theory, catalysis"
+    />
+    <button
+      type="button"
+      class="paper-clear-button"
+      id="paperClearButton"
+      aria-label="Clear search"
+    >
+      ×
+    </button>
+  </div>
+
+  <button class="button primary" id="paperSearchButton">Search Papers</button>
+</div>
 
     <div class="topic-chips">
       <button type="button" data-topic="high entropy alloy">high entropy alloy</button>
