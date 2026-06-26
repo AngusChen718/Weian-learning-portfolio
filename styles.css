@@ -1189,3 +1189,50 @@ html.theme-changing .theme-toggle {
   max-height: none;
   overflow: visible;
 }
+
+.summary-output {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.ai-summary {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.75;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.ai-summary h2,
+.ai-summary h3 {
+  color: var(--text);
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+}
+
+.ai-summary h2 {
+  font-size: 28px;
+  margin: 30px 0 16px;
+}
+
+.ai-summary h3 {
+  font-size: 23px;
+  margin: 26px 0 12px;
+}
+
+.ai-summary p {
+  margin: 0 0 18px;
+}
+
+.ai-summary strong {
+  color: var(--text);
+}
+
+.ai-summary li {
+  margin: 8px 0 8px 22px;
+}
