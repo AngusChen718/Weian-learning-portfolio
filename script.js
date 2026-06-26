@@ -13,6 +13,7 @@ if (savedTheme === "dark") {
 
 themeToggle.addEventListener("click", () => {
   root.classList.add("theme-changing");
+  themeToggle.classList.add("icon-fade");
 
   void root.offsetWidth;
 
@@ -24,11 +25,14 @@ themeToggle.addEventListener("click", () => {
       root.classList.contains("dark") ? "dark" : "light"
     );
 
-    updateThemeIcon();
+    setTimeout(() => {
+      updateThemeIcon();
+      themeToggle.classList.remove("icon-fade");
+    }, 120);
 
     setTimeout(() => {
       root.classList.remove("theme-changing");
-    }, 650);
+    }, 450);
   });
 });
 
