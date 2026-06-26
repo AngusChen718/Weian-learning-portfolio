@@ -961,3 +961,27 @@ html.theme-changing .theme-toggle {
     transition: none !important;
   }
 }
+
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  transition:
+    background 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.theme-toggle {
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+html.theme-changing .theme-toggle {
+  transform: rotate(180deg) scale(0.96);
+}
