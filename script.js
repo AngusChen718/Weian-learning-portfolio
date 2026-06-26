@@ -19,6 +19,15 @@ const summaryButton = document.getElementById("summaryButton");
 const summaryOutput = document.getElementById("summaryOutput");
 const AI_API_URL = "https://weian-summary-api.fdr5hn7ry7.workers.dev/summarize";
 
+const PAPER_SEARCH_API_URL = "https://paper-search.fdr5hn7ry7.workers.dev/search";
+
+const paperQuery = document.getElementById("paperQuery");
+const paperSearchButton = document.getElementById("paperSearchButton");
+const paperStatus = document.getElementById("paperStatus");
+const paperResults = document.getElementById("paperResults");
+
+let lastPaperResults = [];
+
 uploadButton.addEventListener("click", () => fileInput.click());
 
 fileInput.addEventListener("change", async (event) => {
@@ -153,4 +162,197 @@ function escapeHtml(string) {
     '"': "&quot;",
     "'": "&#039;"
   }[match]));
+}
+
+if (paperSearchButton) {
+  paperSearchButton.addEventListener("click", searchPapers);
+}
+
+if (paperQuery) {
+  paperQuery.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      searchPapers();
+    }
+  });
+}
+
+document.querySelectorAll("[data-topic]").forEach((button) => {
+  button.addEventListener("click", () => {
+    paperQuery.value = button.dataset.topic;
+    searchPapers();
+  });
+});
+
+async function searchPapers() {
+  const query = paperQuery.value.trim();
+
+  if (!query) {
+    paperStatus.textContent = "請先輸入研究主題。";
+    return;
+  }
+
+  paperStatus.textContent = "正在搜尋文獻，請稍等...";
+  paperResults.innerHTML = "";
+
+  try {
+    const response = await fetch(
+      `${PAPER_SEARCH_API_URL}?q=${encodeURIComponent(query)}&limit=20`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "文獻搜尋失敗。");
+    }
+
+    lastPaperResults = data.papers || [];
+
+    paperStatus.textContent = `找到 ${lastPaperResults.length} 篇文獻，已依閱讀優先度排序。`;
+
+    renderPaperResults(lastPaperResults);
+  } catch (error) {
+    paperStatus.textContent = `搜尋失敗：${error.message}`;
+  }
+}
+
+function renderPaperResults(papers) {
+  if (!papers.length) {
+    paperResults.innerHTML = `
+      <div class="paper-empty">
+        找不到相關文獻，請換一個關鍵字。
+      </div>
+    `;
+    return;
+  }
+
+  paperResults.innerHTML = papers
+    .map((paper, index) => {
+      const reasons = (paper.reasons || [])
+        .slice(0, 3)
+        .map((reason) => `<li>${escapeHtml(reason)}</li>`)
+        .join("");
+
+      const concepts = (paper.concepts || [])
+        .slice(0, 4)
+        .map((concept) => `<span>${escapeHtml(concept)}</span>`)
+        .join("");
+
+      return `
+        <article class="paper-card">
+          <div class="paper-card-top">
+            <div>
+              <p class="paper-priority">${escapeHtml(paper.stars || "")} ${escapeHtml(paper.priority || "")}</p>
+              <h3>${escapeHtml(paper.title || "Untitled")}</h3>
+            </div>
+            <div class="paper-score">
+              <span>${paper.score || 0}</span>
+              <small>Score</small>
+            </div>
+          </div>
+
+          <p class="paper-meta">
+            ${escapeHtml(String(paper.year || "Unknown"))}
+            · ${escapeHtml(paper.venue || "Unknown source")}
+            · Citations: ${paper.citedByCount || 0}
+          </p>
+
+          <p class="paper-authors">
+            ${escapeHtml(paper.authors || "Unknown authors")}
+          </p>
+
+          <p class="paper-abstract">
+            ${escapeHtml(shortenText(paper.abstract || "No abstract available.", 360))}
+          </p>
+
+          <div class="paper-tags">
+            ${concepts}
+          </div>
+
+          <div class="paper-reasons">
+            <strong>推薦原因</strong>
+            <ul>${reasons}</ul>
+          </div>
+
+          <div class="paper-actions">
+            <button type="button" data-action="analyze" data-index="${index}">
+              Analyze
+            </button>
+            <button type="button" data-action="open" data-index="${index}">
+              Open
+            </button>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  paperResults.querySelectorAll("[data-action]").forEach((button) => {
+    button.addEventListener("click", handlePaperAction);
+  });
+}
+
+function handlePaperAction(event) {
+  const button = event.currentTarget;
+  const index = Number(button.dataset.index);
+  const action = button.dataset.action;
+  const paper = lastPaperResults[index];
+
+  if (!paper) return;
+
+  if (action === "open") {
+    const url = paper.openAccessUrl || paper.doi || paper.openAlexUrl;
+
+    if (url) {
+      window.open(url, "_blank");
+    }
+
+    return;
+  }
+
+  if (action === "analyze") {
+    const text = `
+Title:
+${paper.title}
+
+Authors:
+${paper.authors}
+
+Year:
+${paper.year}
+
+Source:
+${paper.venue}
+
+Citations:
+${paper.citedByCount}
+
+Priority:
+${paper.priority}
+
+Reasons:
+${(paper.reasons || []).join("、")}
+
+Abstract:
+${paper.abstract}
+    `.trim();
+
+    articleText.value = text;
+
+    summaryOutput.innerHTML = `
+      <p class="output-title">AI Summary</p>
+      <p class="placeholder">已將文獻資料放入下方分析框，正在產生摘要...</p>
+    `;
+
+    summaryButton.click();
+  }
+}
+
+function shortenText(text, maxLength) {
+  if (!text) return "";
+
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  return text.slice(0, maxLength).trim() + "...";
 }
