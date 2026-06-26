@@ -1020,3 +1020,41 @@ html.theme-changing .theme-toggle {
 html.theme-changing .theme-toggle {
   transform: none !important;
 }
+
+.paper-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.paper-pagination button {
+  border: 1px solid var(--line);
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.paper-pagination button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.paper-pagination button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.paper-pagination span {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 650;
+}
