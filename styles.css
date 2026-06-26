@@ -913,3 +913,51 @@ textarea {
     width: 72px;
   }
 }
+
+html.theme-changing,
+html.theme-changing body,
+html.theme-changing .site-header,
+html.theme-changing .metric-card,
+html.theme-changing .journal-card,
+html.theme-changing .topic-card,
+html.theme-changing .tool-card,
+html.theme-changing .literature-panel,
+html.theme-changing .paper-search-panel,
+html.theme-changing .paper-card,
+html.theme-changing .summary-output,
+html.theme-changing .upload-box,
+html.theme-changing textarea,
+html.theme-changing input,
+html.theme-changing button,
+html.theme-changing a {
+  transition:
+    background-color 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.theme-toggle {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.theme-toggle:active {
+  transform: scale(0.88) rotate(25deg);
+}
+
+html.theme-changing .theme-toggle {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-changing,
+  html.theme-changing *,
+  .theme-toggle {
+    transition: none !important;
+  }
+}
