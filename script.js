@@ -1,3 +1,23 @@
+function escapeHtml(string) {
+  return String(string).replace(/[&<>"']/g, (match) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  }[match]));
+}
+
+function shortenText(text, maxLength) {
+  if (!text) return "";
+
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  return text.slice(0, maxLength).trim() + "...";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.documentElement;
   const themeToggle = document.getElementById("themeToggle");
