@@ -52,6 +52,8 @@ const paperStatus = document.getElementById("paperStatus");
 const paperResults = document.getElementById("paperResults");
 
 let lastPaperResults = [];
+let currentPaperPage = 1;
+const PAPERS_PER_PAGE = 5;
 
 uploadButton.addEventListener("click", () => fileInput.click());
 
