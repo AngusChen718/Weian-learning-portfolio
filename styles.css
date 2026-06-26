@@ -985,3 +985,14 @@ html.theme-changing *::after {
 html.theme-changing .theme-toggle {
   transform: rotate(180deg) scale(0.96);
 }
+
+.theme-toggle {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1;
+}
