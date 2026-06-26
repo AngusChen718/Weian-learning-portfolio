@@ -450,3 +450,18 @@ function updateThemeIcon() {
     themeToggle.textContent = "☾";
   }
 }
+
+function scrollToPaperResultsTop() {
+  if (!paperStatus) return;
+
+  requestAnimationFrame(() => {
+    const headerOffset = 110;
+    const targetPosition =
+      paperStatus.getBoundingClientRect().top + window.scrollY - headerOffset;
+
+    window.scrollTo({
+      top: targetPosition,
+      behavior: "smooth",
+    });
+  });
+}
