@@ -1150,3 +1150,42 @@ html.theme-changing .theme-toggle {
 .paper-clear-button:hover {
   opacity: 0.6;
 }
+
+.ai-summary {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.8;
+  max-width: 100%;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.ai-summary h2,
+.ai-summary h3 {
+  color: var(--text);
+  margin: 28px 0 12px;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+}
+
+.ai-summary h2 {
+  font-size: 30px;
+}
+
+.ai-summary h3 {
+  font-size: 24px;
+}
+
+.ai-summary strong {
+  color: var(--text);
+}
+
+.ai-summary li {
+  margin: 6px 0 6px 22px;
+}
+
+.summary-output {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+}
