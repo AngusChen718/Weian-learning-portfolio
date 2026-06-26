@@ -146,34 +146,74 @@ Growing.
       </div>
     </section>
 
-    <section class="section literature-section" id="literature">
-      <div class="section-label">Literature Hub</div>
-      <div class="section-heading">
-        <h2>文獻摘要系統 Prototype</h2>
-        <p>
-          第一版先做介面與文字摘要示範。PDF / 論文 AI 摘要需要後續串接 API。
-        </p>
+<section class="section literature-section" id="literature">
+  <div class="section-label">Literature Hub</div>
+  <div class="section-heading">
+    <h2>Paper Scout 文獻導航系統</h2>
+    <p>
+      輸入研究主題後，系統會搜尋文獻並依照年份、引用數、摘要完整度與主題相關性進行初步排序。
+    </p>
+  </div>
+
+  <div class="paper-search-panel">
+    <div class="paper-search-header">
+      <div>
+        <p class="tiny">Research Topic</p>
+        <h3>搜尋研究主題</h3>
       </div>
+      <p class="paper-search-note">
+        目前資料來源：OpenAlex。評分僅作為初步閱讀優先度參考。
+      </p>
+    </div>
 
-      <div class="literature-panel">
-        <div class="upload-box">
-          <input type="file" id="fileInput" accept=".txt,.md,.pdf,.doc,.docx" hidden />
-          <button class="upload-button" id="uploadButton">Upload Paper or Article</button>
-          <p id="fileName">支援 TXT 示範摘要；PDF / DOC 會先顯示等待串接 AI。</p>
-        </div>
+    <div class="paper-search-bar">
+      <input
+        type="text"
+        id="paperQuery"
+        placeholder="例如：high entropy alloy, density functional theory, catalysis"
+      />
+      <button class="button primary" id="paperSearchButton">Search Papers</button>
+    </div>
 
-        <div class="text-area-wrap">
-          <label for="articleText">或貼上一段文章：</label>
-          <textarea id="articleText" placeholder="Paste article text here..."></textarea>
-          <button class="button primary" id="summaryButton">Generate Summary</button>
-        </div>
+    <div class="topic-chips">
+      <button type="button" data-topic="high entropy alloy">high entropy alloy</button>
+      <button type="button" data-topic="density functional theory">density functional theory</button>
+      <button type="button" data-topic="catalysis">catalysis</button>
+    </div>
 
-        <div class="summary-output" id="summaryOutput">
-          <p class="output-title">Summary Output</p>
-          <p class="placeholder">你的摘要結果會出現在這裡。</p>
-        </div>
-      </div>
-    </section>
+    <div id="paperStatus" class="paper-status">
+      請輸入關鍵字開始搜尋。
+    </div>
+
+    <div id="paperResults" class="paper-results"></div>
+  </div>
+
+  <div class="section-heading literature-analysis-title">
+    <h2>AI 文獻分析</h2>
+    <p>
+      可以貼上文章或選擇上方文獻的摘要，讓 AI 協助整理重點。
+    </p>
+  </div>
+
+  <div class="literature-panel">
+    <div class="upload-box">
+      <input type="file" id="fileInput" accept=".txt,.md,.pdf,.doc,.docx" hidden />
+      <button class="upload-button" id="uploadButton">Upload Paper or Article</button>
+      <p id="fileName">支援 TXT 示範摘要；PDF / DOC 會先顯示等待串接 AI。</p>
+    </div>
+
+    <div class="text-area-wrap">
+      <label for="articleText">或貼上一段文章：</label>
+      <textarea id="articleText" placeholder="Paste article text here..."></textarea>
+      <button class="button primary" id="summaryButton">Generate Summary</button>
+    </div>
+
+    <div class="summary-output" id="summaryOutput">
+      <p class="output-title">Summary Output</p>
+      <p class="placeholder">你的摘要結果會出現在這裡。</p>
+    </div>
+  </div>
+</section>
 
     <section class="section" id="tools">
       <div class="section-label">AI Tools</div>
