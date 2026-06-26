@@ -356,22 +356,23 @@ function renderPaperResults(papers) {
   const nextButton = document.getElementById("nextPaperPage");
 
   if (prevButton) {
-    prevButton.addEventListener("click", () => {
-      if (currentPaperPage > 1) {
-        currentPaperPage -= 1;
-        renderPaperResults(lastPaperResults);
-      }
-    });
-  }
+  prevButton.addEventListener("click", () => {
+    if (currentPaperPage > 1) {
+      currentPaperPage -= 1;
+      renderPaperResults(lastPaperResults);
+      scrollToPaperResultsTop();
+    }
+  });
+}
 
-  if (nextButton) {
-    nextButton.addEventListener("click", () => {
-      if (currentPaperPage < totalPages) {
-        currentPaperPage += 1;
-        renderPaperResults(lastPaperResults);
-      }
-    });
-  }
+if (nextButton) {
+  nextButton.addEventListener("click", () => {
+    if (currentPaperPage < totalPages) {
+      currentPaperPage += 1;
+      renderPaperResults(lastPaperResults);
+      scrollToPaperResultsTop();
+    }
+  });
 }
 
 function handlePaperAction(event) {
