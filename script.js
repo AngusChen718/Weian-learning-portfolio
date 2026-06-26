@@ -145,13 +145,24 @@ async function generateLocalSummary(text) {
 
 function formatSummary(text) {
   return escapeHtml(text)
+    // 清掉分隔線
     .replace(/^---$/gm, "")
     .replace(/^\s*---\s*$/gm, "")
+
+    // 只讓 ## / ### 變成真正標題
     .replace(/^## (.*)$/gm, "<h2>$1</h2>")
     .replace(/^### (.*)$/gm, "<h3>$1</h3>")
-    .replace(/^(\d+)\.\s*(.*)$/gm, "<h3>$1. $2</h3>")
-    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    .replace(/^- (.*)$/gm, "• $1")
+
+    // AI 常吐 **粗體**，這裡直接拿掉符號，不轉成粗黑
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+
+    // 編號項目改成普通段落，不要變大標題、不整句粗體
+    .replace(/^(\d+)\.\s*(.*)$/gm, '<p class="summary-point"><span>$1.</span> $2</p>')
+
+    // 條列項目也改成普通段落
+    .replace(/^- (.*)$/gm, '<p class="summary-point"><span>•</span> $1</p>')
+    .replace(/^•\s*(.*)$/gm, '<p class="summary-point"><span>•</span> $1</p>')
+
     .replace(/\n{3,}/g, "\n\n")
     .split("\n")
     .filter((line) => line.trim() !== "")
