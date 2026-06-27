@@ -597,7 +597,44 @@ ${paper.abstract}
     paperSearchButton.classList.remove("is-searching");
     paperSearchButton.textContent = "Search Papers";
   }
+function startThinkingLines() {
+  const thinkingText = document.getElementById("thinkingText");
 
+  if (!thinkingText) return;
+
+  const lines = [
+    "Reading paper metadata...",
+    "Extracting abstract...",
+    "Checking research relevance...",
+    "Identifying key findings...",
+    "Building structured notes...",
+    "Preparing AI summary...",
+  ];
+
+  clearInterval(thinkingTimer);
+
+  thinkingIndex = 0;
+  thinkingText.textContent = lines[thinkingIndex];
+
+  requestAnimationFrame(() => {
+    thinkingText.classList.add("show");
+  });
+
+  thinkingTimer = setInterval(() => {
+    thinkingText.classList.remove("show");
+
+    setTimeout(() => {
+      thinkingIndex = (thinkingIndex + 1) % lines.length;
+      thinkingText.textContent = lines[thinkingIndex];
+      thinkingText.classList.add("show");
+    }, 420);
+  }, 1700);
+}
+
+function stopThinkingLines() {
+  clearInterval(thinkingTimer);
+  thinkingTimer = null;
+}
   function scrollToPaperResultsTop() {
     if (!paperStatus) return;
 
