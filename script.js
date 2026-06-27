@@ -254,8 +254,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    paperStatus.textContent = "正在搜尋文獻，請稍等...";
-    paperResults.innerHTML = "";
+   paperStatus.textContent = "正在搜尋文獻，請稍等...";
+renderPaperSkeletons();
 
     try {
       const response = await fetch(
@@ -276,7 +276,39 @@ document.addEventListener("DOMContentLoaded", () => {
       paperStatus.textContent = `搜尋失敗：${error.message}`;
     }
   }
+function renderPaperSkeletons(count = 5) {
+  if (!paperResults) return;
 
+  paperResults.innerHTML = Array.from({ length: count })
+    .map(
+      () => `
+        <article class="paper-card skeleton-card">
+          <div class="skeleton-top">
+            <div class="skeleton-content">
+              <div class="skeleton-line skeleton-small"></div>
+              <div class="skeleton-line skeleton-title"></div>
+              <div class="skeleton-line skeleton-title short"></div>
+            </div>
+            <div class="skeleton-score"></div>
+          </div>
+
+          <div class="skeleton-line skeleton-meta"></div>
+          <div class="skeleton-line skeleton-author"></div>
+
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+
+          <div class="skeleton-tags">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </article>
+      `
+    )
+    .join("");
+}
   function renderPaperResults(papers) {
     if (!paperStatus || !paperResults) return;
 
