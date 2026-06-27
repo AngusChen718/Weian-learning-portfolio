@@ -193,10 +193,21 @@ let thinkingIndex = 0;
       return;
     }
 
-    summaryOutput.innerHTML = `
-      <p class="output-title">AI Summary</p>
-      <p class="placeholder">AI 正在整理文章，請稍等...</p>
-    `;
+   summaryOutput.innerHTML = `
+  <p class="output-title">AI Summary</p>
+
+  <div class="ai-thinking">
+    <span class="thinking-dot"></span>
+
+    <div>
+      <p class="thinking-label">AI Research Assistant</p>
+      <p class="thinking-text" id="thinkingText">Reading paper metadata...</p>
+    </div>
+  </div>
+`;
+
+startThinkingLines();
+scrollToSummaryOutput();
 
     try {
       const response = await fetch(AI_API_URL, {
