@@ -635,22 +635,44 @@ function stopThinkingLines() {
   clearInterval(thinkingTimer);
   thinkingTimer = null;
 }
-  function scrollToPaperResultsTop() {
-    if (!paperStatus) return;
+ function scrollToPaperResultsTop() {
+  if (!paperStatus) return;
 
-    requestAnimationFrame(() => {
-      const headerOffset = 110;
-      const targetPosition =
-        paperStatus.getBoundingClientRect().top +
-        window.scrollY -
-        headerOffset;
+  requestAnimationFrame(() => {
+    const headerOffset = 110;
+    const targetPosition =
+      paperStatus.getBoundingClientRect().top +
+      window.scrollY -
+      headerOffset;
 
-      window.scrollTo({
-        top: targetPosition,
-        behavior: "smooth",
-      });
-    });
+    smoothScrollTo(targetPosition, 850);
+  });
+}
+  function smoothScrollTo(targetY, duration = 850) {
+  const startY = window.scrollY;
+  const distance = targetY - startY;
+  const startTime = performance.now();
+
+  function easeInOutCubic(t) {
+    return t < 0.5
+      ? 4 * t * t * t
+      : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
+
+  function step(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeInOutCubic(progress);
+
+    window.scrollTo(0, startY + distance * easedProgress);
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
 
   function scrollToSummaryOutput() {
     if (!summaryOutput) return;
