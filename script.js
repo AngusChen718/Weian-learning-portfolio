@@ -645,10 +645,10 @@ function stopThinkingLines() {
       window.scrollY -
       headerOffset;
 
-    smoothScrollTo(targetPosition, 850);
+    smoothScrollTo(targetPosition, 720);
   });
 }
-  function smoothScrollTo(targetY, duration = 850) {
+  function smoothScrollTo(targetY, duration = 720) {
   const startY = window.scrollY;
   const distance = targetY - startY;
   const startTime = performance.now();
