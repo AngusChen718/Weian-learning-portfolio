@@ -147,7 +147,27 @@ document.addEventListener("DOMContentLoaded", () => {
       if (paperStatus) {
         paperStatus.textContent = "請輸入關鍵字開始搜尋。";
       }
+function setSearchButtonState(state) {
+  if (!paperSearchButton) return;
 
+  if (state === "loading") {
+    paperSearchButton.disabled = true;
+    paperSearchButton.classList.add("is-searching");
+    paperSearchButton.textContent = "Searching...";
+    return;
+  }
+
+  if (state === "done") {
+    paperSearchButton.disabled = true;
+    paperSearchButton.classList.remove("is-searching");
+    paperSearchButton.textContent = "✓ Done";
+    return;
+  }
+
+  paperSearchButton.disabled = false;
+  paperSearchButton.classList.remove("is-searching");
+  paperSearchButton.textContent = "Search Papers";
+}
       updateClearButton();
 
       if (paperQuery) {
