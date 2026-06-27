@@ -237,7 +237,9 @@ summaryOutput.innerHTML = `
 
       scrollToSummaryOutput();
     } catch (error) {
-      summaryOutput.innerHTML = `
+  stopThinkingLines();
+
+  summaryOutput.innerHTML = `
         <p class="output-title">AI Summary</p>
         <div class="ai-summary">
           目前無法產生摘要：${escapeHtml(error.message)}
