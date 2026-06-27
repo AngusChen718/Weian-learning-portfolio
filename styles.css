@@ -1523,3 +1523,69 @@ html.theme-changing .theme-toggle {
     min-width: 0;
   }
 }
+
+.paper-card {
+  animation: paper-card-in 0.42s ease both;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease;
+}
+
+.paper-card:not(.skeleton-card):hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  border-color: rgba(0, 0, 0, 0.16);
+}
+
+:root.dark .paper-card:not(.skeleton-card):hover {
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.paper-card:not(.skeleton-card):hover .paper-score {
+  transform: scale(1.04);
+}
+
+.paper-score {
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.paper-actions button {
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.paper-actions button:hover {
+  transform: translateY(-1px);
+}
+
+.paper-actions button:active {
+  transform: scale(0.96);
+}
+
+.skeleton-card {
+  animation: none;
+}
+
+@keyframes paper-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
