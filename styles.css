@@ -1443,3 +1443,24 @@ html.theme-changing .theme-toggle {
     transform: translateX(100%);
   }
 }
+
+#paperSearchButton {
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease,
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+#paperSearchButton:active {
+  transform: scale(0.96);
+}
+
+#paperSearchButton.is-searching {
+  cursor: wait;
+  opacity: 0.78;
+}
+
+#paperSearchButton:disabled {
+  pointer-events: none;
+}
