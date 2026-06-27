@@ -1464,3 +1464,62 @@ html.theme-changing .theme-toggle {
 #paperSearchButton:disabled {
   pointer-events: none;
 }
+
+.paper-search-bar {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+}
+
+.paper-input-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.paper-input-wrap input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 56px;
+}
+
+#paperSearchButton {
+  flex: none !important;
+  width: 150px;
+  min-width: 150px;
+  height: 56px;
+  white-space: nowrap;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+
+#paperSearchButton.is-searching {
+  cursor: wait;
+  opacity: 0.78;
+}
+
+#paperSearchButton:disabled {
+  pointer-events: none;
+}
+
+.paper-clear-button {
+  z-index: 3;
+}
+
+@media (max-width: 760px) {
+  .paper-search-bar {
+    grid-template-columns: 1fr;
+  }
+
+  #paperSearchButton {
+    width: 100%;
+    min-width: 0;
+  }
+}
