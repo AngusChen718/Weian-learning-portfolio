@@ -245,14 +245,45 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function searchPapers() {
-    if (!paperQuery || !paperStatus || !paperResults) return;
+  if (!paperQuery || !paperStatus || !paperResults) return;
 
-    const query = paperQuery.value.trim();
+  const query = paperQuery.value.trim();
 
-    if (!query) {
-      paperStatus.textContent = "請先輸入研究主題。";
-      return;
+  if (!query) {
+    paperStatus.textContent = "請先輸入研究主題。";
+    return;
+  }
+
+  paperStatus.textContent = "正在搜尋文獻，請稍等...";
+  renderPaperSkeletons();
+  setSearchButtonState("loading");
+
+  try {
+    const response = await fetch(
+      `${PAPER_SEARCH_API_URL}?q=${encodeURIComponent(query)}&limit=20`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "文獻搜尋失敗。");
     }
+
+    lastPaperResults = data.papers || [];
+    currentPaperPage = 1;
+
+    renderPaperResults(lastPaperResults);
+
+    setSearchButtonState("done");
+
+    setTimeout(() => {
+      setSearchButtonState("idle");
+    }, 1200);
+  } catch (error) {
+    paperStatus.textContent = `搜尋失敗：${error.message}`;
+    setSearchButtonState("idle");
+  }
+}
 
    paperStatus.textContent = "正在搜尋文獻，請稍等...";
 renderPaperSkeletons();
