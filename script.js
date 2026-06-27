@@ -82,12 +82,14 @@ document.addEventListener("DOMContentLoaded", () => {
     uploadButton.addEventListener("click", () => fileInput.click());
   }
 
-  if (fileInput && fileName && articleText && summaryOutput) {
+  if (fileInput) {
     fileInput.addEventListener("change", async (event) => {
       const file = event.target.files[0];
       if (!file) return;
 
-      fileName.textContent = `Selected: ${file.name}`;
+      if (fileName) {
+        fileName.textContent = `Selected: ${file.name}`;
+      }
 
       if (
         file.type === "text/plain" ||
@@ -95,9 +97,13 @@ document.addEventListener("DOMContentLoaded", () => {
         file.name.endsWith(".txt")
       ) {
         const text = await file.text();
-        articleText.value = text.slice(0, 8000);
+
+        if (articleText) {
+          articleText.value = text.slice(0, 8000);
+        }
+
         generateLocalSummary(text);
-      } else {
+      } else if (summaryOutput) {
         summaryOutput.innerHTML = `
           <p class="output-title">Prototype Notice</p>
           <p>已收到檔案：${escapeHtml(file.name)}</p>
@@ -107,8 +113,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  if (summaryButton && articleText && summaryOutput) {
+  if (summaryButton) {
     summaryButton.addEventListener("click", () => {
+      if (!articleText || !summaryOutput) return;
+
       const text = articleText.value.trim();
 
       if (!text) {
@@ -139,40 +147,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (paperClearButton) {
     paperClearButton.addEventListener("click", () => {
-      if (paperQuery) paperQuery.value = "";
-      if (paperResults) paperResults.innerHTML = "";
-      lastPaperResults = [];
-      currentPaperPage = 1;
+      if (paperQuery) {
+        paperQuery.value = "";
+        paperQuery.focus();
+      }
+
+      if (paperResults) {
+        paperResults.innerHTML = "";
+      }
 
       if (paperStatus) {
         paperStatus.textContent = "請輸入關鍵字開始搜尋。";
       }
-function setSearchButtonState(state) {
-  if (!paperSearchButton) return;
 
-  if (state === "loading") {
-    paperSearchButton.disabled = true;
-    paperSearchButton.classList.add("is-searching");
-    paperSearchButton.textContent = "Searching...";
-    return;
-  }
+      lastPaperResults = [];
+      currentPaperPage = 1;
 
-  if (state === "done") {
-    paperSearchButton.disabled = true;
-    paperSearchButton.classList.remove("is-searching");
-    paperSearchButton.textContent = "✓ Done";
-    return;
-  }
-
-  paperSearchButton.disabled = false;
-  paperSearchButton.classList.remove("is-searching");
-  paperSearchButton.textContent = "Search Papers";
-}
       updateClearButton();
-
-      if (paperQuery) {
-        paperQuery.focus();
-      }
+      setSearchButtonState("idle");
     });
   }
 
@@ -265,48 +257,19 @@ function setSearchButtonState(state) {
   }
 
   async function searchPapers() {
-  if (!paperQuery || !paperStatus || !paperResults) return;
+    if (!paperQuery || !paperStatus || !paperResults) return;
 
-  const query = paperQuery.value.trim();
+    const query = paperQuery.value.trim();
 
-  if (!query) {
-    paperStatus.textContent = "請先輸入研究主題。";
-    return;
-  }
-
-  paperStatus.textContent = "正在搜尋文獻，請稍等...";
-  renderPaperSkeletons();
-  setSearchButtonState("loading");
-
-  try {
-    const response = await fetch(
-      `${PAPER_SEARCH_API_URL}?q=${encodeURIComponent(query)}&limit=20`
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "文獻搜尋失敗。");
+    if (!query) {
+      paperStatus.textContent = "請先輸入研究主題。";
+      setSearchButtonState("idle");
+      return;
     }
 
-    lastPaperResults = data.papers || [];
-    currentPaperPage = 1;
-
-    renderPaperResults(lastPaperResults);
-
-    setSearchButtonState("done");
-
-    setTimeout(() => {
-      setSearchButtonState("idle");
-    }, 1200);
-  } catch (error) {
-    paperStatus.textContent = `搜尋失敗：${error.message}`;
-    setSearchButtonState("idle");
-  }
-}
-
-   paperStatus.textContent = "正在搜尋文獻，請稍等...";
-renderPaperSkeletons();
+    paperStatus.textContent = "正在搜尋文獻，請稍等...";
+    renderPaperSkeletons();
+    setSearchButtonState("loading");
 
     try {
       const response = await fetch(
@@ -323,48 +286,58 @@ renderPaperSkeletons();
       currentPaperPage = 1;
 
       renderPaperResults(lastPaperResults);
+
+      setSearchButtonState("done");
+
+      setTimeout(() => {
+        setSearchButtonState("idle");
+      }, 1200);
     } catch (error) {
       paperStatus.textContent = `搜尋失敗：${error.message}`;
+      setSearchButtonState("idle");
     }
   }
-function renderPaperSkeletons(count = 5) {
-  if (!paperResults) return;
 
-  paperResults.innerHTML = Array.from({ length: count })
-    .map(
-      () => `
-        <article class="paper-card skeleton-card">
-          <div class="skeleton-top">
-            <div class="skeleton-content">
-              <div class="skeleton-line skeleton-small"></div>
-              <div class="skeleton-line skeleton-title"></div>
-              <div class="skeleton-line skeleton-title short"></div>
+  function renderPaperSkeletons(count = 5) {
+    if (!paperResults) return;
+
+    paperResults.innerHTML = Array.from({ length: count })
+      .map(
+        () => `
+          <article class="paper-card skeleton-card">
+            <div class="skeleton-top">
+              <div class="skeleton-content">
+                <div class="skeleton-line skeleton-small"></div>
+                <div class="skeleton-line skeleton-title"></div>
+                <div class="skeleton-line skeleton-title short"></div>
+              </div>
+              <div class="skeleton-score"></div>
             </div>
-            <div class="skeleton-score"></div>
-          </div>
 
-          <div class="skeleton-line skeleton-meta"></div>
-          <div class="skeleton-line skeleton-author"></div>
+            <div class="skeleton-line skeleton-meta"></div>
+            <div class="skeleton-line skeleton-author"></div>
 
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
 
-          <div class="skeleton-tags">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </article>
-      `
-    )
-    .join("");
-}
+            <div class="skeleton-tags">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </article>
+        `
+      )
+      .join("");
+  }
+
   function renderPaperResults(papers) {
     if (!paperStatus || !paperResults) return;
 
     if (!papers.length) {
       paperStatus.textContent = "找不到相關文獻。";
+
       paperResults.innerHTML = `
         <div class="paper-empty">
           找不到相關文獻，請換一個關鍵字。
@@ -526,7 +499,7 @@ function renderPaperSkeletons(count = 5) {
     }
 
     if (action === "analyze") {
-      if (!articleText || !summaryOutput || !summaryButton) return;
+      if (!articleText || !summaryOutput) return;
 
       const text = `
 Title:
@@ -566,16 +539,6 @@ ${paper.abstract}
     }
   }
 
-  function shortenText(text, maxLength) {
-    if (!text) return "";
-
-    if (text.length <= maxLength) {
-      return text;
-    }
-
-    return text.slice(0, maxLength).trim() + "...";
-  }
-
   function updateThemeIcon() {
     if (!themeToggle) return;
 
@@ -594,6 +557,28 @@ ${paper.abstract}
     } else {
       paperClearButton.classList.remove("show");
     }
+  }
+
+  function setSearchButtonState(state) {
+    if (!paperSearchButton) return;
+
+    if (state === "loading") {
+      paperSearchButton.disabled = true;
+      paperSearchButton.classList.add("is-searching");
+      paperSearchButton.textContent = "Searching...";
+      return;
+    }
+
+    if (state === "done") {
+      paperSearchButton.disabled = true;
+      paperSearchButton.classList.remove("is-searching");
+      paperSearchButton.textContent = "✓ Done";
+      return;
+    }
+
+    paperSearchButton.disabled = false;
+    paperSearchButton.classList.remove("is-searching");
+    paperSearchButton.textContent = "Search Papers";
   }
 
   function scrollToPaperResultsTop() {
