@@ -1332,3 +1332,114 @@ html.theme-changing .theme-toggle {
   max-height: none !important;
   overflow: visible !important;
 }
+
+.skeleton-card {
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.skeleton-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.skeleton-content {
+  flex: 1;
+}
+
+.skeleton-line,
+.skeleton-score,
+.skeleton-tags span {
+  position: relative;
+  overflow: hidden;
+  background: rgba(120, 120, 120, 0.14);
+  border-radius: 999px;
+}
+
+.skeleton-line {
+  height: 14px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.skeleton-small {
+  width: 34%;
+  height: 12px;
+  margin-bottom: 18px;
+}
+
+.skeleton-title {
+  width: 82%;
+  height: 24px;
+  margin-bottom: 12px;
+}
+
+.skeleton-title.short {
+  width: 58%;
+}
+
+.skeleton-meta {
+  width: 48%;
+  margin-top: 22px;
+}
+
+.skeleton-author {
+  width: 64%;
+}
+
+.skeleton-line.short {
+  width: 72%;
+}
+
+.skeleton-score {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  flex: 0 0 auto;
+}
+
+.skeleton-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.skeleton-tags span {
+  width: 86px;
+  height: 28px;
+}
+
+.skeleton-line::after,
+.skeleton-score::after,
+.skeleton-tags span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  animation: skeleton-shimmer 1.35s infinite;
+}
+
+:root.dark .skeleton-line::after,
+:root.dark .skeleton-score::after,
+:root.dark .skeleton-tags span::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    transparent
+  );
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
