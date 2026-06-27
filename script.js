@@ -77,6 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastPaperResults = [];
   let currentPaperPage = 1;
   const PAPERS_PER_PAGE = 5;
+  let thinkingTimer = null;
+let thinkingIndex = 0;
 
   if (uploadButton && fileInput) {
     uploadButton.addEventListener("click", () => fileInput.click());
