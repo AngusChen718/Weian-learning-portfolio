@@ -226,12 +226,14 @@ scrollToSummaryOutput();
         throw new Error(data.error || "AI 摘要失敗。");
       }
 
-      summaryOutput.innerHTML = `
-        <p class="output-title">AI Summary</p>
-        <div class="ai-summary">
-          ${formatSummary(data.summary || "沒有收到摘要內容。")}
-        </div>
-      `;
+     stopThinkingLines();
+
+summaryOutput.innerHTML = `
+  <p class="output-title">AI Summary</p>
+  <div class="ai-summary">
+    ${formatSummary(data.summary || "沒有收到摘要內容。")}
+  </div>
+`;
 
       scrollToSummaryOutput();
     } catch (error) {
