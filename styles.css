@@ -1834,3 +1834,42 @@ html.theme-changing .theme-toggle {
     white-space: nowrap;
   }
 }
+
+.paper-score {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 84px;
+  min-width: 84px;
+  height: 84px;
+  padding: 0;
+
+  text-align: center;
+  gap: 6px;
+}
+
+.paper-score span {
+  display: block;
+  line-height: 1;
+  margin: 0;
+
+  font-size: 30px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.paper-score small {
+  display: block;
+  margin: 0;
+
+  width: 100%;
+  max-width: none;
+
+  text-align: center;
+  line-height: 1.1;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.75;
+}
