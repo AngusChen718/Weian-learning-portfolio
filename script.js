@@ -418,8 +418,8 @@ renderPaperResults(lastPaperResults);
     paperStatus.textContent = `找到 ${papers.length} 篇文獻，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
 
     const paperCards = visiblePapers
-      .map((paper, localIndex) => {
-        const index = startIndex + localIndex;
+      .map((paper) => {
+  const index = lastPaperResults.indexOf(paper);
 
         const reasons = (paper.reasons || [])
           .slice(0, 3)
