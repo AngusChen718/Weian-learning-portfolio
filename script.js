@@ -182,6 +182,19 @@ let thinkingIndex = 0;
     });
   });
 
+  if (readingFilter) {
+  readingFilter.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-reading-filter]");
+    if (!button) return;
+
+    activeReadingFilter = button.dataset.readingFilter;
+    currentPaperPage = 1;
+
+    updateReadingFilterUI();
+    renderPaperResults(lastPaperResults);
+  });
+}
+
   async function generateLocalSummary(text) {
     if (!summaryOutput) return;
 
