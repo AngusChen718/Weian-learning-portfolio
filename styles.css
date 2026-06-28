@@ -1950,3 +1950,74 @@ html.theme-changing .theme-toggle {
   box-shadow:
     0 16px 34px rgba(0, 0, 0, 0.16);
 }
+
+.topic-chips button {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.18s ease,
+    background 0.22s ease,
+    color 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.topic-chips button:hover {
+  transform: translateY(-2px);
+  color: var(--text);
+  border-color: rgba(120, 120, 120, 0.28);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+:root.dark .topic-chips button:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+.topic-chips button:active {
+  transform: scale(0.96);
+}
+
+.paper-actions button {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.18s ease,
+    background 0.22s ease,
+    color 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.paper-actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+:root.dark .paper-actions button:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+}
+
+.paper-actions button:active {
+  transform: scale(0.96);
+}
+
+.summary-output {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.summary-output:hover {
+  border-color: rgba(120, 120, 120, 0.22);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+:root.dark .summary-output:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
