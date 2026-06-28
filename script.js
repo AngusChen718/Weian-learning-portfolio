@@ -396,6 +396,11 @@ renderPaperResults(lastPaperResults);
   }
 
   const totalPages = Math.ceil(filteredPapers.length / PAPERS_PER_PAGE);
+
+  if (currentPaperPage > totalPages) {
+    currentPaperPage = totalPages;
+  }
+
   const startIndex = (currentPaperPage - 1) * PAPERS_PER_PAGE;
   const visiblePapers = filteredPapers.slice(
     startIndex,
@@ -408,140 +413,130 @@ renderPaperResults(lastPaperResults);
     paperStatus.textContent = `${getFilterDisplayName(activeReadingFilter)}：${filteredPapers.length} 篇，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
   }
 
-    const totalPages = Math.ceil(papers.length / PAPERS_PER_PAGE);
-    const startIndex = (currentPaperPage - 1) * PAPERS_PER_PAGE;
-    const visiblePapers = papers.slice(
-      startIndex,
-      startIndex + PAPERS_PER_PAGE
-    );
+  const paperCards = visiblePapers
+    .map((paper) => {
+      const index = lastPaperResults.indexOf(paper);
 
-    paperStatus.textContent = `找到 ${papers.length} 篇文獻，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
+      const reasons = (paper.reasons || [])
+        .slice(0, 3)
+        .map((reason) => `<li>${escapeHtml(reason)}</li>`)
+        .join("");
 
-    const paperCards = visiblePapers
-      .map((paper) => {
-  const index = lastPaperResults.indexOf(paper);
+      const concepts = (paper.concepts || [])
+        .slice(0, 4)
+        .map((concept) => `<span>${escapeHtml(concept)}</span>`)
+        .join("");
 
-        const reasons = (paper.reasons || [])
-          .slice(0, 3)
-          .map((reason) => `<li>${escapeHtml(reason)}</li>`)
-          .join("");
-
-        const concepts = (paper.concepts || [])
-          .slice(0, 4)
-          .map((concept) => `<span>${escapeHtml(concept)}</span>`)
-          .join("");
-
-        return `
-          <article class="paper-card">
-            <div class="paper-card-top">
-              <div>
-                <p class="paper-priority">
-                  ${escapeHtml(paper.stars || "")} ${escapeHtml(paper.priority || "")}
-                </p>
-                <h3>${escapeHtml(paper.title || "Untitled")}</h3>
-              </div>
-
-              <div class="paper-score">
-  <span>${paper.score || 0}</span>
-  <small>${getReadingLabel(paper)}</small>
-</div>
+      return `
+        <article class="paper-card">
+          <div class="paper-card-top">
+            <div>
+              <p class="paper-priority">
+                ${escapeHtml(paper.stars || "")} ${escapeHtml(paper.priority || "")}
+              </p>
+              <h3>${escapeHtml(paper.title || "Untitled")}</h3>
             </div>
 
-            <p class="paper-meta">
-              ${escapeHtml(String(paper.year || "Unknown"))}
-              · ${escapeHtml(paper.venue || "Unknown source")}
-              · Citations: ${paper.citedByCount || 0}
-            </p>
-
-            <p class="paper-authors">
-              ${escapeHtml(paper.authors || "Unknown authors")}
-            </p>
-
-            <p class="paper-abstract">
-              ${escapeHtml(
-                shortenText(
-                  paper.abstract || "No abstract available.",
-                  360
-                )
-              )}
-            </p>
-
-            <div class="paper-tags">
-              ${concepts}
+            <div class="paper-score">
+              <span>${paper.score || 0}</span>
+              <small>${getReadingLabel(paper)}</small>
             </div>
+          </div>
 
-            <div class="paper-reasons">
-              <strong>推薦原因</strong>
-              <ul>${reasons}</ul>
-            </div>
+          <p class="paper-meta">
+            ${escapeHtml(String(paper.year || "Unknown"))}
+            · ${escapeHtml(paper.venue || "Unknown source")}
+            · Citations: ${paper.citedByCount || 0}
+          </p>
 
-            <div class="paper-actions">
-              <button type="button" data-action="analyze" data-index="${index}">
-                Analyze
-              </button>
-              <button type="button" data-action="open" data-index="${index}">
-                Open
-              </button>
-            </div>
-          </article>
-        `;
-      })
-      .join("");
+          <p class="paper-authors">
+            ${escapeHtml(paper.authors || "Unknown authors")}
+          </p>
 
-    const pagination = `
-      <div class="paper-pagination">
-        <button
-          type="button"
-          id="prevPaperPage"
-          ${currentPaperPage === 1 ? "disabled" : ""}
-        >
-          ← Previous
-        </button>
+          <p class="paper-abstract">
+            ${escapeHtml(
+              shortenText(
+                paper.abstract || "No abstract available.",
+                360
+              )
+            )}
+          </p>
 
-        <span>
-          Page ${currentPaperPage} of ${totalPages}
-        </span>
+          <div class="paper-tags">
+            ${concepts}
+          </div>
 
-        <button
-          type="button"
-          id="nextPaperPage"
-          ${currentPaperPage === totalPages ? "disabled" : ""}
-        >
-          Next →
-        </button>
-      </div>
-    `;
+          <div class="paper-reasons">
+            <strong>推薦原因</strong>
+            <ul>${reasons}</ul>
+          </div>
 
-    paperResults.innerHTML = paperCards + pagination;
+          <div class="paper-actions">
+            <button type="button" data-action="analyze" data-index="${index}">
+              Analyze
+            </button>
+            <button type="button" data-action="open" data-index="${index}">
+              Open
+            </button>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
 
-    paperResults.querySelectorAll("[data-action]").forEach((button) => {
-      button.addEventListener("click", handlePaperAction);
+  const pagination = `
+    <div class="paper-pagination">
+      <button
+        type="button"
+        id="prevPaperPage"
+        ${currentPaperPage === 1 ? "disabled" : ""}
+      >
+        ← Previous
+      </button>
+
+      <span>
+        Page ${currentPaperPage} of ${totalPages}
+      </span>
+
+      <button
+        type="button"
+        id="nextPaperPage"
+        ${currentPaperPage === totalPages ? "disabled" : ""}
+      >
+        Next →
+      </button>
+    </div>
+  `;
+
+  paperResults.innerHTML = paperCards + pagination;
+
+  paperResults.querySelectorAll("[data-action]").forEach((button) => {
+    button.addEventListener("click", handlePaperAction);
+  });
+
+  const prevButton = document.getElementById("prevPaperPage");
+  const nextButton = document.getElementById("nextPaperPage");
+
+  if (prevButton) {
+    prevButton.addEventListener("click", () => {
+      if (currentPaperPage > 1) {
+        currentPaperPage -= 1;
+        renderPaperResults(lastPaperResults);
+        scrollToPaperResultsTop();
+      }
     });
-
-    const prevButton = document.getElementById("prevPaperPage");
-    const nextButton = document.getElementById("nextPaperPage");
-
-    if (prevButton) {
-      prevButton.addEventListener("click", () => {
-        if (currentPaperPage > 1) {
-          currentPaperPage -= 1;
-          renderPaperResults(lastPaperResults);
-          scrollToPaperResultsTop();
-        }
-      });
-    }
-
-    if (nextButton) {
-      nextButton.addEventListener("click", () => {
-        if (currentPaperPage < totalPages) {
-          currentPaperPage += 1;
-          renderPaperResults(lastPaperResults);
-          scrollToPaperResultsTop();
-        }
-      });
-    }
   }
 
+  if (nextButton) {
+    nextButton.addEventListener("click", () => {
+      if (currentPaperPage < totalPages) {
+        currentPaperPage += 1;
+        renderPaperResults(lastPaperResults);
+        scrollToPaperResultsTop();
+      }
+    });
+  }
+}
   function handlePaperAction(event) {
     const button = event.currentTarget;
     const index = Number(button.dataset.index);
