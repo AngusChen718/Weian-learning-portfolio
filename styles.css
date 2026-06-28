@@ -1920,3 +1920,33 @@ html.theme-changing .theme-toggle {
     filter: none;
   }
 }
+
+.paper-input-wrap input {
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease,
+    transform 0.18s ease;
+}
+
+.paper-input-wrap input:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.28);
+  box-shadow:
+    0 0 0 4px rgba(0, 0, 0, 0.06),
+    0 14px 36px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+:root.dark .paper-input-wrap input:focus {
+  border-color: rgba(255, 255, 255, 0.32);
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.08),
+    0 14px 36px rgba(0, 0, 0, 0.32);
+}
+
+.paper-search-bar:focus-within #paperSearchButton {
+  transform: translateY(-1px);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.16);
+}
