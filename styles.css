@@ -2078,3 +2078,14 @@ html.theme-changing .theme-toggle {
 
   background: var(--card);
 }
+
+.summary-output .output-title {
+  position: static !important;
+  top: auto !important;
+  z-index: auto !important;
+
+  margin: 0 0 24px !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+}
