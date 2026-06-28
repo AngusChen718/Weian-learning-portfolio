@@ -314,10 +314,12 @@ summaryOutput.innerHTML = `
         throw new Error(data.error || "文獻搜尋失敗。");
       }
 
-      lastPaperResults = data.papers || [];
-      currentPaperPage = 1;
+     lastPaperResults = data.papers || [];
+currentPaperPage = 1;
+activeReadingFilter = "all";
 
-      renderPaperResults(lastPaperResults);
+updateReadingFilterUI();
+renderPaperResults(lastPaperResults);
 
       setSearchButtonState("done");
 
