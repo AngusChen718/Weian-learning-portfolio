@@ -1768,3 +1768,13 @@ html.theme-changing .theme-toggle {
 .knowledge-link:hover {
   transform: translateY(-4px);
 }
+
+.paper-score small{
+    display:block;
+    max-width:72px;
+    margin-top:4px;
+    text-align:center;
+    line-height:1.15;
+    font-size:12px;
+    opacity:.75;
+}
