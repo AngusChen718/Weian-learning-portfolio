@@ -76,8 +76,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const readingFilter = document.getElementById("readingFilter");
 
   let lastPaperResults = [];
-  let currentPaperPage = 1;
-  const PAPERS_PER_PAGE = 5;
+let currentPaperPage = 1;
+let activeReadingFilter = "all";
+const PAPERS_PER_PAGE = 5;
   let thinkingTimer = null;
 let thinkingIndex = 0;
 
