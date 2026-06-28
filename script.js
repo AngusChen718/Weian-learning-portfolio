@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const paperStatus = document.getElementById("paperStatus");
   const paperResults = document.getElementById("paperResults");
   const paperClearButton = document.getElementById("paperClearButton");
+  const readingFilter = document.getElementById("readingFilter");
 
   let lastPaperResults = [];
   let currentPaperPage = 1;
