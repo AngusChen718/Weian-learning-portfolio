@@ -640,7 +640,57 @@ ${paper.abstract}
 
   return "Explore";
 }
+function getReadingFilterKey(paper) {
+  const label = getReadingLabel(paper);
 
+  if (label === "Start Here") return "start";
+  if (label === "Core") return "core";
+  return "explore";
+}
+
+function filterPapersByReadingLabel(papers) {
+  if (activeReadingFilter === "all") {
+    return papers;
+  }
+
+  return papers.filter((paper) => {
+    return getReadingFilterKey(paper) === activeReadingFilter;
+  });
+}
+
+function getFilterDisplayName(filter) {
+  if (filter === "start") return "Start Here";
+  if (filter === "core") return "Core";
+  if (filter === "explore") return "Explore";
+  return "All";
+}
+
+function updateReadingFilterUI() {
+  if (!readingFilter) return;
+
+  const counts = {
+    all: lastPaperResults.length,
+    start: 0,
+    core: 0,
+    explore: 0,
+  };
+
+  lastPaperResults.forEach((paper) => {
+    const key = getReadingFilterKey(paper);
+    counts[key] += 1;
+  });
+
+  readingFilter.querySelectorAll("[data-reading-filter]").forEach((button) => {
+    const key = button.dataset.readingFilter;
+    const count = button.querySelector(".filter-count");
+
+    button.classList.toggle("active", key === activeReadingFilter);
+
+    if (count) {
+      count.textContent = counts[key] || 0;
+    }
+  });
+}
   function setSearchButtonState(state) {
     if (!paperSearchButton) return;
 
