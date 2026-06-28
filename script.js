@@ -576,6 +576,26 @@ ${paper.abstract}
     }
   }
 
+  function getReadingLabel(paper) {
+  const score = Number(paper.score || 0);
+  const priority = String(paper.priority || "").toLowerCase();
+  const reasons = (paper.reasons || []).join(" ").toLowerCase();
+
+  if (
+    score >= 90 ||
+    priority.includes("essential") ||
+    reasons.includes("review")
+  ) {
+    return "Start Here";
+  }
+
+  if (score >= 75) {
+    return "Core";
+  }
+
+  return "Explore";
+}
+
   function setSearchButtonState(state) {
     if (!paperSearchButton) return;
 
