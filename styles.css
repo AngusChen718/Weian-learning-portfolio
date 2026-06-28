@@ -2050,3 +2050,31 @@ html.theme-changing .theme-toggle {
 .summary-output::-webkit-scrollbar-thumb:hover {
   background: rgba(120, 120, 120, 0.42);
 }
+
+.summary-output {
+  height: 620px !important;
+  max-height: 620px !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.summary-output .ai-summary {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding-right: 14px;
+}
+
+.summary-output .output-title {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+
+  margin: 0 0 18px;
+  padding: 0 0 12px;
+
+  background: var(--card);
+}
