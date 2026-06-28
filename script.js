@@ -367,18 +367,46 @@ renderPaperResults(lastPaperResults);
   }
 
   function renderPaperResults(papers) {
-    if (!paperStatus || !paperResults) return;
+  if (!paperStatus || !paperResults) return;
 
-    if (!papers.length) {
-      paperStatus.textContent = "找不到相關文獻。";
+  updateReadingFilterUI();
 
-      paperResults.innerHTML = `
-        <div class="paper-empty">
-          找不到相關文獻，請換一個關鍵字。
-        </div>
-      `;
-      return;
-    }
+  if (!papers.length) {
+    paperStatus.textContent = "找不到相關文獻。";
+
+    paperResults.innerHTML = `
+      <div class="paper-empty">
+        找不到相關文獻，請換一個關鍵字。
+      </div>
+    `;
+    return;
+  }
+
+  const filteredPapers = filterPapersByReadingLabel(papers);
+
+  if (!filteredPapers.length) {
+    paperStatus.textContent = `目前沒有 ${getFilterDisplayName(activeReadingFilter)} 類型的文獻。`;
+
+    paperResults.innerHTML = `
+      <div class="paper-empty">
+        目前沒有符合這個分類的文獻，可以切回 All 查看全部結果。
+      </div>
+    `;
+    return;
+  }
+
+  const totalPages = Math.ceil(filteredPapers.length / PAPERS_PER_PAGE);
+  const startIndex = (currentPaperPage - 1) * PAPERS_PER_PAGE;
+  const visiblePapers = filteredPapers.slice(
+    startIndex,
+    startIndex + PAPERS_PER_PAGE
+  );
+
+  if (activeReadingFilter === "all") {
+    paperStatus.textContent = `找到 ${papers.length} 篇文獻，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
+  } else {
+    paperStatus.textContent = `${getFilterDisplayName(activeReadingFilter)}：${filteredPapers.length} 篇，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
+  }
 
     const totalPages = Math.ceil(papers.length / PAPERS_PER_PAGE);
     const startIndex = (currentPaperPage - 1) * PAPERS_PER_PAGE;
