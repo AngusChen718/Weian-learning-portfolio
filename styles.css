@@ -2089,3 +2089,19 @@ html.theme-changing .theme-toggle {
 
   background: transparent !important;
 }
+
+.summary-output {
+  height: 620px !important;
+  max-height: 620px !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  -webkit-overflow-scrolling: touch;
+
+  /* 重點：不要鎖住滑動，讓外層頁面可以接續滑 */
+  overscroll-behavior-y: auto !important;
+  overscroll-behavior: auto !important;
+
+  touch-action: pan-y;
+}
