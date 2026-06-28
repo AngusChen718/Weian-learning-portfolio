@@ -397,9 +397,9 @@ summaryOutput.innerHTML = `
               </div>
 
               <div class="paper-score">
-                <span>${paper.score || 0}</span>
-                <small>Score</small>
-              </div>
+  <span>${paper.score || 0}</span>
+  <small>${getReadingLabel(paper)}</small>
+</div>
             </div>
 
             <p class="paper-meta">
