@@ -2129,3 +2129,28 @@ html.theme-changing .theme-toggle {
 .summary-output .ai-summary > *:last-child {
   margin-bottom: 72px !important;
 }
+
+.ai-summary.summary-pop {
+  animation: summary-pop-in 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: top center;
+}
+
+@keyframes summary-pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+    filter: blur(5px);
+  }
+
+  65% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.006);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
