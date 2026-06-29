@@ -2105,3 +2105,27 @@ html.theme-changing .theme-toggle {
 
   touch-action: pan-y;
 }
+
+.summary-output {
+  height: 620px !important;
+  max-height: 620px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  box-sizing: border-box !important;
+  padding-bottom: 72px !important;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: auto !important;
+  overscroll-behavior: auto !important;
+  touch-action: pan-y;
+}
+
+.summary-output .ai-summary {
+  padding-bottom: 96px !important;
+}
+
+.summary-output p:last-child,
+.summary-output .ai-summary > *:last-child {
+  margin-bottom: 72px !important;
+}
