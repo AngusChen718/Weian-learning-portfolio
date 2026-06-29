@@ -195,74 +195,79 @@ let thinkingIndex = 0;
   });
 }
 
-  async function generateLocalSummary(text) {
-    if (!summaryOutput) return;
+ async function generateLocalSummary(text) {
+  if (!summaryOutput) return;
 
-    const clean = text.replace(/\s+/g, " ").trim();
+  const clean = text.replace(/\s+/g, " ").trim();
 
-    if (!clean) {
-      summaryOutput.innerHTML = `
-        <p class="output-title">Summary Output</p>
-        <p class="placeholder">請先貼上文章內容。</p>
-      `;
-      return;
-    }
-
-   summaryOutput.innerHTML = `
-  <p class="output-title">AI Summary</p>
-
-  <div class="ai-thinking">
-    <span class="thinking-dot"></span>
-
-    <div>
-      <p class="thinking-label">AI Research Assistant</p>
-      <p class="thinking-text" id="thinkingText">Reading paper metadata...</p>
-    </div>
-  </div>
-`;
-
-startThinkingLines();
-scrollToSummaryOutput();
-
-    try {
-      const response = await fetch(AI_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: clean,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "AI 摘要失敗。");
-      }
-
-     stopThinkingLines();
-
-summaryOutput.innerHTML = `
-  <p class="output-title">AI Summary</p>
-  <div class="ai-summary summary-pop">
-    ${formatSummary(data.summary || "沒有收到摘要內容。")}
-  </div>
-`;
-
-      scrollToSummaryOutput();
-    } catch (error) {
-  stopThinkingLines();
-
-  summaryOutput.innerHTML = `
-        <p class="output-title">AI Summary</p>
-        <div class="ai-summary">
-          目前無法產生摘要：${escapeHtml(error.message)}
-        </div>
-      `;
-    }
+  if (!clean) {
+    summaryOutput.innerHTML = `
+      <p class="output-title">Summary Output</p>
+      <p class="placeholder">請先貼上文章內容。</p>
+    `;
+    return;
   }
 
+  summaryOutput.innerHTML = `
+    <p class="output-title">AI Summary</p>
+
+    <div class="ai-thinking">
+      <span class="thinking-dot"></span>
+
+      <div>
+        <p class="thinking-label">AI Research Assistant</p>
+        <p class="thinking-text" id="thinkingText">Reading paper metadata...</p>
+      </div>
+    </div>
+  `;
+
+  startThinkingLines();
+  scrollToSummaryOutput();
+
+  try {
+    const response = await fetch(AI_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: clean,
+      }),
+    });
+
+    const data = await response.json().catch(() => ({
+      error: "AI 回傳格式不是 JSON。",
+    }));
+
+    if (!response.ok) {
+      const message = data.detail
+        ? `${data.error || "AI 摘要失敗。"}\n\n${data.detail}`
+        : data.error || "AI 摘要失敗。";
+
+      throw new Error(message);
+    }
+
+    stopThinkingLines();
+
+    summaryOutput.innerHTML = `
+      <p class="output-title">AI Summary</p>
+      <div class="ai-summary summary-pop">
+        ${formatSummary(data.summary || "沒有收到摘要內容。")}
+      </div>
+    `;
+
+    scrollToSummaryOutput();
+  } catch (error) {
+    stopThinkingLines();
+
+    summaryOutput.innerHTML = `
+      <p class="output-title">AI Summary</p>
+      <pre class="error-detail">目前無法產生摘要：
+
+${escapeHtml(error.message)}</pre>
+    `;
+  }
+}
   function formatSummary(text) {
     return escapeHtml(text)
       .replace(/^---$/gm, "")
