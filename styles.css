@@ -2154,3 +2154,139 @@ html.theme-changing .theme-toggle {
     filter: blur(0);
   }
 }
+
+/* FINAL FIX — AI Summary scroll box */
+.summary-output {
+  height: 620px !important;
+  max-height: 620px !important;
+  min-height: 620px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  overflow: hidden !important;
+
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 28px !important;
+  background: var(--soft);
+
+  box-sizing: border-box !important;
+}
+
+.summary-output .output-title {
+  flex: 0 0 auto !important;
+  position: static !important;
+
+  margin: 0 0 22px !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+  color: var(--text);
+  font-weight: 750;
+}
+
+.summary-output .ai-summary {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+
+  height: auto !important;
+  max-height: none !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  padding-right: 14px !important;
+  padding-bottom: 96px !important;
+
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.75;
+  font-weight: 400;
+
+  white-space: normal;
+  word-break: break-word;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: auto !important;
+  overscroll-behavior: auto !important;
+  touch-action: pan-y;
+}
+
+.summary-output .ai-summary p,
+.summary-output .ai-summary .summary-point {
+  color: var(--muted) !important;
+  font-size: 17px;
+  line-height: 1.75;
+  font-weight: 400 !important;
+  margin: 0 0 16px !important;
+}
+
+.summary-output .ai-summary h2 {
+  color: var(--text);
+  font-size: 26px;
+  line-height: 1.25;
+  margin: 28px 0 18px;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+.summary-output .ai-summary h3 {
+  color: var(--text);
+  font-size: 21px;
+  line-height: 1.35;
+  margin: 24px 0 10px;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+.summary-output .ai-summary strong {
+  color: var(--muted) !important;
+  font-weight: 500 !important;
+}
+
+.summary-output .ai-summary > *:last-child {
+  margin-bottom: 90px !important;
+}
+
+.summary-output .ai-summary::-webkit-scrollbar {
+  width: 8px;
+}
+
+.summary-output .ai-summary::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.summary-output .ai-summary::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.28);
+  border-radius: 999px;
+}
+
+.summary-output .ai-summary::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 120, 0.42);
+}
+
+.ai-summary.summary-pop {
+  animation: summary-pop-in 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: top center;
+}
+
+@keyframes summary-pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+    filter: blur(5px);
+  }
+
+  65% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.006);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
