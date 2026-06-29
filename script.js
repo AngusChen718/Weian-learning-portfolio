@@ -790,21 +790,31 @@ function stopThinkingLines() {
 }
 
   function scrollToSummaryOutput() {
-    if (!summaryOutput) return;
+  if (!summaryOutput) return;
 
-    requestAnimationFrame(() => {
-      const headerOffset = 120;
-      const targetPosition =
-        summaryOutput.getBoundingClientRect().top +
-        window.scrollY -
-        headerOffset;
+  requestAnimationFrame(() => {
+    const summaryBody = summaryOutput.querySelector(
+      ".ai-summary, .error-detail"
+    );
 
-      window.scrollTo({
-        top: targetPosition,
-        behavior: "smooth",
-      });
+    if (summaryBody) {
+      summaryBody.scrollTop = 0;
+    }
+
+    summaryOutput.scrollTop = 0;
+
+    const headerOffset = 210;
+    const targetPosition =
+      summaryOutput.getBoundingClientRect().top +
+      window.scrollY -
+      headerOffset;
+
+    window.scrollTo({
+      top: targetPosition,
+      behavior: "smooth",
     });
-  }
+  });
+}
 
   updateClearButton();
 });
