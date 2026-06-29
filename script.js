@@ -245,7 +245,7 @@ scrollToSummaryOutput();
 
 summaryOutput.innerHTML = `
   <p class="output-title">AI Summary</p>
-  <div class="ai-summary">
+  <div class="ai-summary summary-pop">
     ${formatSummary(data.summary || "沒有收到摘要內容。")}
   </div>
 `;
