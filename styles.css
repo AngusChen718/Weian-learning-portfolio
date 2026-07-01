@@ -2054,3 +2054,42 @@ html.theme-changing .theme-toggle {
 .journal-entry:hover {
   transform: translateY(-1px) !important;
 }
+
+/* Journal Fix: no vertical hover clipping */
+
+/* 左右兩邊一起往下，留出呼吸感 */
+.journal-layout {
+  padding-top: 14px !important;
+}
+
+/* 左邊列表本身也留一點空間，避免上緣被裁 */
+.journal-entry-list {
+  padding-top: 10px !important;
+  padding-right: 10px !important;
+  padding-bottom: 24px !important;
+  padding-left: 4px !important;
+}
+
+/* 右邊詳細卡片也一起下移，跟左邊切齊 */
+.journal-detail {
+  margin-top: 10px !important;
+}
+
+/* 拔掉上下浮動 */
+.journal-entry,
+.journal-entry:hover,
+.journal-card,
+.journal-card:hover {
+  transform: none !important;
+}
+
+/* hover 改成邊框＋陰影，不再移動 */
+.journal-entry:hover {
+  border-color: var(--text) !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.08) !important;
+  background: rgba(17, 17, 17, 0.055) !important;
+}
+
+:root.dark .journal-entry:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
