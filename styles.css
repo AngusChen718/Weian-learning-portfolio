@@ -2162,3 +2162,58 @@ html.theme-changing .theme-toggle {
   border-color: rgba(255, 255, 255, 0.16) !important;
   background: rgba(255, 255, 255, 0.065) !important;
 }
+
+.journal-entry {
+  position: relative;
+  transform: none !important;
+}
+
+.journal-entry::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 22px;
+  bottom: 22px;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--text);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.journal-entry:hover {
+  background: rgba(17, 17, 17, 0.035) !important;
+  border-color: rgba(17, 17, 17, 0.12) !important;
+  box-shadow: none !important;
+}
+
+.journal-entry:hover::before {
+  opacity: 0.18;
+}
+
+.journal-entry.active {
+  background: rgba(17, 17, 17, 0.045) !important;
+  border-color: var(--line) !important;
+  box-shadow: none !important;
+}
+
+.journal-entry.active::before {
+  opacity: 0.55;
+}
+
+:root.dark .journal-entry:hover {
+  background: rgba(255, 255, 255, 0.055) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+:root.dark .journal-entry.active {
+  background: rgba(255, 255, 255, 0.075) !important;
+}
+
+:root.dark .journal-entry:hover::before {
+  opacity: 0.28;
+}
+
+:root.dark .journal-entry.active::before {
+  opacity: 0.75;
+}
