@@ -2148,3 +2148,17 @@ html.theme-changing .theme-toggle {
   border-color: rgba(255, 255, 255, 0.2) !important;
   background: rgba(255, 255, 255, 0.085) !important;
 }
+
+/* Journal Fix: softer hover shadow */
+
+.journal-entry:hover {
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.045) !important;
+  border-color: rgba(17, 17, 17, 0.14) !important;
+  background: rgba(17, 17, 17, 0.035) !important;
+}
+
+:root.dark .journal-entry:hover {
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: rgba(255, 255, 255, 0.065) !important;
+}
