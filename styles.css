@@ -1894,3 +1894,16 @@ html.theme-changing .theme-toggle {
     grid-template-columns: 1fr;
   }
 }
+
+/* Journal Fix 01: keep filter fixed while scrolling */
+.journal-shell {
+  align-items: start;
+}
+
+.journal-sidebar {
+  position: sticky;
+  top: 112px;
+  align-self: start;
+  max-height: calc(100vh - 140px);
+  overflow: auto;
+}
