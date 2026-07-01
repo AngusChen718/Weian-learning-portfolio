@@ -2025,3 +2025,32 @@ html.theme-changing .theme-toggle {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Journal Fix: align cards + loosen title spacing */
+
+/* 讓 Journal 標題不要黏在一起 */
+.journal-toolbar h2 {
+  letter-spacing: -0.035em !important;
+  line-height: 0.95 !important;
+}
+
+/* 左右內容卡片頂端切齊 */
+.journal-entry-list {
+  padding-top: 0 !important;
+}
+
+.journal-detail {
+  margin-top: 0 !important;
+}
+
+/* 但保留左右跟底部空間，避免 hover 被裁 */
+.journal-entry-list {
+  padding-right: 10px !important;
+  padding-bottom: 22px !important;
+  padding-left: 4px !important;
+}
+
+/* 卡片 hover 不要往上浮太多，不然又會吃到線 */
+.journal-entry:hover {
+  transform: translateY(-1px) !important;
+}
