@@ -1916,3 +1916,54 @@ html.theme-changing .theme-toggle {
 .journal-entry:hover {
   transform: translateY(-2px);
 }
+
+/* Journal Fix: spacing + fixed filters */
+
+/* New Entry 跟 Journal 拉開距離 */
+.journal-editor-preview {
+  margin-bottom: 52px !important;
+}
+
+/* Journal 整個區塊不要貼太緊 */
+.journal-shell {
+  margin-top: 18px !important;
+  align-items: start;
+}
+
+/* 左邊 Filters 固定在畫面上 */
+.journal-sidebar {
+  position: fixed !important;
+  top: 118px !important;
+  left: max(16px, calc((100vw - 1120px) / 2)) !important;
+  width: 240px !important;
+  max-height: calc(100vh - 150px) !important;
+  overflow-y: auto !important;
+  z-index: 5;
+}
+
+/* 因為 filter 變 fixed，右邊內容要留出左側空間 */
+.journal-main {
+  margin-left: 260px !important;
+}
+
+/* hover 時上面黑線不要被裁掉 */
+.journal-entry-list {
+  padding: 10px 10px 22px 4px !important;
+}
+
+.journal-entry:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* iPad / 手機不要 fixed，不然會擠爆 */
+@media (max-width: 880px) {
+  .journal-sidebar {
+    position: static !important;
+    width: auto !important;
+    max-height: none !important;
+  }
+
+  .journal-main {
+    margin-left: 0 !important;
+  }
+}
