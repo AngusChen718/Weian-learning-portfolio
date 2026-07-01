@@ -818,3 +818,381 @@ function stopThinkingLines() {
 
   updateClearButton();
 });
+
+
+(() => {
+  const app = document.querySelector("[data-journal-app]");
+  if (!app) return;
+
+  const STORAGE_KEY = "weian-journal-v0";
+
+  const elements = {
+    list: document.getElementById("journalEntryList"),
+    search: document.getElementById("journalSearch"),
+    filters: [...document.querySelectorAll("[data-journal-filter]")],
+
+    newEntry: document.getElementById("newEntryBtn"),
+    editEntry: document.getElementById("editEntryBtn"),
+    deleteEntry: document.getElementById("deleteEntryBtn"),
+    clearEditor: document.getElementById("clearEditorBtn"),
+    saveDraft: document.getElementById("saveDraftBtn"),
+    publish: document.getElementById("publishEntryBtn"),
+
+    detailDate: document.getElementById("detailDate"),
+    detailTitle: document.getElementById("detailTitle"),
+    detailMeta: document.getElementById("detailMeta"),
+    detailContent: document.getElementById("detailContent"),
+    detailTags: document.getElementById("detailTags"),
+
+    title: document.getElementById("entryTitle"),
+    category: document.getElementById("entryCategory"),
+    visibility: document.getElementById("entryVisibility"),
+    mood: document.getElementById("entryMood"),
+    time: document.getElementById("entryTime"),
+    tags: document.getElementById("entryTags"),
+    content: document.getElementById("entryContent"),
+    editor: document.getElementById("editor"),
+  };
+
+  const seedEntries = [
+    {
+      id: "seed-1",
+      title: "Building Paper Scout UI",
+      category: "Development",
+      visibility: "public",
+      status: "published",
+      mood: "😵",
+      timeSpent: 4,
+      tags: ["CSS", "JavaScript", "Paper Scout"],
+      content:
+        "今天整理了 Paper Scout 的介面、AI Summary 面板與搜尋結果互動。\n\n遇到最大的問題是 Summary 區塊的捲動與固定 Navbar 互相影響。\n\n下一步是建立 Journal Workspace，讓學習紀錄可以直接在網站上新增與管理。",
+      createdAt: "2026-07-01T10:00:00.000Z",
+      updatedAt: "2026-07-01T10:00:00.000Z",
+      publishedAt: "2026-07-01T10:00:00.000Z",
+    },
+    {
+      id: "seed-2",
+      title: "Testing AI Research Notes",
+      category: "Research",
+      visibility: "private",
+      status: "draft",
+      mood: "🙂",
+      timeSpent: 2,
+      tags: ["AI", "Literature", "Research Notes"],
+      content:
+        "測試把 AI Summary 改成 Research Notes 格式。\n\n希望未來每篇文獻都可以自動整理研究問題、方法、重要發現、限制與閱讀策略。",
+      createdAt: "2026-06-30T10:00:00.000Z",
+      updatedAt: "2026-06-30T10:00:00.000Z",
+      publishedAt: null,
+    },
+  ];
+
+  let state = {
+    entries: loadEntries(),
+    selectedId: null,
+    editingId: null,
+    filter: "all",
+    search: "",
+  };
+
+  function loadEntries() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      return Array.isArray(saved) && saved.length ? saved : seedEntries;
+    } catch {
+      return seedEntries;
+    }
+  }
+
+  function saveEntries() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.entries));
+  }
+
+  function createId() {
+    if (window.crypto && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+
+    return `entry-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  }
+
+  function formatDate(dateString) {
+    if (!dateString) return "Draft";
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).replaceAll("-", ".");
+  }
+
+  function getVisibleEntries() {
+    const keyword = state.search.trim().toLowerCase();
+
+    return state.entries
+      .filter((entry) => {
+        if (state.filter === "all") return true;
+        if (state.filter === "private") return entry.visibility === "private";
+        if (state.filter === "draft") return entry.status === "draft";
+        return entry.category === state.filter;
+      })
+      .filter((entry) => {
+        if (!keyword) return true;
+
+        return [
+          entry.title,
+          entry.category,
+          entry.visibility,
+          entry.status,
+          entry.content,
+          ...(entry.tags || []),
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(keyword);
+      })
+      .sort((a, b) => {
+        return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
+      });
+  }
+
+  function renderList() {
+    const entries = getVisibleEntries();
+
+    if (!entries.length) {
+      elements.list.innerHTML = `
+        <article class="journal-entry">
+          <div>
+            <p class="journal-date">No results</p>
+            <h3>No journal found</h3>
+            <p>換個關鍵字或分類試試看。</p>
+          </div>
+        </article>
+      `;
+      renderDetail(null);
+      return;
+    }
+
+    if (!state.selectedId || !entries.some((entry) => entry.id === state.selectedId)) {
+      state.selectedId = entries[0].id;
+    }
+
+    elements.list.innerHTML = entries
+      .map((entry) => {
+        const isActive = entry.id === state.selectedId;
+        const tags = (entry.tags || [])
+          .slice(0, 3)
+          .map((tag) => `<span>${escapeHtml(tag)}</span>`)
+          .join("");
+
+        return `
+          <article class="journal-entry ${isActive ? "active" : ""}" data-entry-id="${entry.id}">
+            <div>
+              <p class="journal-date">${formatDate(entry.publishedAt || entry.createdAt)}</p>
+              <h3>${escapeHtml(entry.title)}</h3>
+              <p>${escapeHtml(entry.content).slice(0, 120)}${entry.content.length > 120 ? "..." : ""}</p>
+
+              <div class="journal-tags">
+                <span>${escapeHtml(entry.category)}</span>
+                ${tags}
+              </div>
+            </div>
+
+            <div class="journal-meta">
+              <span class="status ${entry.visibility === "public" ? "public" : "private"}">
+                ${escapeHtml(entry.visibility)}
+              </span>
+              <span>${entry.status === "published" ? "Published" : "Draft"}</span>
+              <span>⏱ ${entry.timeSpent || 0}h</span>
+              <span>${escapeHtml(entry.mood || "🙂")}</span>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+
+    elements.list.querySelectorAll("[data-entry-id]").forEach((card) => {
+      card.addEventListener("click", () => {
+        state.selectedId = card.dataset.entryId;
+        state.editingId = null;
+        renderList();
+        renderDetail(getSelectedEntry());
+      });
+    });
+
+    renderDetail(getSelectedEntry());
+  }
+
+  function getSelectedEntry() {
+    return state.entries.find((entry) => entry.id === state.selectedId) || null;
+  }
+
+  function renderDetail(entry) {
+    if (!entry) {
+      elements.detailDate.textContent = "Select an entry";
+      elements.detailTitle.textContent = "No journal selected";
+      elements.detailMeta.innerHTML = "";
+      elements.detailContent.textContent = "從左邊選一篇 Journal，或按 New Entry 新增一篇。";
+      elements.detailTags.innerHTML = "";
+      return;
+    }
+
+    elements.detailDate.textContent = formatDate(entry.publishedAt || entry.createdAt);
+    elements.detailTitle.textContent = entry.title;
+
+    elements.detailMeta.innerHTML = `
+      <span>${escapeHtml(entry.category)}</span>
+      <span>${entry.status === "published" ? "Published" : "Draft"}</span>
+      <span>${escapeHtml(entry.visibility)}</span>
+      <span>⏱ ${entry.timeSpent || 0}h</span>
+      <span>${escapeHtml(entry.mood || "🙂")}</span>
+    `;
+
+    elements.detailContent.textContent = entry.content;
+
+    elements.detailTags.innerHTML = (entry.tags || [])
+      .map((tag) => `<span>${escapeHtml(tag)}</span>`)
+      .join("");
+  }
+
+  function setEditor(entry = null) {
+    state.editingId = entry ? entry.id : null;
+
+    elements.title.value = entry?.title || "";
+    elements.category.value = entry?.category || "Development";
+    elements.visibility.value = entry?.visibility || "public";
+    elements.mood.value = entry?.mood || "🙂";
+    elements.time.value = entry?.timeSpent || "";
+    elements.tags.value = (entry?.tags || []).join(", ");
+    elements.content.value = entry?.content || "";
+
+    const editorTitle = elements.editor.querySelector("h2");
+    editorTitle.textContent = entry ? "Edit Entry" : "New Entry";
+
+    elements.editor.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+
+  function readEditor(status) {
+    const title = elements.title.value.trim();
+    const content = elements.content.value.trim();
+
+    if (!title) {
+      alert("先輸入標題。");
+      elements.title.focus();
+      return null;
+    }
+
+    if (!content) {
+      alert("先輸入內容。");
+      elements.content.focus();
+      return null;
+    }
+
+    const now = new Date().toISOString();
+    const oldEntry = state.entries.find((entry) => entry.id === state.editingId);
+
+    return {
+      id: oldEntry?.id || createId(),
+      title,
+      category: elements.category.value,
+      visibility: elements.visibility.value,
+      status,
+      mood: elements.mood.value,
+      timeSpent: Number(elements.time.value || 0),
+      tags: elements.tags.value
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+      content,
+      createdAt: oldEntry?.createdAt || now,
+      updatedAt: now,
+      publishedAt:
+        status === "published"
+          ? oldEntry?.publishedAt || now
+          : oldEntry?.publishedAt || null,
+    };
+  }
+
+  function upsertEntry(status) {
+    const entry = readEditor(status);
+    if (!entry) return;
+
+    const existingIndex = state.entries.findIndex((item) => item.id === entry.id);
+
+    if (existingIndex >= 0) {
+      state.entries[existingIndex] = entry;
+    } else {
+      state.entries.unshift(entry);
+    }
+
+    state.selectedId = entry.id;
+    state.editingId = entry.id;
+
+    saveEntries();
+    renderList();
+    renderDetail(entry);
+
+    alert(status === "published" ? "已 Publish。" : "已存成 Draft。");
+  }
+
+  function deleteSelectedEntry() {
+    const entry = getSelectedEntry();
+    if (!entry) return;
+
+    const confirmDelete = confirm(`確定要刪除「${entry.title}」嗎？`);
+
+    if (!confirmDelete) return;
+
+    state.entries = state.entries.filter((item) => item.id !== entry.id);
+    state.selectedId = null;
+    state.editingId = null;
+
+    saveEntries();
+    clearEditor();
+    renderList();
+  }
+
+  function clearEditor() {
+    state.editingId = null;
+
+    elements.title.value = "";
+    elements.category.value = "Development";
+    elements.visibility.value = "public";
+    elements.mood.value = "🙂";
+    elements.time.value = "";
+    elements.tags.value = "";
+    elements.content.value = "";
+
+    const editorTitle = elements.editor.querySelector("h2");
+    editorTitle.textContent = "New Entry";
+  }
+
+  elements.newEntry.addEventListener("click", () => setEditor(null));
+  elements.editEntry.addEventListener("click", () => setEditor(getSelectedEntry()));
+  elements.deleteEntry.addEventListener("click", deleteSelectedEntry);
+  elements.clearEditor.addEventListener("click", clearEditor);
+  elements.saveDraft.addEventListener("click", () => upsertEntry("draft"));
+  elements.publish.addEventListener("click", () => upsertEntry("published"));
+
+  elements.search.addEventListener("input", (event) => {
+    state.search = event.target.value;
+    renderList();
+  });
+
+  elements.filters.forEach((button) => {
+    button.addEventListener("click", () => {
+      state.filter = button.dataset.journalFilter;
+
+      elements.filters.forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+
+      renderList();
+    });
+  });
+
+  renderList();
+})();
