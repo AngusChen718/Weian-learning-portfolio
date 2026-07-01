@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Journal Workspace｜Weian Chen</title>
+  <meta name="description" content="Weian Chen 的學習紀錄與研究日誌工作區。" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="grain"></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html#home">Weian Chen</a>
+
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="journal.html">Journal</a>
+      <a href="index.html#knowledge">Knowledge</a>
+      <a href="index.html#literature">Literature</a>
+      <a href="index.html#projects">Projects</a>
+    </nav>
+
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☾</button>
+  </header>
+
+  <main class="journal-workspace">
+    <section class="journal-hero">
+      <p class="eyebrow">Journal Workspace</p>
+
+      <h1>
+        Learning Log<br />
+        <span>Research. Reflection. Progress.</span>
+      </h1>
+
+      <p>
+        用來記錄每天的學習、研究、開發過程與反思。未來會加入 AI 週報、搜尋、分類與私人筆記。
+      </p>
+
+      <div class="journal-actions">
+        <a href="#editor" class="button primary">＋ New Entry</a>
+        <a href="index.html" class="button ghost">Back Home</a>
+      </div>
+    </section>
+
+    <section class="journal-shell">
+      <aside class="journal-sidebar">
+        <p class="tiny">Filters</p>
+
+        <button class="journal-filter active">All Entries</button>
+        <button class="journal-filter">Development</button>
+        <button class="journal-filter">Research</button>
+        <button class="journal-filter">English</button>
+        <button class="journal-filter">Private</button>
+      </aside>
+
+      <section class="journal-main">
+        <div class="journal-toolbar">
+          <div>
+            <p class="tiny">Entries</p>
+            <h2>Journal</h2>
+          </div>
+
+          <input class="journal-search" type="text" placeholder="Search journal..." />
+        </div>
+
+        <div class="journal-entry-list">
+          <article class="journal-entry">
+            <div>
+              <p class="journal-date">2026.07.01</p>
+              <h3>Building Paper Scout UI</h3>
+              <p>
+                今天整理了 Paper Scout 的介面、AI Summary 面板與搜尋結果互動，並開始思考 Journal Workspace 的架構。
+              </p>
+
+              <div class="journal-tags">
+                <span>Development</span>
+                <span>CSS</span>
+                <span>Paper Scout</span>
+              </div>
+            </div>
+
+            <div class="journal-meta">
+              <span class="status public">Public</span>
+              <span>⏱ 4h</span>
+              <span>😵</span>
+            </div>
+          </article>
+
+          <article class="journal-entry">
+            <div>
+              <p class="journal-date">2026.06.30</p>
+              <h3>Testing AI Research Notes</h3>
+              <p>
+                將 AI Summary 改成 Research Notes 格式，測試研究問題、方法、限制與閱讀策略等欄位。
+              </p>
+
+              <div class="journal-tags">
+                <span>Research</span>
+                <span>AI</span>
+                <span>Literature</span>
+              </div>
+            </div>
+
+            <div class="journal-meta">
+              <span class="status private">Private</span>
+              <span>⏱ 2h</span>
+              <span>🙂</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <section class="journal-editor-preview" id="editor">
+      <p class="tiny">Editor Preview</p>
+      <h2>New Entry</h2>
+
+      <div class="editor-card">
+        <input type="text" placeholder="Title" />
+        <input type="text" placeholder="Category: Development / Research / English..." />
+        <input type="text" placeholder="Tags: CSS, AI, Paper Scout..." />
+
+        <textarea placeholder="今天做了什麼？遇到什麼問題？學到了什麼？下一步是什麼？"></textarea>
+
+        <div class="editor-actions">
+          <button class="button ghost">Save Draft</button>
+          <button class="button primary">Publish</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
