@@ -2093,3 +2093,58 @@ html.theme-changing .theme-toggle {
 :root.dark .journal-entry:hover {
   background: rgba(255, 255, 255, 0.08) !important;
 }
+
+/* Journal Fix: make editor fields same height */
+
+.editor-grid {
+  align-items: end !important;
+}
+
+.editor-card input,
+.editor-card select {
+  height: 58px !important;
+  min-height: 58px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 修 Time Spent number input 看起來太高的問題 */
+.editor-card input[type="number"] {
+  line-height: 58px !important;
+  appearance: textfield;
+}
+
+/* Chrome / Safari 的 number 上下箭頭不要把高度撐歪 */
+.editor-card input[type="number"]::-webkit-outer-spin-button,
+.editor-card input[type="number"]::-webkit-inner-spin-button {
+  margin: 0;
+}
+
+/* Journal Fix: softer active selected card */
+
+/* 不要讓目前選中的 journal 出現粗黑框 */
+.journal-entry.active {
+  border-color: var(--line) !important;
+  background: rgba(17, 17, 17, 0.045) !important;
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.04) !important;
+}
+
+/* hover 的時候也不要變黑框 */
+.journal-entry:hover {
+  border-color: rgba(17, 17, 17, 0.18) !important;
+  background: rgba(17, 17, 17, 0.055) !important;
+}
+
+/* dark mode 對應 */
+:root.dark .journal-entry.active {
+  border-color: var(--line) !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+:root.dark .journal-entry:hover {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.085) !important;
+}
