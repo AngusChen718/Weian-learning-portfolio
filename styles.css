@@ -1907,3 +1907,12 @@ html.theme-changing .theme-toggle {
   max-height: calc(100vh - 140px);
   overflow: auto;
 }
+
+/* Journal Fix 02: prevent hover border clipping */
+.journal-entry-list {
+  padding: 8px 8px 18px 2px;
+}
+
+.journal-entry:hover {
+  transform: translateY(-2px);
+}
