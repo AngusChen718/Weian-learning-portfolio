@@ -2434,3 +2434,15 @@ html.theme-changing .theme-toggle {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* Fix AI Summary inner corner overlap */
+.summary-output {
+  overflow: hidden !important;
+}
+
+.summary-output .ai-thinking,
+.summary-output .ai-summary,
+.summary-output .error-detail {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
