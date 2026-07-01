@@ -44,54 +44,8 @@
       </div>
     </section>
 
-    <section class="journal-shell">
-      <aside class="journal-sidebar">
-        <p class="tiny">Filters</p>
 
-        <button class="journal-filter active" data-journal-filter="all">All Entries</button>
-        <button class="journal-filter" data-journal-filter="Development">Development</button>
-        <button class="journal-filter" data-journal-filter="Research">Research</button>
-        <button class="journal-filter" data-journal-filter="English">English</button>
-        <button class="journal-filter" data-journal-filter="University">University</button>
-        <button class="journal-filter" data-journal-filter="private">Private</button>
-        <button class="journal-filter" data-journal-filter="draft">Drafts</button>
-      </aside>
-
-      <section class="journal-main">
-        <div class="journal-toolbar">
-          <div>
-            <p class="tiny">Entries</p>
-            <h2>Journal</h2>
-          </div>
-
-          <input class="journal-search" id="journalSearch" type="text" placeholder="Search journal..." />
-        </div>
-
-        <div class="journal-layout">
-          <div class="journal-entry-list" id="journalEntryList"></div>
-
-          <article class="journal-detail" id="journalDetail">
-            <p class="journal-date" id="detailDate">Select an entry</p>
-            <h3 id="detailTitle">No journal selected</h3>
-
-            <div class="journal-tags" id="detailMeta"></div>
-
-            <p class="detail-content placeholder" id="detailContent">
-              從左邊選一篇 Journal，或按 New Entry 新增一篇。
-            </p>
-
-            <div class="journal-tags" id="detailTags"></div>
-
-            <div class="editor-actions detail-actions">
-              <button class="button ghost" id="editEntryBtn">Edit</button>
-              <button class="button ghost danger" id="deleteEntryBtn">Delete</button>
-            </div>
-          </article>
-        </div>
-      </section>
-    </section>
-
-    <section class="journal-editor-preview" id="editor">
+<section class="journal-editor-preview" id="editor">
       <p class="tiny">Editor</p>
       <h2>New Entry</h2>
 
@@ -158,6 +112,55 @@
         </div>
       </div>
     </section>
+    
+    <section class="journal-shell">
+      <aside class="journal-sidebar">
+        <p class="tiny">Filters</p>
+
+        <button class="journal-filter active" data-journal-filter="all">All Entries</button>
+        <button class="journal-filter" data-journal-filter="Development">Development</button>
+        <button class="journal-filter" data-journal-filter="Research">Research</button>
+        <button class="journal-filter" data-journal-filter="English">English</button>
+        <button class="journal-filter" data-journal-filter="University">University</button>
+        <button class="journal-filter" data-journal-filter="private">Private</button>
+        <button class="journal-filter" data-journal-filter="draft">Drafts</button>
+      </aside>
+
+      <section class="journal-main">
+        <div class="journal-toolbar">
+          <div>
+            <p class="tiny">Entries</p>
+            <h2>Journal</h2>
+          </div>
+
+          <input class="journal-search" id="journalSearch" type="text" placeholder="Search journal..." />
+        </div>
+
+        <div class="journal-layout">
+          <div class="journal-entry-list" id="journalEntryList"></div>
+
+          <article class="journal-detail" id="journalDetail">
+            <p class="journal-date" id="detailDate">Select an entry</p>
+            <h3 id="detailTitle">No journal selected</h3>
+
+            <div class="journal-tags" id="detailMeta"></div>
+
+            <p class="detail-content placeholder" id="detailContent">
+              從左邊選一篇 Journal，或按 New Entry 新增一篇。
+            </p>
+
+            <div class="journal-tags" id="detailTags"></div>
+
+            <div class="editor-actions detail-actions">
+              <button class="button ghost" id="editEntryBtn">Edit</button>
+              <button class="button ghost danger" id="deleteEntryBtn">Delete</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    
   </main>
 
   <script src="script.js"></script>
