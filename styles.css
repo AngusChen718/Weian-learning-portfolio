@@ -2217,3 +2217,25 @@ html.theme-changing .theme-toggle {
 :root.dark .journal-entry.active::before {
   opacity: 0.75;
 }
+
+/* Journal Fix: shorter active accent bar */
+.journal-entry::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 28px;
+  width: 4px;
+  height: 42px;
+  border-radius: 999px;
+  background: var(--text);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.journal-entry:hover::before {
+  opacity: 0.14;
+}
+
+.journal-entry.active::before {
+  opacity: 0.35;
+}
