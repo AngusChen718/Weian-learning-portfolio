@@ -908,6 +908,42 @@ function stopThinkingLines() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state.entries));
   }
 
+  function showToast(message) {
+    let toast = document.querySelector(".journal-toast");
+
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.className = "journal-toast";
+      document.body.appendChild(toast);
+    }
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 1800);
+  }
+
+  function openEditor() {
+    app.classList.add("editor-open");
+
+    if (elements.newEntry) {
+      elements.newEntry.textContent = "Close Editor";
+      elements.newEntry.setAttribute("aria-expanded", "true");
+    }
+  }
+
+  function closeEditor() {
+    app.classList.remove("editor-open");
+
+    if (elements.newEntry) {
+      elements.newEntry.textContent = "＋ New Entry";
+      elements.newEntry.setAttribute("aria-expanded", "false");
+    }
+  }
+
   function createId() {
     if (window.crypto && crypto.randomUUID) {
       return crypto.randomUUID();
@@ -1059,6 +1095,8 @@ function stopThinkingLines() {
   function setEditor(entry = null) {
     state.editingId = entry ? entry.id : null;
 
+    openEditor();
+
     elements.title.value = entry?.title || "";
     elements.category.value = entry?.category || "Development";
     elements.visibility.value = entry?.visibility || "public";
@@ -1070,10 +1108,12 @@ function stopThinkingLines() {
     const editorTitle = elements.editor.querySelector("h2");
     editorTitle.textContent = entry ? "Edit Entry" : "New Entry";
 
-    elements.editor.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    setTimeout(() => {
+      elements.editor.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 80);
   }
 
   function readEditor(status) {
@@ -1136,7 +1176,9 @@ function stopThinkingLines() {
     renderList();
     renderDetail(entry);
 
-    alert(status === "published" ? "已 Publish。" : "已存成 Draft。");
+    showToast(status === "published" ? "✓ Published" : "✓ Draft saved");
+    clearEditor();
+    closeEditor();
   }
 
   function deleteSelectedEntry() {
@@ -1171,10 +1213,24 @@ function stopThinkingLines() {
     editorTitle.textContent = "New Entry";
   }
 
-  elements.newEntry.addEventListener("click", () => setEditor(null));
+  elements.newEntry.addEventListener("click", () => {
+    if (app.classList.contains("editor-open")) {
+      clearEditor();
+      closeEditor();
+      return;
+    }
+
+    setEditor(null);
+  });
+
   elements.editEntry.addEventListener("click", () => setEditor(getSelectedEntry()));
   elements.deleteEntry.addEventListener("click", deleteSelectedEntry);
-  elements.clearEditor.addEventListener("click", clearEditor);
+
+  elements.clearEditor.addEventListener("click", () => {
+    clearEditor();
+    closeEditor();
+  });
+
   elements.saveDraft.addEventListener("click", () => upsertEntry("draft"));
   elements.publish.addEventListener("click", () => upsertEntry("published"));
 
@@ -1194,5 +1250,6 @@ function stopThinkingLines() {
     });
   });
 
+  closeEditor();
   renderList();
 })();
