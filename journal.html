@@ -25,7 +25,7 @@
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☾</button>
   </header>
 
-  <main class="journal-workspace">
+  <main class="journal-workspace" data-journal-app>
     <section class="journal-hero">
       <p class="eyebrow">Journal Workspace</p>
 
@@ -35,6 +35,134 @@
       </h1>
 
       <p>
+        用來記錄每天的學習、研究、開發過程與反思。未來會加入 AI 週報、搜尋、分類、私人筆記與研究進度整理。
+      </p>
+
+      <div class="journal-actions">
+        <button class="button primary" id="newEntryBtn">＋ New Entry</button>
+        <a href="index.html" class="button ghost">Back Home</a>
+      </div>
+    </section>
+
+    <section class="journal-shell">
+      <aside class="journal-sidebar">
+        <p class="tiny">Filters</p>
+
+        <button class="journal-filter active" data-journal-filter="all">All Entries</button>
+        <button class="journal-filter" data-journal-filter="Development">Development</button>
+        <button class="journal-filter" data-journal-filter="Research">Research</button>
+        <button class="journal-filter" data-journal-filter="English">English</button>
+        <button class="journal-filter" data-journal-filter="University">University</button>
+        <button class="journal-filter" data-journal-filter="private">Private</button>
+        <button class="journal-filter" data-journal-filter="draft">Drafts</button>
+      </aside>
+
+      <section class="journal-main">
+        <div class="journal-toolbar">
+          <div>
+            <p class="tiny">Entries</p>
+            <h2>Journal</h2>
+          </div>
+
+          <input class="journal-search" id="journalSearch" type="text" placeholder="Search journal..." />
+        </div>
+
+        <div class="journal-layout">
+          <div class="journal-entry-list" id="journalEntryList"></div>
+
+          <article class="journal-detail" id="journalDetail">
+            <p class="journal-date" id="detailDate">Select an entry</p>
+            <h3 id="detailTitle">No journal selected</h3>
+
+            <div class="journal-tags" id="detailMeta"></div>
+
+            <p class="detail-content placeholder" id="detailContent">
+              從左邊選一篇 Journal，或按 New Entry 新增一篇。
+            </p>
+
+            <div class="journal-tags" id="detailTags"></div>
+
+            <div class="editor-actions detail-actions">
+              <button class="button ghost" id="editEntryBtn">Edit</button>
+              <button class="button ghost danger" id="deleteEntryBtn">Delete</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <section class="journal-editor-preview" id="editor">
+      <p class="tiny">Editor</p>
+      <h2>New Entry</h2>
+
+      <div class="editor-card">
+        <label class="field-label">
+          Title
+          <input id="entryTitle" type="text" placeholder="Building Paper Scout UI" />
+        </label>
+
+        <div class="editor-grid">
+          <label class="field-label">
+            Category
+            <select id="entryCategory">
+              <option>Development</option>
+              <option>Research</option>
+              <option>English</option>
+              <option>German</option>
+              <option>University</option>
+              <option>Life</option>
+            </select>
+          </label>
+
+          <label class="field-label">
+            Visibility
+            <select id="entryVisibility">
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+              <option value="unlisted">Unlisted</option>
+            </select>
+          </label>
+
+          <label class="field-label">
+            Mood
+            <select id="entryMood">
+              <option>🙂</option>
+              <option>😄</option>
+              <option>😐</option>
+              <option>😵</option>
+              <option>😭</option>
+              <option>🔥</option>
+            </select>
+          </label>
+
+          <label class="field-label">
+            Time Spent
+            <input id="entryTime" type="number" min="0" step="0.5" placeholder="2.5" />
+          </label>
+        </div>
+
+        <label class="field-label">
+          Tags
+          <input id="entryTags" type="text" placeholder="CSS, AI, Paper Scout" />
+        </label>
+
+        <label class="field-label">
+          Content
+          <textarea id="entryContent" placeholder="今天做了什麼？遇到什麼問題？學到了什麼？下一步是什麼？"></textarea>
+        </label>
+
+        <div class="editor-actions">
+          <button class="button ghost" id="clearEditorBtn">Clear</button>
+          <button class="button ghost" id="saveDraftBtn">Save Draft</button>
+          <button class="button primary" id="publishEntryBtn">Publish</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>      <p>
         用來記錄每天的學習、研究、開發過程與反思。未來會加入 AI 週報、搜尋、分類與私人筆記。
       </p>
 
