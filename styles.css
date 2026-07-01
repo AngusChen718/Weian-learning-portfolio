@@ -2446,3 +2446,71 @@ html.theme-changing .theme-toggle {
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
 }
+
+
+/* AI Summary Fix: auto height + no ugly blank space */
+/* Paste this at the VERY BOTTOM of styles.css */
+
+.summary-output {
+  height: auto !important;
+  min-height: 260px !important;
+  max-height: none !important;
+  overflow: hidden !important;
+}
+
+/* Keep the title/header clean */
+.summary-output .output-title {
+  flex: 0 0 auto !important;
+}
+
+/* Content should size naturally when short, scroll only when long */
+.summary-output .ai-thinking,
+.summary-output .ai-summary,
+.summary-output .error-detail {
+  flex: 0 1 auto !important;
+  min-height: 0 !important;
+  max-height: 70vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 18px 30px 34px !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+/* Loading state still keeps a nice centered space, but not a huge empty box */
+.summary-output .ai-thinking {
+  min-height: 260px !important;
+  align-items: center !important;
+}
+
+/* Remove the old extra bottom spacer */
+.summary-output .ai-summary > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+.summary-output .ai-summary::after,
+.summary-output .error-detail::after {
+  display: none !important;
+  height: 0 !important;
+  content: none !important;
+}
+
+/* Mobile: also remove fixed height */
+@media (max-width: 760px) {
+  .summary-output {
+    height: auto !important;
+    min-height: 240px !important;
+    max-height: none !important;
+  }
+
+  .summary-output .ai-thinking,
+  .summary-output .ai-summary,
+  .summary-output .error-detail {
+    max-height: 70vh !important;
+    padding: 16px 22px 30px !important;
+  }
+
+  .summary-output .ai-thinking {
+    min-height: 240px !important;
+  }
+}
