@@ -2658,3 +2658,198 @@ html.theme-changing .theme-toggle {
     padding: 20px 22px 30px !important;
   }
 }
+
+
+/* ===== AI Summary v3: force compact button + clean result panel ===== */
+/* Paste this at the VERY BOTTOM of styles.css */
+
+/* 1) Force Generate Summary to stop stretching full-width */
+#summaryButton,
+button#summaryButton,
+.literature-panel #summaryButton,
+.text-area-wrap + #summaryButton {
+  width: clamp(280px, 42vw, 520px) !important;
+  max-width: 520px !important;
+  min-width: 280px !important;
+  height: 54px !important;
+  min-height: 54px !important;
+
+  justify-self: center !important;
+  align-self: center !important;
+  margin: 22px auto 30px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 999px !important;
+  padding: 0 28px !important;
+
+  font-size: 15px !important;
+  font-weight: 780 !important;
+  letter-spacing: -0.01em;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(0) scale(1) !important;
+  transform-origin: center !important;
+
+  transition:
+    width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s ease,
+    opacity 0.22s ease !important;
+}
+
+/* Duang feel: hover/focus grows slightly */
+#summaryButton:hover,
+#summaryButton:focus {
+  width: clamp(320px, 52vw, 620px) !important;
+  transform: translateY(-1px) scale(1.018) !important;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.13) !important;
+}
+
+#summaryButton:active {
+  transform: translateY(0) scale(0.982) !important;
+}
+
+/* 2) Summary panel should not be huge when empty */
+.summary-output {
+  height: auto !important;
+  min-height: 260px !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Header alignment */
+.summary-output .output-title {
+  margin: 0 !important;
+  padding: 20px 30px 14px !important;
+  flex: 0 0 auto !important;
+}
+
+/* 3) Empty placeholder: centered and not too left */
+.summary-output > .placeholder,
+.summary-output .placeholder {
+  min-height: 210px !important;
+  margin: 0 !important;
+  padding: 0 32px !important;
+
+  display: grid !important;
+  place-items: center !important;
+  text-align: center !important;
+
+  color: var(--muted) !important;
+  font-size: 22px !important;
+  font-weight: 720 !important;
+  line-height: 1.55 !important;
+}
+
+/* 4) Loading state: make it a small centered card, not a giant blank area */
+.summary-output .ai-thinking {
+  width: fit-content !important;
+  max-width: min(520px, calc(100% - 48px)) !important;
+  min-height: auto !important;
+
+  margin: 64px auto !important;
+  padding: 22px 28px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 14px !important;
+
+  border: 1px solid var(--line) !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.46) !important;
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.06) !important;
+
+  overflow: visible !important;
+}
+
+/* cancel the old nested-card style if it exists */
+.summary-output .ai-thinking > div {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.summary-output .thinking-dot {
+  margin: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+/* 5) Actual output: natural height, scroll only if long */
+.summary-output .ai-summary,
+.summary-output .error-detail {
+  flex: 0 1 auto !important;
+  min-height: 0 !important;
+  max-height: 70vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  padding: 24px 30px 34px !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+.summary-output .ai-summary::after,
+.summary-output .error-detail::after {
+  display: none !important;
+  content: none !important;
+  height: 0 !important;
+}
+
+.summary-output .ai-summary > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Dark mode */
+:root.dark .summary-output .ai-thinking {
+  background: rgba(255, 255, 255, 0.055) !important;
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.32) !important;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  #summaryButton,
+  button#summaryButton,
+  .literature-panel #summaryButton {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: 52px !important;
+  }
+
+  #summaryButton:hover,
+  #summaryButton:focus {
+    width: 100% !important;
+    transform: none !important;
+  }
+
+  .summary-output {
+    min-height: 240px !important;
+  }
+
+  .summary-output > .placeholder,
+  .summary-output .placeholder {
+    min-height: 190px !important;
+    padding: 0 22px !important;
+    font-size: 19px !important;
+  }
+
+  .summary-output .ai-thinking {
+    max-width: calc(100% - 32px) !important;
+    margin: 46px auto !important;
+    padding: 18px 20px !important;
+  }
+
+  .summary-output .ai-summary,
+  .summary-output .error-detail {
+    padding: 20px 22px 30px !important;
+  }
+}
+
