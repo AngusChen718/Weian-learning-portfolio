@@ -2853,3 +2853,15 @@ button#summaryButton,
   }
 }
 
+body::before {
+  content: "CSS TEST";
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 999999;
+  background: red;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+}
