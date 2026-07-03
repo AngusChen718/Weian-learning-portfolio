@@ -3107,3 +3107,276 @@ overflow: visible !important;
   min-height: 200px;   /* 設定一個保底的最小高度 */
 }
 
+/*  
+Paper Scout Search History Drawer 
+ */
+
+/* Header 右側：OpenAlex 說明 + History 按鈕 */ 
+.paper-search-actions { 
+display: flex; 
+align-items: flex-start; 
+justify-content: flex-end; 
+gap: 14px; 
+max-width: 560px; 
+}
+
+.history-trigger { 
+flex: 0 0 auto; 
+height: 42px; 
+padding: 0 18px; 
+border: 1px solid var(--line); 
+border-radius: 999px; 
+background: var(--text); 
+color: var(--bg); 
+font: inherit; 
+font-size: 14px; 
+font-weight: 760; 
+cursor: pointer;
+
+display: inline-flex; 
+align-items: center; 
+justify-content: center;
+
+transition: 
+transform 0.18s ease, 
+box-shadow 0.18s ease, 
+opacity 0.18s ease; 
+}
+
+.history-trigger:hover { 
+transform: translateY(-2px); 
+box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12); 
+}
+
+.history-trigger:active { 
+transform: scale(0.96); 
+}
+
+/* 背景遮罩 */ 
+.history-backdrop { 
+position: fixed; 
+inset: 0; 
+z-index: 48; 
+background: rgba(0, 0, 0, 0.18); 
+backdrop-filter: blur(8px); 
+-webkit-backdrop-filter: blur(8px);
+
+opacity: 0; 
+pointer-events: none; 
+transition: opacity 0.24s ease; 
+}
+
+.history-backdrop.is-open { 
+opacity: 1; 
+pointer-events: auto; 
+}
+
+.history-backdrop[hidden] { 
+display: none !important; 
+}
+
+/* 右側抽屜 */ 
+.history-drawer { 
+position: fixed; 
+top: 0; 
+right: 0; 
+z-index: 49;
+
+width: min(420px, calc(100vw - 24px)); 
+height: 100dvh; 
+padding: 28px;
+
+border-left: 1px solid var(--line); 
+background: var(--surface); 
+color: var(--text); 
+box-shadow: -24px 0 80px rgba(0, 0, 0, 0.12);
+
+backdrop-filter: blur(28px); 
+-webkit-backdrop-filter: blur(28px);
+
+transform: translateX(110%); 
+transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+
+display: flex; 
+flex-direction: column; 
+gap: 22px;
+
+overflow-y: auto; 
+}
+
+.history-drawer.is-open { 
+transform: translateX(0); 
+}
+
+.history-drawer-header { 
+display: flex; 
+align-items: flex-start; 
+justify-content: space-between; 
+gap: 16px; 
+padding-bottom: 18px; 
+border-bottom: 1px solid var(--line); 
+}
+
+.history-drawer-header h3 { 
+margin: 8px 0 0; 
+font-size: 32px; 
+line-height: 1; 
+letter-spacing: -0.045em; 
+}
+
+.history-close { 
+width: 42px; 
+height: 42px; 
+border: 1px solid var(--line); 
+border-radius: 999px; 
+background: var(--soft); 
+color: var(--text); 
+font-size: 26px; 
+line-height: 1; 
+cursor: pointer;
+
+display: grid; 
+place-items: center;
+
+transition: 
+transform 0.18s ease, 
+background 0.18s ease; 
+}
+
+.history-close:hover { 
+transform: rotate(8deg) scale(1.04); 
+background: rgba(17, 17, 17, 0.08); 
+}
+
+.history-list { 
+display: grid; 
+gap: 12px; 
+flex: 1; 
+}
+
+/* 沒有歷史紀錄時 */ 
+.history-empty { 
+min-height: 220px; 
+border: 1px dashed var(--line); 
+border-radius: 24px; 
+padding: 28px; 
+background: var(--soft);
+
+display: grid; 
+place-items: center; 
+text-align: center; 
+}
+
+.history-empty p { 
+margin: 0 0 8px; 
+font-size: 18px; 
+font-weight: 780; 
+color: var(--text); 
+}
+
+.history-empty span { 
+color: var(--muted); 
+font-size: 14px; 
+line-height: 1.55; 
+}
+
+/* JS 之後會生成的每一筆紀錄 */ 
+.history-item { 
+width: 100%; 
+text-align: left; 
+border: 1px solid var(--line); 
+border-radius: 22px; 
+padding: 18px; 
+background: var(--soft); 
+color: var(--text); 
+cursor: pointer;
+
+transition: 
+transform 0.18s ease, 
+border-color 0.18s ease, 
+background 0.18s ease; 
+}
+
+.history-item:hover { 
+transform: translateY(-2px); 
+border-color: rgba(17, 17, 17, 0.2); 
+background: rgba(17, 17, 17, 0.055); 
+}
+
+.history-query { 
+margin: 0 0 8px; 
+font-size: 17px; 
+font-weight: 780; 
+line-height: 1.25; 
+letter-spacing: -0.02em; 
+}
+
+.history-meta { 
+margin: 0; 
+color: var(--muted); 
+font-size: 13px; 
+font-weight: 650; 
+}
+
+/* Clear History */ 
+.history-clear { 
+height: 46px; 
+border: 1px solid var(--line); 
+border-radius: 999px; 
+background: transparent; 
+color: #d14; 
+font: inherit; 
+font-size: 14px; 
+font-weight: 760; 
+cursor: pointer;
+
+transition: 
+transform 0.18s ease, 
+background 0.18s ease; 
+}
+
+.history-clear:hover { 
+transform: translateY(-2px); 
+background: rgba(221, 17, 68, 0.08); 
+}
+
+/* Dark mode */ 
+:root.dark .history-backdrop { 
+background: rgba(0, 0, 0, 0.42); 
+}
+
+:root.dark .history-drawer { 
+box-shadow: -24px 0 90px rgba(0, 0, 0, 0.55); 
+}
+
+:root.dark .history-close:hover { 
+background: rgba(255, 255, 255, 0.08); 
+}
+
+:root.dark .history-item:hover { 
+border-color: rgba(255, 255, 255, 0.18); 
+background: rgba(255, 255, 255, 0.075); 
+}
+
+/* Mobile */ 
+@media (max-width: 760px) { 
+.paper-search-actions { 
+width: 100%; 
+max-width: none; 
+flex-direction: column; 
+align-items: stretch; 
+}
+
+.history-trigger { 
+width: 100%; 
+}
+
+.history-drawer { 
+width: 100%; 
+padding: 24px 20px; 
+}
+
+.history-drawer-header h3 { 
+font-size: 28px; 
+} 
+}
