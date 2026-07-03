@@ -3070,3 +3070,32 @@ padding: 18px 20px !important;
 padding: 22px 22px 36px !important; 
 } 
 }
+
+/* AI Summary Result Bottom Fix */
+
+.summary-output[data-state="result"] .summary-body { 
+padding: 28px 34px 90px !important; 
+box-sizing: border-box !important; 
+}
+
+.summary-output[data-state="result"] .ai-summary { 
+padding: 0 !important; 
+margin: 0 !important; 
+max-height: none !important; 
+overflow: visible !important; 
+line-height: 1.9 !important; 
+}
+
+.summary-output[data-state="result"] .ai-summary p, 
+.summary-output[data-state="result"] .ai-summary .summary-point { 
+margin-bottom: 24px !important; 
+}
+
+.summary-output[data-state="result"] .ai-summary > *:last-child { 
+margin-bottom: 0 !important; 
+}
+
+/* 讓外框不要把最後一行裁掉 */ 
+.summary-output[data-state="result"] { 
+overflow: visible !important; 
+}
