@@ -3498,3 +3498,20 @@ html.theme-changing *::after {
     border-color 0.42s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
+
+/* ===================================================
+   🌗 黑色變白字（切換至深色模式）的光學卡頓補償
+   =================================================== */
+:root.dark html.theme-changing h1,
+:root.dark html.theme-changing h2,
+:root.dark html.theme-changing h3,
+:root.dark html.theme-changing p,
+:root.dark html.theme-changing span {
+  /* 
+     當「切換至深色模式（文字由黑變白）」時，
+     將大標題與主要文字的 color 轉場時間單獨微調拉長到 0.45s 滿格。
+     這樣可以完美吻合 JS 拔掉 class 的最後一幀，消滅黑變白時的光學拉扯感！
+  */
+  transition-duration: 0.45s !important;
+  transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important; /* 更柔和的減速曲線 */
+}
