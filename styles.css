@@ -3435,3 +3435,15 @@ width: 100% !important;
 margin-left: 0 !important; 
 } 
 }
+
+/* ===================================================
+   💡 修正切換模式時文字閃爍與鈍點的覆蓋規則
+   =================================================== */
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  /* 強制將轉場時間縮短至 0.35s，與 body 完美同步，並抹除原本 !important 造成的延遲 */
+  transition:
+    background 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  transition-property: background, background-color, color, border-color, box-shadow, opacity, transform !important;
+}
