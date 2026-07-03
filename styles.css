@@ -3447,3 +3447,22 @@ html.theme-changing *::after {
     background 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
   transition-property: background, background-color, color, border-color, box-shadow, opacity, transform !important;
 }
+
+/* ===== 終極修正版：完美處理所有色階，消滅切換頓點 ===== */
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  /* 
+     關鍵 1：只過渡顏色，拿掉容易衝突的 background（只留 background-color）與 transform。
+     關鍵 2：時間設定為 0.4s。這能確保動畫在 JS 定時器移除類別前就「提早優雅地走完」，絕對不會再發生被強制腰斬的跳動感！
+  */
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease !important;
+}
+
+html.theme-changing .theme-toggle {
+  transform: none !important;
+}
