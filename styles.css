@@ -3543,3 +3543,23 @@ html.theme-changing:not(.dark) * {
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
 }
+/* ===================================================
+   💎 終極完美微調：排除非原生漸變屬性 ＋ 完美停靠
+   =================================================== */
+html.theme-changing,
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  /* 💡 核心修正 1：徹底移除 'background' 縮寫，嚴格唯獨保留 'background-color'。
+     這能阻止瀏覽器去瞎計算 linear-gradient，直接解放 GPU 渲染壓力！ */
+  transition-property: background-color, color, border-color, opacity !important;
+  
+  /* 💡 核心修正 2：時間安全縮短至 0.38s。
+     讓變色動畫在 380 毫秒時就完全「原地靜止」，比 JS 的 450ms 提早走完，
+     留出 70 毫秒的絕對安全停泊期，JS 怎麼拔 class 都不會再引起畫面跳動。 */
+  transition-duration: 0.38s !important;
+  
+  /* 💡 核心修正 3：改用標準的 ease-in-out（平滑淡入淡出）。
+     確保動畫在前後兩端都能完美減速歸零，徹底融化兩端切換的微小生硬感。 */
+  transition-timing-function: ease-in-out !important;
+}
