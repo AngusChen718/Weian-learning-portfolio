@@ -3380,3 +3380,58 @@ padding: 24px 20px;
 font-size: 28px; 
 } 
 }
+
+
+/* Paper Scout header: put source note beside title */
+
+.paper-search-title-block { 
+width: 100% !important; 
+}
+
+.paper-title-row { 
+display: flex !important; 
+align-items: center !important; 
+gap: 16px !important; 
+flex-wrap: wrap !important; 
+}
+
+.paper-title-row h3 { 
+margin: 4px 0 0 !important; 
+flex: 0 0 auto !important; 
+}
+
+.paper-title-row .paper-search-note { 
+margin: 8px 0 0 !important; 
+max-width: 520px !important; 
+font-size: 15px !important; 
+line-height: 1.5 !important; 
+color: var(--muted) !important; 
+}
+
+.paper-title-row .history-trigger { 
+margin-top: 6px !important; 
+margin-left: auto !important; 
+}
+
+.paper-search-actions { 
+max-width: none !important; 
+}
+
+/* 手機 / 窄畫面 */ 
+@media (max-width: 760px) { 
+.paper-title-row { 
+align-items: flex-start !important; 
+flex-direction: column !important; 
+gap: 10px !important; 
+}
+
+.paper-title-row .paper-search-note { 
+max-width: none !important; 
+margin-top: 0 !important; 
+}
+
+.paper-title-row .history-trigger { 
+width: 100% !important; 
+margin-left: 0 !important; 
+} 
+}
