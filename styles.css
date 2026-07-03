@@ -2853,4 +2853,57 @@ button#summaryButton,
   }
 }
 
+/* FINAL AI Summary Fix */
+
+.summary-output {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.summary-output .output-title {
+  margin: 0 !important;
+  padding: 20px 30px 14px !important;
+}
+
+.summary-output .ai-summary,
+.summary-output .error-detail {
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 24px 30px 48px !important;
+}
+
+.summary-output .ai-summary::after,
+.summary-output .error-detail::after {
+  display: none !important;
+  content: none !important;
+  height: 0 !important;
+}
+
+.summary-output .ai-summary > *:last-child,
+.summary-output .error-detail > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* placeholder 置中 */
+.summary-output > .placeholder,
+.summary-output .placeholder {
+  min-height: 180px !important;
+  margin: 0 !important;
+  padding: 0 30px !important;
+  display: grid !important;
+  place-items: center !important;
+  text-align: center !important;
+}
+
+/* loading 不要撐爆 */
+.summary-output .ai-thinking {
+  width: fit-content !important;
+  max-width: min(520px, calc(100% - 48px)) !important;
+  min-height: auto !important;
+  margin: 56px auto !important;
+  padding: 22px 28px !important;
+  overflow: visible !important;
+}
  
