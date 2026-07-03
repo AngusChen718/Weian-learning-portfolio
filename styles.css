@@ -3466,3 +3466,16 @@ html.theme-changing *::after {
 html.theme-changing .theme-toggle {
   transform: none !important;
 }
+
+/* ===================================================
+   ⏳ 嘗試方案：將全域變色時間拉長至 0.75s 覆蓋測試
+   =================================================== */
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  transition:
+    background-color 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.75s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
