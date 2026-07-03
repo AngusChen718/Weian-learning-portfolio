@@ -3479,3 +3479,22 @@ html.theme-changing *::after {
     border-color 0.75s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.75s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
+
+/* ===================================================
+   🎯 終極對齊：精準匹配 JavaScript 的 450ms 計時器
+   =================================================== */
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  /* 
+     將轉場時間定為 0.42s，確保在 JS 執行完 450ms 移除類別前，
+     全域所有色階的文字、背景、卡片陰影就已經優雅地「提早走完動畫」。
+     這能 100% 消除半路被強行斷句、跳色的鈍感！
+  ```css
+  */
+  transition:
+    background-color 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
