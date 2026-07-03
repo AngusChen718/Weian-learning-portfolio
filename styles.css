@@ -3515,3 +3515,31 @@ html.theme-changing *::after {
   transition-duration: 0.45s !important;
   transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important; /* 更柔和的減速曲線 */
 }
+/* ===================================================
+   🏆 終極完美對稱流：徹底解決雙向切換（含深色切回淺色）的卡頓
+   =================================================== */
+
+/* 1. 基礎設定：同時支援 body 的 background 縮寫與子屬性，防止屬性中斷 */
+html.theme-changing,
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  transition-property: background, background-color, color, border-color, box-shadow !important;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* 2. ☀️ 淺色 ➡️ 🌙 深色（文字由黑變白）：維持 0.42s 提早優雅收尾 */
+html.theme-changing.dark,
+html.theme-changing.dark * {
+  transition-duration: 0.42s !important;
+}
+
+/* 3. 🌙 深色 ➡️ ☀️ 淺色（文字由白變黑）：卡頓的真正元兇
+   這裡將時間拉滿到 0.45s 完美吃滿 JS 的計時器，並鎖定字體平滑度，防止最後一幀像素跳動 */
+html.theme-changing:not(.dark),
+html.theme-changing:not(.dark) * {
+  transition-duration: 0.45s !important;
+  /* ✨ 核心關鍵：強制瀏覽器在轉場期間維持相同的文字渲染模式，消滅切回淺色時的微小抖動 */
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
