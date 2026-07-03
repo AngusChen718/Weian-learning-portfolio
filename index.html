@@ -237,10 +237,17 @@ Growing.
       <button class="button primary" id="summaryButton">Generate Summary</button>
     </div>
 
-    <div class="summary-output" id="summaryOutput">
-      <p class="output-title">Summary Output</p>
-      <p class="placeholder">你的摘要結果會出現在這裡。</p>
+   <div class="summary-output" id="summaryOutput" data-state="empty">
+  <p class="output-title">AI Research Assistant</p>
+
+  <div class="summary-body" id="summaryBody">
+    <div class="summary-empty">
+      <div class="summary-empty-icon">✦</div>
+      <p>你的摘要結果會出現在這裡。</p>
+      <span>貼上文章內容後，選擇分析方式並開始生成。</span>
     </div>
+  </div>
+</div>
   </div>
 </section>
 
