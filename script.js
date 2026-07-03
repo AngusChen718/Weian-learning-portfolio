@@ -233,56 +233,81 @@ function getFriendlySummaryError(error) {
   return `目前無法產生摘要：\n\n${message}`;
 }
  async function generateLocalSummary(text) {
-  if (!summaryOutput) return;
+  const cleanText = text.trim();
 
-  const clean = text.replace(/\s+/g, " ").trim();
-
-  if (!clean) {
-    summaryOutput.innerHTML = `
-      <p class="output-title">Summary Output</p>
-      <p class="placeholder">請先貼上文章內容。</p>
-    `;
+  if (!cleanText) {
+    setSummaryState("empty", SUMMARY_EMPTY_HTML);
     return;
   }
 
-  summaryOutput.innerHTML = `
-    <p class="output-title">AI Summary</p>
-
-    <div class="ai-thinking">
+  setSummaryState("loading", `
+    <div class="summary-loading">
       <span class="thinking-dot"></span>
-
       <div>
         <p class="thinking-label">AI Research Assistant</p>
-        <p class="thinking-text" id="thinkingText">Reading paper metadata...</p>
+        <p class="thinking-text show">Reading your text...</p>
       </div>
     </div>
-  `;
+  `);
 
-  startThinkingLines();
   scrollToSummaryOutput();
+  startThinkingLines();
 
   try {
     const response = await fetch(AI_API_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        text: clean,
-      }),
+        text: cleanText
+      })
     });
 
-    const data = await response.json().catch(() => ({
-      error: "AI 回傳格式不是 JSON。",
-    }));
+    const data = await response.json();
 
     if (!response.ok) {
-      const message = data.detail
-        ? `${data.error || "AI 摘要失敗。"}\n\n${data.detail}`
-        : data.error || "AI 摘要失敗。";
-
-      throw new Error(message);
+      throw new Error(
+        data?.error ||
+        data?.message ||
+        JSON.stringify(data, null, 2) ||
+        "Unknown AI summary error"
+      );
     }
+
+    const summary =
+      data?.summary ||
+      data?.result ||
+      data?.text ||
+      "";
+
+    if (!summary) {
+      throw new Error("AI 沒有回傳摘要內容。");
+    }
+
+    stopThinkingLines();
+
+    setSummaryState("result", `
+      <div class="ai-summary summary-pop">
+        ${formatSummary(summary)}
+      </div>
+    `);
+
+    scrollToSummaryOutput();
+  } catch (error) {
+    stopThinkingLines();
+
+    const friendlyMessage = getFriendlySummaryError(error);
+
+    setSummaryState("error", `
+      <div class="summary-error">
+        ${escapeHtml(friendlyMessage)}
+      </div>
+    `);
+
+    scrollToSummaryOutput();
+  }
+}
 
     stopThinkingLines();
 
