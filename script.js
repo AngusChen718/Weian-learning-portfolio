@@ -1,4 +1,4 @@
-function escapeHtml(string) {
+ function escapeHtml(string) {
   return String(string).replace(/[&<>"']/g, (match) => ({
     "&": "&amp;",
     "<": "&lt;",
@@ -76,11 +76,51 @@ document.addEventListener("DOMContentLoaded", () => {
   const readingFilter = document.getElementById("readingFilter");
 
   let lastPaperResults = [];
-let currentPaperPage = 1;
-let activeReadingFilter = "all";
-const PAPERS_PER_PAGE = 5;
+  let currentPaperPage = 1;
+  let activeReadingFilter = "all";
+  const PAPERS_PER_PAGE = 5;
+
   let thinkingTimer = null;
-let thinkingIndex = 0;
+  let thinkingIndex = 0;
+
+  const SUMMARY_EMPTY_HTML = `
+    <div class="summary-empty">
+      <div class="summary-empty-icon">✦</div>
+      <p>你的摘要結果會出現在這裡。</p>
+      <span>貼上文章內容後，選擇分析方式並開始生成。</span>
+    </div>
+  `;
+
+  function setSummaryState(state, html) {
+    const summaryOutput = document.getElementById("summaryOutput");
+    const summaryBody = document.getElementById("summaryBody");
+
+    if (!summaryOutput || !summaryBody) return;
+
+    summaryOutput.dataset.state = state;
+    summaryBody.innerHTML = html;
+    summaryBody.scrollTop = 0;
+  }
+
+  function resetSummaryState() {
+    setSummaryState("empty", SUMMARY_EMPTY_HTML);
+  }
+
+  function getFriendlySummaryError(error) {
+    const message = error?.message || String(error);
+
+    const isBusy =
+      message.includes("503") ||
+      message.includes("UNAVAILABLE") ||
+      message.includes("high demand") ||
+      message.includes("overloaded");
+
+    if (isBusy) {
+      return "AI 目前太忙了，請稍後再試。\n\n你的文章內容已保留，不需要重新貼上。";
+    }
+
+    return `目前無法產生摘要：\n\n${message}`;
+  }
 
   if (uploadButton && fileInput) {
     uploadButton.addEventListener("click", () => fileInput.click());
@@ -107,12 +147,18 @@ let thinkingIndex = 0;
         }
 
         generateLocalSummary(text);
-      } else if (summaryOutput) {
-        summaryOutput.innerHTML = `
-          <p class="output-title">Prototype Notice</p>
-          <p>已收到檔案：${escapeHtml(file.name)}</p>
-          <p>這個版本先完成上傳介面。PDF / Word 的真正 AI 摘要需要後續串接後端與 AI API。</p>
-        `;
+      } else {
+        setSummaryState("error", `
+          <div class="summary-error">
+            <strong>Prototype Notice</strong>
+
+            已收到檔案：${escapeHtml(file.name)}
+
+            這個版本先完成上傳介面。PDF / Word 的真正 AI 摘要需要後續串接後端與 AI API。
+          </div>
+        `);
+
+        scrollToSummaryOutput();
       }
     });
   }
@@ -124,10 +170,15 @@ let thinkingIndex = 0;
       const text = articleText.value.trim();
 
       if (!text) {
-        summaryOutput.innerHTML = `
-          <p class="output-title">Summary Output</p>
-          <p class="placeholder">請先貼上文章內容，或上傳 TXT 檔。</p>
-        `;
+        setSummaryState("empty", `
+          <div class="summary-empty">
+            <div class="summary-empty-icon">✦</div>
+            <p>請先貼上文章內容。</p>
+            <span>貼上一段文章或上傳 TXT 檔後，再點擊 Generate Summary。</span>
+          </div>
+        `);
+
+        scrollToSummaryOutput();
         return;
       }
 
@@ -183,153 +234,95 @@ let thinkingIndex = 0;
   });
 
   if (readingFilter) {
-  readingFilter.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-reading-filter]");
-    if (!button) return;
+    readingFilter.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-reading-filter]");
+      if (!button) return;
 
-    activeReadingFilter = button.dataset.readingFilter;
-    currentPaperPage = 1;
+      activeReadingFilter = button.dataset.readingFilter;
+      currentPaperPage = 1;
 
-    updateReadingFilterUI();
-    renderPaperResults(lastPaperResults);
-  });
-}
-const SUMMARY_EMPTY_HTML = `
-  <div class="summary-empty">
-    <div class="summary-empty-icon">✦</div>
-    <p>你的摘要結果會出現在這裡。</p>
-    <span>貼上文章內容後，選擇分析方式並開始生成。</span>
-  </div>
-`;
-
-function setSummaryState(state, html) {
-  const summaryOutput = document.getElementById("summaryOutput");
-  const summaryBody = document.getElementById("summaryBody");
-
-  if (!summaryOutput || !summaryBody) return;
-
-  summaryOutput.dataset.state = state;
-  summaryBody.innerHTML = html;
-  summaryBody.scrollTop = 0;
-}
-
-function resetSummaryState() {
-  setSummaryState("empty", SUMMARY_EMPTY_HTML);
-}
-
-function getFriendlySummaryError(error) {
-  const message = error?.message || String(error);
-
-  const isBusy =
-    message.includes("503") ||
-    message.includes("UNAVAILABLE") ||
-    message.includes("high demand") ||
-    message.includes("overloaded");
-
-  if (isBusy) {
-    return "AI 目前太忙了，請稍後再試。\n\n你的文章內容已保留，不需要重新貼上。";
-  }
-
-  return `目前無法產生摘要：\n\n${message}`;
-}
- async function generateLocalSummary(text) {
-  const cleanText = text.trim();
-
-  if (!cleanText) {
-    setSummaryState("empty", SUMMARY_EMPTY_HTML);
-    return;
-  }
-
-  setSummaryState("loading", `
-    <div class="summary-loading">
-      <span class="thinking-dot"></span>
-      <div>
-        <p class="thinking-label">AI Research Assistant</p>
-        <p class="thinking-text show">Reading your text...</p>
-      </div>
-    </div>
-  `);
-
-  scrollToSummaryOutput();
-  startThinkingLines();
-
-  try {
-    const response = await fetch(AI_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        text: cleanText
-      })
+      updateReadingFilterUI();
+      renderPaperResults(lastPaperResults);
     });
+  }
 
-    const data = await response.json();
+  async function generateLocalSummary(text) {
+    const cleanText = text.trim();
 
-    if (!response.ok) {
-      throw new Error(
-        data?.error ||
-        data?.message ||
-        JSON.stringify(data, null, 2) ||
-        "Unknown AI summary error"
-      );
+    if (!cleanText) {
+      resetSummaryState();
+      return;
     }
 
-    const summary =
-      data?.summary ||
-      data?.result ||
-      data?.text ||
-      "";
-
-    if (!summary) {
-      throw new Error("AI 沒有回傳摘要內容。");
-    }
-
-    stopThinkingLines();
-
-    setSummaryState("result", `
-      <div class="ai-summary summary-pop">
-        ${formatSummary(summary)}
+    setSummaryState("loading", `
+      <div class="summary-loading">
+        <span class="thinking-dot"></span>
+        <div>
+          <p class="thinking-label">AI Research Assistant</p>
+          <p class="thinking-text show" id="thinkingText">Reading your text...</p>
+        </div>
       </div>
     `);
 
     scrollToSummaryOutput();
-  } catch (error) {
-    stopThinkingLines();
+    startThinkingLines();
 
-    const friendlyMessage = getFriendlySummaryError(error);
+    try {
+      const response = await fetch(AI_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          text: cleanText
+        })
+      });
 
-    setSummaryState("error", `
-      <div class="summary-error">
-        ${escapeHtml(friendlyMessage)}
-      </div>
-    `);
+      const data = await response.json();
 
-    scrollToSummaryOutput();
+      if (!response.ok) {
+        throw new Error(
+          data?.error ||
+          data?.message ||
+          JSON.stringify(data, null, 2) ||
+          "Unknown AI summary error"
+        );
+      }
+
+      const summary =
+        data?.summary ||
+        data?.result ||
+        data?.text ||
+        "";
+
+      if (!summary) {
+        throw new Error("AI 沒有回傳摘要內容。");
+      }
+
+      stopThinkingLines();
+
+      setSummaryState("result", `
+        <div class="ai-summary summary-pop">
+          ${formatSummary(summary)}
+        </div>
+      `);
+
+      scrollToSummaryOutput();
+    } catch (error) {
+      stopThinkingLines();
+
+      const friendlyMessage = getFriendlySummaryError(error);
+
+      setSummaryState("error", `
+        <div class="summary-error">
+          ${escapeHtml(friendlyMessage)}
+        </div>
+      `);
+
+      scrollToSummaryOutput();
+    }
   }
-}
 
-    stopThinkingLines();
-
-    summaryOutput.innerHTML = `
-      <p class="output-title">AI Summary</p>
-      <div class="ai-summary summary-pop">
-        ${formatSummary(data.summary || "沒有收到摘要內容。")}
-      </div>
-    `;
-
-    scrollToSummaryOutput();
-  } catch (error) {
-    stopThinkingLines();
-
-    summaryOutput.innerHTML = `
-      <p class="output-title">AI Summary</p>
-      <pre class="error-detail">目前無法產生摘要：
-
-${escapeHtml(error.message)}</pre>
-    `;
-  }
-}
   function formatSummary(text) {
     return escapeHtml(text)
       .replace(/^---$/gm, "")
@@ -381,12 +374,12 @@ ${escapeHtml(error.message)}</pre>
         throw new Error(data.error || "文獻搜尋失敗。");
       }
 
-     lastPaperResults = data.papers || [];
-currentPaperPage = 1;
-activeReadingFilter = "all";
+      lastPaperResults = data.papers || [];
+      currentPaperPage = 1;
+      activeReadingFilter = "all";
 
-updateReadingFilterUI();
-renderPaperResults(lastPaperResults);
+      updateReadingFilterUI();
+      renderPaperResults(lastPaperResults);
 
       setSearchButtonState("done");
 
@@ -434,176 +427,177 @@ renderPaperResults(lastPaperResults);
   }
 
   function renderPaperResults(papers) {
-  if (!paperStatus || !paperResults) return;
+    if (!paperStatus || !paperResults) return;
 
-  updateReadingFilterUI();
+    updateReadingFilterUI();
 
-  if (!papers.length) {
-    paperStatus.textContent = "找不到相關文獻。";
+    if (!papers.length) {
+      paperStatus.textContent = "找不到相關文獻。";
 
-    paperResults.innerHTML = `
-      <div class="paper-empty">
-        找不到相關文獻，請換一個關鍵字。
-      </div>
-    `;
-    return;
-  }
-
-  const filteredPapers = filterPapersByReadingLabel(papers);
-
-  if (!filteredPapers.length) {
-    paperStatus.textContent = `目前沒有 ${getFilterDisplayName(activeReadingFilter)} 類型的文獻。`;
-
-    paperResults.innerHTML = `
-      <div class="paper-empty">
-        目前沒有符合這個分類的文獻，可以切回 All 查看全部結果。
-      </div>
-    `;
-    return;
-  }
-
-  const totalPages = Math.ceil(filteredPapers.length / PAPERS_PER_PAGE);
-
-  if (currentPaperPage > totalPages) {
-    currentPaperPage = totalPages;
-  }
-
-  const startIndex = (currentPaperPage - 1) * PAPERS_PER_PAGE;
-  const visiblePapers = filteredPapers.slice(
-    startIndex,
-    startIndex + PAPERS_PER_PAGE
-  );
-
-  if (activeReadingFilter === "all") {
-    paperStatus.textContent = `找到 ${papers.length} 篇文獻，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
-  } else {
-    paperStatus.textContent = `${getFilterDisplayName(activeReadingFilter)}：${filteredPapers.length} 篇，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
-  }
-
-  const paperCards = visiblePapers
-    .map((paper) => {
-      const index = lastPaperResults.indexOf(paper);
-
-      const reasons = (paper.reasons || [])
-        .slice(0, 3)
-        .map((reason) => `<li>${escapeHtml(reason)}</li>`)
-        .join("");
-
-      const concepts = (paper.concepts || [])
-        .slice(0, 4)
-        .map((concept) => `<span>${escapeHtml(concept)}</span>`)
-        .join("");
-
-      return `
-        <article class="paper-card">
-          <div class="paper-card-top">
-            <div>
-              <p class="paper-priority">
-                ${escapeHtml(paper.stars || "")} ${escapeHtml(paper.priority || "")}
-              </p>
-              <h3>${escapeHtml(paper.title || "Untitled")}</h3>
-            </div>
-
-            <div class="paper-score">
-              <span>${paper.score || 0}</span>
-              <small>${getReadingLabel(paper)}</small>
-            </div>
-          </div>
-
-          <p class="paper-meta">
-            ${escapeHtml(String(paper.year || "Unknown"))}
-            · ${escapeHtml(paper.venue || "Unknown source")}
-            · Citations: ${paper.citedByCount || 0}
-          </p>
-
-          <p class="paper-authors">
-            ${escapeHtml(paper.authors || "Unknown authors")}
-          </p>
-
-          <p class="paper-abstract">
-            ${escapeHtml(
-              shortenText(
-                paper.abstract || "No abstract available.",
-                360
-              )
-            )}
-          </p>
-
-          <div class="paper-tags">
-            ${concepts}
-          </div>
-
-          <div class="paper-reasons">
-            <strong>推薦原因</strong>
-            <ul>${reasons}</ul>
-          </div>
-
-          <div class="paper-actions">
-            <button type="button" data-action="analyze" data-index="${index}">
-              Analyze
-            </button>
-            <button type="button" data-action="open" data-index="${index}">
-              Open
-            </button>
-          </div>
-        </article>
+      paperResults.innerHTML = `
+        <div class="paper-empty">
+          找不到相關文獻，請換一個關鍵字。
+        </div>
       `;
-    })
-    .join("");
+      return;
+    }
 
-  const pagination = `
-    <div class="paper-pagination">
-      <button
-        type="button"
-        id="prevPaperPage"
-        ${currentPaperPage === 1 ? "disabled" : ""}
-      >
-        ← Previous
-      </button>
+    const filteredPapers = filterPapersByReadingLabel(papers);
 
-      <span>
-        Page ${currentPaperPage} of ${totalPages}
-      </span>
+    if (!filteredPapers.length) {
+      paperStatus.textContent = `目前沒有 ${getFilterDisplayName(activeReadingFilter)} 類型的文獻。`;
 
-      <button
-        type="button"
-        id="nextPaperPage"
-        ${currentPaperPage === totalPages ? "disabled" : ""}
-      >
-        Next →
-      </button>
-    </div>
-  `;
+      paperResults.innerHTML = `
+        <div class="paper-empty">
+          目前沒有符合這個分類的文獻，可以切回 All 查看全部結果。
+        </div>
+      `;
+      return;
+    }
 
-  paperResults.innerHTML = paperCards + pagination;
+    const totalPages = Math.ceil(filteredPapers.length / PAPERS_PER_PAGE);
 
-  paperResults.querySelectorAll("[data-action]").forEach((button) => {
-    button.addEventListener("click", handlePaperAction);
-  });
+    if (currentPaperPage > totalPages) {
+      currentPaperPage = totalPages;
+    }
 
-  const prevButton = document.getElementById("prevPaperPage");
-  const nextButton = document.getElementById("nextPaperPage");
+    const startIndex = (currentPaperPage - 1) * PAPERS_PER_PAGE;
+    const visiblePapers = filteredPapers.slice(
+      startIndex,
+      startIndex + PAPERS_PER_PAGE
+    );
 
-  if (prevButton) {
-    prevButton.addEventListener("click", () => {
-      if (currentPaperPage > 1) {
-        currentPaperPage -= 1;
-        renderPaperResults(lastPaperResults);
-        scrollToPaperResultsTop();
-      }
+    if (activeReadingFilter === "all") {
+      paperStatus.textContent = `找到 ${papers.length} 篇文獻，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
+    } else {
+      paperStatus.textContent = `${getFilterDisplayName(activeReadingFilter)}：${filteredPapers.length} 篇，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
+    }
+
+    const paperCards = visiblePapers
+      .map((paper) => {
+        const index = lastPaperResults.indexOf(paper);
+
+        const reasons = (paper.reasons || [])
+          .slice(0, 3)
+          .map((reason) => `<li>${escapeHtml(reason)}</li>`)
+          .join("");
+
+        const concepts = (paper.concepts || [])
+          .slice(0, 4)
+          .map((concept) => `<span>${escapeHtml(concept)}</span>`)
+          .join("");
+
+        return `
+          <article class="paper-card">
+            <div class="paper-card-top">
+              <div>
+                <p class="paper-priority">
+                  ${escapeHtml(paper.stars || "")} ${escapeHtml(paper.priority || "")}
+                </p>
+                <h3>${escapeHtml(paper.title || "Untitled")}</h3>
+              </div>
+
+              <div class="paper-score">
+                <span>${paper.score || 0}</span>
+                <small>${getReadingLabel(paper)}</small>
+              </div>
+            </div>
+
+            <p class="paper-meta">
+              ${escapeHtml(String(paper.year || "Unknown"))}
+              · ${escapeHtml(paper.venue || "Unknown source")}
+              · Citations: ${paper.citedByCount || 0}
+            </p>
+
+            <p class="paper-authors">
+              ${escapeHtml(paper.authors || "Unknown authors")}
+            </p>
+
+            <p class="paper-abstract">
+              ${escapeHtml(
+                shortenText(
+                  paper.abstract || "No abstract available.",
+                  360
+                )
+              )}
+            </p>
+
+            <div class="paper-tags">
+              ${concepts}
+            </div>
+
+            <div class="paper-reasons">
+              <strong>推薦原因</strong>
+              <ul>${reasons}</ul>
+            </div>
+
+            <div class="paper-actions">
+              <button type="button" data-action="analyze" data-index="${index}">
+                Analyze
+              </button>
+              <button type="button" data-action="open" data-index="${index}">
+                Open
+              </button>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+
+    const pagination = `
+      <div class="paper-pagination">
+        <button
+          type="button"
+          id="prevPaperPage"
+          ${currentPaperPage === 1 ? "disabled" : ""}
+        >
+          ← Previous
+        </button>
+
+        <span>
+          Page ${currentPaperPage} of ${totalPages}
+        </span>
+
+        <button
+          type="button"
+          id="nextPaperPage"
+          ${currentPaperPage === totalPages ? "disabled" : ""}
+        >
+          Next →
+        </button>
+      </div>
+    `;
+
+    paperResults.innerHTML = paperCards + pagination;
+
+    paperResults.querySelectorAll("[data-action]").forEach((button) => {
+      button.addEventListener("click", handlePaperAction);
     });
+
+    const prevButton = document.getElementById("prevPaperPage");
+    const nextButton = document.getElementById("nextPaperPage");
+
+    if (prevButton) {
+      prevButton.addEventListener("click", () => {
+        if (currentPaperPage > 1) {
+          currentPaperPage -= 1;
+          renderPaperResults(lastPaperResults);
+          scrollToPaperResultsTop();
+        }
+      });
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener("click", () => {
+        if (currentPaperPage < totalPages) {
+          currentPaperPage += 1;
+          renderPaperResults(lastPaperResults);
+          scrollToPaperResultsTop();
+        }
+      });
+    }
   }
 
-  if (nextButton) {
-    nextButton.addEventListener("click", () => {
-      if (currentPaperPage < totalPages) {
-        currentPaperPage += 1;
-        renderPaperResults(lastPaperResults);
-        scrollToPaperResultsTop();
-      }
-    });
-  }
-}
   function handlePaperAction(event) {
     const button = event.currentTarget;
     const index = Number(button.dataset.index);
@@ -653,10 +647,15 @@ ${paper.abstract}
 
       articleText.value = text;
 
-      summaryOutput.innerHTML = `
-        <p class="output-title">AI Summary</p>
-        <p class="placeholder">已將文獻資料放入下方分析框，正在產生摘要...</p>
-      `;
+      setSummaryState("loading", `
+        <div class="summary-loading">
+          <span class="thinking-dot"></span>
+          <div>
+            <p class="thinking-label">AI Research Assistant</p>
+            <p class="thinking-text show" id="thinkingText">Preparing paper analysis...</p>
+          </div>
+        </div>
+      `);
 
       scrollToSummaryOutput();
       generateLocalSummary(text);
@@ -684,75 +683,77 @@ ${paper.abstract}
   }
 
   function getReadingLabel(paper) {
-  const score = Number(paper.score || 0);
-  const priority = String(paper.priority || "").toLowerCase();
-  const reasons = (paper.reasons || []).join(" ").toLowerCase();
+    const score = Number(paper.score || 0);
+    const priority = String(paper.priority || "").toLowerCase();
+    const reasons = (paper.reasons || []).join(" ").toLowerCase();
 
-  if (
-    score >= 90 ||
-    priority.includes("essential") ||
-    reasons.includes("review")
-  ) {
-    return "Start Here";
-  }
-
-  if (score >= 75) {
-    return "Core";
-  }
-
-  return "Explore";
-}
-function getReadingFilterKey(paper) {
-  const label = getReadingLabel(paper);
-
-  if (label === "Start Here") return "start";
-  if (label === "Core") return "core";
-  return "explore";
-}
-
-function filterPapersByReadingLabel(papers) {
-  if (activeReadingFilter === "all") {
-    return papers;
-  }
-
-  return papers.filter((paper) => {
-    return getReadingFilterKey(paper) === activeReadingFilter;
-  });
-}
-
-function getFilterDisplayName(filter) {
-  if (filter === "start") return "Start Here";
-  if (filter === "core") return "Core";
-  if (filter === "explore") return "Explore";
-  return "All";
-}
-
-function updateReadingFilterUI() {
-  if (!readingFilter) return;
-
-  const counts = {
-    all: lastPaperResults.length,
-    start: 0,
-    core: 0,
-    explore: 0,
-  };
-
-  lastPaperResults.forEach((paper) => {
-    const key = getReadingFilterKey(paper);
-    counts[key] += 1;
-  });
-
-  readingFilter.querySelectorAll("[data-reading-filter]").forEach((button) => {
-    const key = button.dataset.readingFilter;
-    const count = button.querySelector(".filter-count");
-
-    button.classList.toggle("active", key === activeReadingFilter);
-
-    if (count) {
-      count.textContent = counts[key] || 0;
+    if (
+      score >= 90 ||
+      priority.includes("essential") ||
+      reasons.includes("review")
+    ) {
+      return "Start Here";
     }
-  });
-}
+
+    if (score >= 75) {
+      return "Core";
+    }
+
+    return "Explore";
+  }
+
+  function getReadingFilterKey(paper) {
+    const label = getReadingLabel(paper);
+
+    if (label === "Start Here") return "start";
+    if (label === "Core") return "core";
+    return "explore";
+  }
+
+  function filterPapersByReadingLabel(papers) {
+    if (activeReadingFilter === "all") {
+      return papers;
+    }
+
+    return papers.filter((paper) => {
+      return getReadingFilterKey(paper) === activeReadingFilter;
+    });
+  }
+
+  function getFilterDisplayName(filter) {
+    if (filter === "start") return "Start Here";
+    if (filter === "core") return "Core";
+    if (filter === "explore") return "Explore";
+    return "All";
+  }
+
+  function updateReadingFilterUI() {
+    if (!readingFilter) return;
+
+    const counts = {
+      all: lastPaperResults.length,
+      start: 0,
+      core: 0,
+      explore: 0,
+    };
+
+    lastPaperResults.forEach((paper) => {
+      const key = getReadingFilterKey(paper);
+      counts[key] += 1;
+    });
+
+    readingFilter.querySelectorAll("[data-reading-filter]").forEach((button) => {
+      const key = button.dataset.readingFilter;
+      const count = button.querySelector(".filter-count");
+
+      button.classList.toggle("active", key === activeReadingFilter);
+
+      if (count) {
+        count.textContent = counts[key] || 0;
+      }
+    });
+  }
+
   function setSearchButtonState(state) {
     if (!paperSearchButton) return;
 
@@ -774,113 +775,121 @@ function updateReadingFilterUI() {
     paperSearchButton.classList.remove("is-searching");
     paperSearchButton.textContent = "Search Papers";
   }
-function startThinkingLines() {
-  const thinkingText = document.getElementById("thinkingText");
 
-  if (!thinkingText) return;
+  function startThinkingLines() {
+    const thinkingText = document.getElementById("thinkingText");
 
-  const lines = [
-    "Reading paper metadata...",
-    "Extracting abstract...",
-    "Checking research relevance...",
-    "Identifying key findings...",
-    "Building structured notes...",
-    "Preparing AI summary...",
-  ];
+    if (!thinkingText) return;
 
-  clearInterval(thinkingTimer);
+    const lines = [
+      "Reading paper metadata...",
+      "Extracting abstract...",
+      "Checking research relevance...",
+      "Identifying key findings...",
+      "Building structured notes...",
+      "Preparing AI summary...",
+    ];
 
-  thinkingIndex = 0;
-  thinkingText.textContent = lines[thinkingIndex];
+    clearInterval(thinkingTimer);
 
-  requestAnimationFrame(() => {
-    thinkingText.classList.add("show");
-  });
+    thinkingIndex = 0;
+    thinkingText.textContent = lines[thinkingIndex];
 
-  thinkingTimer = setInterval(() => {
-    thinkingText.classList.remove("show");
-
-    setTimeout(() => {
-      thinkingIndex = (thinkingIndex + 1) % lines.length;
-      thinkingText.textContent = lines[thinkingIndex];
+    requestAnimationFrame(() => {
       thinkingText.classList.add("show");
-    }, 420);
-  }, 1700);
-}
+    });
 
-function stopThinkingLines() {
-  clearInterval(thinkingTimer);
-  thinkingTimer = null;
-}
- function scrollToPaperResultsTop() {
-  if (!paperStatus) return;
+    thinkingTimer = setInterval(() => {
+      thinkingText.classList.remove("show");
 
-  requestAnimationFrame(() => {
-    const headerOffset = 110;
-    const targetPosition =
-      paperStatus.getBoundingClientRect().top +
-      window.scrollY -
-      headerOffset;
+      setTimeout(() => {
+        thinkingIndex = (thinkingIndex + 1) % lines.length;
+        thinkingText.textContent = lines[thinkingIndex];
+        thinkingText.classList.add("show");
+      }, 420);
+    }, 1700);
+  }
 
-    smoothScrollTo(targetPosition, 720);
-  });
-}
+  function stopThinkingLines() {
+    clearInterval(thinkingTimer);
+    thinkingTimer = null;
+  }
+
+  function scrollToPaperResultsTop() {
+    if (!paperStatus) return;
+
+    requestAnimationFrame(() => {
+      const headerOffset = 110;
+      const targetPosition =
+        paperStatus.getBoundingClientRect().top +
+        window.scrollY -
+        headerOffset;
+
+      smoothScrollTo(targetPosition, 720);
+    });
+  }
+
   function smoothScrollTo(targetY, duration = 720) {
-  const startY = window.scrollY;
-  const distance = targetY - startY;
-  const startTime = performance.now();
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const startTime = performance.now();
 
-  function easeInOutCubic(t) {
-    return t < 0.5
-      ? 4 * t * t * t
-      : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-
-  function step(currentTime) {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const easedProgress = easeInOutCubic(progress);
-
-    window.scrollTo(0, startY + distance * easedProgress);
-
-    if (progress < 1) {
-      requestAnimationFrame(step);
+    function easeInOutCubic(t) {
+      return t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
-  }
 
-  requestAnimationFrame(step);
-}
+    function step(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeInOutCubic(progress);
+
+      window.scrollTo(0, startY + distance * easedProgress);
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
 
   function scrollToSummaryOutput() {
-  if (!summaryOutput) return;
+    if (!summaryOutput) return;
 
-  requestAnimationFrame(() => {
-    const summaryBody = summaryOutput.querySelector(
-      ".ai-summary, .error-detail"
-    );
+    requestAnimationFrame(() => {
+      const summaryBody = document.getElementById("summaryBody");
 
-    if (summaryBody) {
-      summaryBody.scrollTop = 0;
-    }
+      if (summaryBody) {
+        summaryBody.scrollTop = 0;
+      }
 
-    summaryOutput.scrollTop = 0;
+      const scrollableSummary = summaryOutput.querySelector(
+        ".ai-summary, .summary-error, .summary-body"
+      );
 
-    const headerOffset = 210;
-    const targetPosition =
-      summaryOutput.getBoundingClientRect().top +
-      window.scrollY -
-      headerOffset;
+      if (scrollableSummary) {
+        scrollableSummary.scrollTop = 0;
+      }
 
-    window.scrollTo({
-      top: targetPosition,
-      behavior: "smooth",
+      summaryOutput.scrollTop = 0;
+
+      const headerOffset = 210;
+      const targetPosition =
+        summaryOutput.getBoundingClientRect().top +
+        window.scrollY -
+        headerOffset;
+
+      window.scrollTo({
+        top: targetPosition,
+        behavior: "smooth",
+      });
     });
-  });
-}
+  }
 
   updateClearButton();
 });
-
 
 (() => {
   const app = document.querySelector("[data-journal-app]");
