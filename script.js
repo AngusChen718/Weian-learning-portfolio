@@ -194,7 +194,44 @@ let thinkingIndex = 0;
     renderPaperResults(lastPaperResults);
   });
 }
+const SUMMARY_EMPTY_HTML = `
+  <div class="summary-empty">
+    <div class="summary-empty-icon">✦</div>
+    <p>你的摘要結果會出現在這裡。</p>
+    <span>貼上文章內容後，選擇分析方式並開始生成。</span>
+  </div>
+`;
 
+function setSummaryState(state, html) {
+  const summaryOutput = document.getElementById("summaryOutput");
+  const summaryBody = document.getElementById("summaryBody");
+
+  if (!summaryOutput || !summaryBody) return;
+
+  summaryOutput.dataset.state = state;
+  summaryBody.innerHTML = html;
+  summaryBody.scrollTop = 0;
+}
+
+function resetSummaryState() {
+  setSummaryState("empty", SUMMARY_EMPTY_HTML);
+}
+
+function getFriendlySummaryError(error) {
+  const message = error?.message || String(error);
+
+  const isBusy =
+    message.includes("503") ||
+    message.includes("UNAVAILABLE") ||
+    message.includes("high demand") ||
+    message.includes("overloaded");
+
+  if (isBusy) {
+    return "AI 目前太忙了，請稍後再試。\n\n你的文章內容已保留，不需要重新貼上。";
+  }
+
+  return `目前無法產生摘要：\n\n${message}`;
+}
  async function generateLocalSummary(text) {
   if (!summaryOutput) return;
 
