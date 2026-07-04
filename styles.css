@@ -3563,3 +3563,71 @@ html.theme-changing *::after {
      確保動畫在前後兩端都能完美減速歸零，徹底融化兩端切換的微小生硬感。 */
   transition-timing-function: ease-in-out !important;
 }
+
+/* ==========================================================================
+   AI Summary → Journal Bridge
+   ========================================================================== */
+
+.summary-journal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.summary-journal-actions[hidden] {
+  display: none !important;
+}
+
+.summary-journal-actions.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.create-journal-entry-button {
+  height: 46px;
+  padding: 0 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 780;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.create-journal-entry-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.14);
+}
+
+.create-journal-entry-button:active {
+  transform: scale(0.96);
+}
+
+@media (max-width: 760px) {
+  .summary-journal-actions {
+    justify-content: stretch;
+  }
+
+  .create-journal-entry-button {
+    width: 100%;
+  }
+}
