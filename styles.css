@@ -3631,3 +3631,99 @@ html.theme-changing *::after {
     width: 100%;
   }
 }
+/* ==========================================================================
+   Hero Refinement: Search. Analyze. Reflect.
+   ========================================================================== */
+
+.hero {
+  min-height: 82vh;
+  display: grid;
+  place-items: center;
+  padding: 120px 24px 96px;
+}
+
+.hero-inner {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-flow-title {
+  max-width: 1100px;
+  margin: 18px auto 24px;
+  font-size: clamp(64px, 11vw, 148px);
+  line-height: 0.92;
+  letter-spacing: -0.08em;
+  font-weight: 880;
+  color: var(--text);
+}
+
+.hero-flow-subtitle {
+  max-width: 760px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: clamp(24px, 4vw, 46px);
+  line-height: 1.12;
+  letter-spacing: -0.055em;
+  font-weight: 720;
+}
+
+.hero-flow-subtitle.secondary {
+  margin-top: 18px;
+  font-size: clamp(17px, 2vw, 24px);
+  line-height: 1.55;
+  letter-spacing: -0.025em;
+  font-weight: 620;
+  color: var(--muted);
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 34px;
+  flex-wrap: wrap;
+}
+
+.hero-actions .button {
+  min-height: 48px;
+  padding: 0 22px;
+}
+
+/* 避免舊的大名字樣式影響新版 hero */
+.hero h1.hero-flow-title {
+  text-shadow: none;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .hero {
+    min-height: 76vh;
+    padding: 96px 20px 72px;
+  }
+
+  .hero-flow-title {
+    font-size: clamp(48px, 16vw, 76px);
+    line-height: 0.95;
+    letter-spacing: -0.075em;
+  }
+
+  .hero-flow-subtitle {
+    font-size: clamp(22px, 7vw, 34px);
+  }
+
+  .hero-flow-subtitle.secondary {
+    font-size: 16px;
+  }
+
+  .hero-actions {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hero-actions .button {
+    width: 100%;
+  }
+}
