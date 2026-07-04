@@ -3727,3 +3727,55 @@ html.theme-changing *::after {
     width: 100%;
   }
 }
+.hero-product {
+  min-height: auto;
+  padding: 150px 24px 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero-product .eyebrow {
+  margin-bottom: 18px;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.hero-product-title {
+  margin: 0;
+  font-size: clamp(52px, 8vw, 88px);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  font-weight: 760;
+}
+
+.hero-product-subtitle {
+  margin: 18px auto 0;
+  max-width: 760px;
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.hero-actions {
+  margin-top: 30px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-product-visual {
+  margin-top: 54px;
+  width: min(980px, 100%);
+}
+
+.hero-product-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
