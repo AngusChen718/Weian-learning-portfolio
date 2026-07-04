@@ -74,12 +74,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const paperResults = document.getElementById("paperResults");
   const paperClearButton = document.getElementById("paperClearButton");
   const readingFilter = document.getElementById("readingFilter");
+ const historyOpenButton = document.getElementById("historyOpenButton");
+const historyCloseButton = document.getElementById("historyCloseButton");
+const historyBackdrop = document.getElementById("historyBackdrop");
+const historyDrawer = document.getElementById("historyDrawer");
+const historyList = document.getElementById("historyList");
+const historyClearButton = document.getElementById("historyClearButton");
 
-  let lastPaperResults = [];
-  let currentPaperPage = 1;
-  let activeReadingFilter = "all";
-  const PAPERS_PER_PAGE = 5;
+const SEARCH_HISTORY_KEY = "weian-paper-search-history";
 
+ let lastPaperResults = [];
+let currentPaperPage = 1;
+let activeReadingFilter = "all";
+let searchHistory = loadSearchHistory();
+
+const PAPERS_PER_PAGE = 5;
+const MAX_SEARCH_HISTORY = 10;
   let thinkingTimer = null;
   let thinkingIndex = 0;
 
@@ -245,6 +255,31 @@ document.addEventListener("DOMContentLoaded", () => {
       renderPaperResults(lastPaperResults);
     });
   }
+ if (historyOpenButton) {
+  historyOpenButton.addEventListener("click", openHistoryDrawer);
+}
+
+if (historyCloseButton) {
+  historyCloseButton.addEventListener("click", closeHistoryDrawer);
+}
+
+if (historyBackdrop) {
+  historyBackdrop.addEventListener("click", closeHistoryDrawer);
+}
+
+if (historyClearButton) {
+  historyClearButton.addEventListener("click", () => {
+    searchHistory = [];
+    localStorage.removeItem(SEARCH_HISTORY_KEY);
+    renderSearchHistory();
+  });
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeHistoryDrawer();
+  }
+});
 
   async function generateLocalSummary(text) {
     const cleanText = text.trim();
@@ -375,11 +410,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       lastPaperResults = data.papers || [];
-      currentPaperPage = 1;
-      activeReadingFilter = "all";
+currentPaperPage = 1;
+activeReadingFilter = "all";
 
-      updateReadingFilterUI();
-      renderPaperResults(lastPaperResults);
+saveSearchHistory(query, lastPaperResults.length);
+
+updateReadingFilterUI();
+renderPaperResults(lastPaperResults);
 
       setSearchButtonState("done");
 
@@ -671,7 +708,136 @@ ${paper.abstract}
       themeToggle.textContent = "☾";
     }
   }
+function openHistoryDrawer() {
+  renderSearchHistory();
 
+  if (historyBackdrop) {
+    historyBackdrop.hidden = false;
+
+    requestAnimationFrame(() => {
+      historyBackdrop.classList.add("is-open");
+    });
+  }
+
+  if (historyDrawer) {
+    historyDrawer.classList.add("is-open");
+    historyDrawer.setAttribute("aria-hidden", "false");
+  }
+}
+
+function closeHistoryDrawer() {
+  if (historyBackdrop) {
+    historyBackdrop.classList.remove("is-open");
+
+    setTimeout(() => {
+      historyBackdrop.hidden = true;
+    }, 240);
+  }
+
+  if (historyDrawer) {
+    historyDrawer.classList.remove("is-open");
+    historyDrawer.setAttribute("aria-hidden", "true");
+  }
+}
+
+function loadSearchHistory() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY));
+
+    if (Array.isArray(saved)) {
+      return saved;
+    }
+
+    return [];
+  } catch {
+    return [];
+  }
+}
+
+function saveSearchHistory(query, resultCount = 0) {
+  const cleanQuery = query.trim();
+
+  if (!cleanQuery) return;
+
+  const normalizedQuery = cleanQuery.toLowerCase();
+
+  searchHistory = searchHistory.filter((item) => {
+    return item.query.toLowerCase() !== normalizedQuery;
+  });
+
+  searchHistory.unshift({
+    id: `history-${Date.now()}`,
+    query: cleanQuery,
+    resultCount,
+    searchedAt: new Date().toISOString(),
+  });
+
+  searchHistory = searchHistory.slice(0, MAX_SEARCH_HISTORY);
+
+  localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(searchHistory));
+  renderSearchHistory();
+}
+
+function renderSearchHistory() {
+  if (!historyList) return;
+
+  if (!searchHistory.length) {
+    historyList.innerHTML = `
+      <div class="history-empty">
+        <p>No search history yet.</p>
+        <span>搜尋文獻後，紀錄會出現在這裡。</span>
+      </div>
+    `;
+    return;
+  }
+
+  historyList.innerHTML = searchHistory
+    .map((item) => {
+      return `
+        <button
+          type="button"
+          class="history-item"
+          data-history-query="${escapeHtml(item.query)}"
+        >
+          <p class="history-query">${escapeHtml(item.query)}</p>
+          <p class="history-meta">
+            ${Number(item.resultCount || 0)} papers · ${formatHistoryTime(item.searchedAt)}
+          </p>
+        </button>
+      `;
+    })
+    .join("");
+
+  historyList.querySelectorAll("[data-history-query]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const query = button.dataset.historyQuery;
+
+      if (!paperQuery || !query) return;
+
+      paperQuery.value = query;
+      updateClearButton();
+      closeHistoryDrawer();
+      searchPapers();
+    });
+  });
+}
+
+function formatHistoryTime(dateString) {
+  if (!dateString) return "unknown time";
+
+  const date = new Date(dateString);
+
+  if (Number.isNaN(date.getTime())) {
+    return "unknown time";
+  }
+
+  return date.toLocaleString("zh-TW", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
   function updateClearButton() {
     if (!paperClearButton || !paperQuery) return;
 
@@ -888,7 +1054,8 @@ ${paper.abstract}
     });
   }
 
-  updateClearButton();
+ updateClearButton();
+renderSearchHistory();
 });
 
 (() => {
