@@ -88,10 +88,15 @@ let currentPaperPage = 1;
 let activeReadingFilter = "all";
 let searchHistory = loadSearchHistory();
 
+let currentAnalysisContext = null;
+let latestSummaryText = "";
+
 const PAPERS_PER_PAGE = 5;
 const MAX_SEARCH_HISTORY = 10;
-  let thinkingTimer = null;
-  let thinkingIndex = 0;
+const PENDING_JOURNAL_KEY = "weian-pending-journal-entry";
+
+let thinkingTimer = null;
+let thinkingIndex = 0;
 
   const SUMMARY_EMPTY_HTML = `
     <div class="summary-empty">
@@ -153,10 +158,18 @@ const MAX_SEARCH_HISTORY = 10;
         const text = await file.text();
 
         if (articleText) {
-          articleText.value = text.slice(0, 8000);
-        }
+  articleText.value = text.slice(0, 8000);
+}
 
-        generateLocalSummary(text);
+currentAnalysisContext = {
+  title: file.name.replace(/\.(txt|md)$/i, ""),
+  category: "Research",
+  tags: ["Uploaded Text", "AI Summary"],
+  sourceUrl: "",
+  researchTopic: "Uploaded article",
+};
+
+generateLocalSummary(text);
       } else {
         setSummaryState("error", `
           <div class="summary-error">
@@ -191,7 +204,13 @@ const MAX_SEARCH_HISTORY = 10;
         scrollToSummaryOutput();
         return;
       }
-
+currentAnalysisContext = {
+  title: "AI Research Note",
+  category: "Research",
+  tags: ["AI Summary", "Research"],
+  sourceUrl: "",
+  researchTopic: "Manual input",
+};
       generateLocalSummary(text);
     });
   }
@@ -283,6 +302,7 @@ document.addEventListener("keydown", (event) => {
 
   async function generateLocalSummary(text) {
     const cleanText = text.trim();
+   hideCreateJournalEntryButton();
 
     if (!cleanText) {
       resetSummaryState();
@@ -336,13 +356,16 @@ document.addEventListener("keydown", (event) => {
 
       stopThinkingLines();
 
-      setSummaryState("result", `
-        <div class="ai-summary summary-pop">
-          ${formatSummary(summary)}
-        </div>
-      `);
+     latestSummaryText = summary;
 
-      scrollToSummaryOutput();
+setSummaryState("result", `
+  <div class="ai-summary summary-pop">
+    ${formatSummary(summary)}
+  </div>
+`);
+
+showCreateJournalEntryButton();
+scrollToSummaryOutput();
     } catch (error) {
       stopThinkingLines();
 
@@ -681,7 +704,13 @@ ${(paper.reasons || []).join("、")}
 Abstract:
 ${paper.abstract}
       `.trim();
-
+currentAnalysisContext = {
+  title: paper.title || "Research Note",
+  category: "Research",
+  tags: (paper.concepts || []).slice(0, 4),
+  sourceUrl: paper.openAccessUrl || paper.doi || paper.openAlexUrl || "",
+  researchTopic: paperQuery?.value?.trim() || "",
+};
       articleText.value = text;
 
       setSummaryState("loading", `
@@ -698,7 +727,85 @@ ${paper.abstract}
       generateLocalSummary(text);
     }
   }
+function ensureSummaryJournalActions() {
+  if (!summaryOutput) return null;
 
+  let actions = document.getElementById("summaryJournalActions");
+
+  if (actions) {
+    return actions;
+  }
+
+  actions = document.createElement("div");
+  actions.id = "summaryJournalActions";
+  actions.className = "summary-journal-actions";
+  actions.hidden = true;
+
+  actions.innerHTML = `
+    <button
+      type="button"
+      class="create-journal-entry-button"
+      id="createJournalEntryButton"
+    >
+      ＋ Create Journal Entry
+    </button>
+  `;
+
+  summaryOutput.insertAdjacentElement("afterend", actions);
+
+  const button = actions.querySelector("#createJournalEntryButton");
+
+  if (button) {
+    button.addEventListener("click", createJournalEntryFromSummary);
+  }
+
+  return actions;
+}
+
+function showCreateJournalEntryButton() {
+  const actions = ensureSummaryJournalActions();
+
+  if (!actions) return;
+
+  actions.hidden = false;
+
+  requestAnimationFrame(() => {
+    actions.classList.add("is-visible");
+  });
+}
+
+function hideCreateJournalEntryButton() {
+  const actions = document.getElementById("summaryJournalActions");
+
+  if (!actions) return;
+
+  actions.classList.remove("is-visible");
+
+  setTimeout(() => {
+    actions.hidden = true;
+  }, 180);
+}
+
+function createJournalEntryFromSummary() {
+  const context = currentAnalysisContext || {};
+
+  const payload = {
+    title: context.title || "AI Research Note",
+    category: context.category || "Research",
+    tags:
+      Array.isArray(context.tags) && context.tags.length
+        ? context.tags
+        : ["AI Summary", "Research"],
+    sourceUrl: context.sourceUrl || "",
+    researchTopic: context.researchTopic || paperQuery?.value?.trim() || "",
+    summary: latestSummaryText || "",
+    createdAt: new Date().toISOString(),
+  };
+
+  localStorage.setItem(PENDING_JOURNAL_KEY, JSON.stringify(payload));
+
+  window.location.href = "journal.html?from=summary#editor";
+}
   function updateThemeIcon() {
     if (!themeToggle) return;
 
@@ -1063,6 +1170,7 @@ renderSearchHistory();
   if (!app) return;
 
   const STORAGE_KEY = "weian-journal-v0";
+ const PENDING_JOURNAL_KEY = "weian-pending-journal-entry";
 
   const elements = {
     list: document.getElementById("journalEntryList"),
@@ -1435,7 +1543,65 @@ renderSearchHistory();
     clearEditor();
     renderList();
   }
+function buildPendingJournalContent(pending) {
+  const sourceLine = pending.sourceUrl
+    ? `Source:\n${pending.sourceUrl}\n\n`
+    : "";
 
+  const topicLine = pending.researchTopic
+    ? `Research Topic:\n${pending.researchTopic}\n\n`
+    : "";
+
+  return `My Reflection:
+今天閱讀這篇文獻後，我的想法是：
+
+---
+
+${topicLine}${sourceLine}AI Summary:
+${pending.summary || "尚未產生摘要內容。"}`;
+}
+
+function consumePendingJournalEntry() {
+  const raw = localStorage.getItem(PENDING_JOURNAL_KEY);
+
+  if (!raw) return;
+
+  let pending = null;
+
+  try {
+    pending = JSON.parse(raw);
+  } catch {
+    localStorage.removeItem(PENDING_JOURNAL_KEY);
+    return;
+  }
+
+  localStorage.removeItem(PENDING_JOURNAL_KEY);
+
+  setEditor({
+    title: pending.title || "AI Research Note",
+    category: pending.category || "Research",
+    visibility: "private",
+    mood: "🙂",
+    timeSpent: "",
+    tags:
+      Array.isArray(pending.tags) && pending.tags.length
+        ? pending.tags
+        : ["AI Summary", "Research"],
+    content: buildPendingJournalContent(pending),
+  });
+
+  setTimeout(() => {
+    elements.content.focus();
+
+    const marker = "今天閱讀這篇文獻後，我的想法是：\n";
+    const position = elements.content.value.indexOf(marker);
+
+    if (position >= 0) {
+      const cursorPosition = position + marker.length;
+      elements.content.setSelectionRange(cursorPosition, cursorPosition);
+    }
+  }, 260);
+}
   function clearEditor() {
     state.editingId = null;
 
@@ -1489,5 +1655,6 @@ renderSearchHistory();
   });
 
   closeEditor();
-  renderList();
+renderList();
+consumePendingJournalEntry();
 })();
