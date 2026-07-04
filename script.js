@@ -1544,20 +1544,39 @@ renderSearchHistory();
     renderList();
   }
 function buildPendingJournalContent(pending) {
-  const sourceLine = pending.sourceUrl
-    ? `Source:\n${pending.sourceUrl}\n\n`
+  const tags = Array.isArray(pending.tags)
+    ? pending.tags.filter(Boolean)
+    : [];
+
+  const tagLine = tags.length
+    ? `Tags: ${tags.map((tag) => `#${String(tag).replace(/\s+/g, "-")}`).join(" ")}\n`
     : "";
 
   const topicLine = pending.researchTopic
-    ? `Research Topic:\n${pending.researchTopic}\n\n`
+    ? `Topic: ${pending.researchTopic}\n`
     : "";
 
-  return `My Reflection:
+  const sourceLine = pending.sourceUrl
+    ? `Source: ${pending.sourceUrl}\n`
+    : "";
+
+  return `## My Reflection
+
+Created from AI Summary
+
 今天閱讀這篇文獻後，我的想法是：
+
 
 ---
 
-${topicLine}${sourceLine}AI Summary:
+## Research Info
+
+${topicLine}${sourceLine}${tagLine}
+
+---
+
+## AI Summary
+
 ${pending.summary || "尚未產生摘要內容。"}`;
 }
 
