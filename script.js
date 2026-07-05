@@ -1205,6 +1205,7 @@ function clearArticleAnalysis() {
   }
 
  updateClearButton();
+updateArticleClearButton();
 renderSearchHistory();
 });
 
