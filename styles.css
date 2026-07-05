@@ -3894,3 +3894,64 @@ html.theme-changing *::after {
     font-size: 16px !important;
   }
 }
+/* ==========================================================================
+   Knowledge Cards as Entry Points
+   ========================================================================== */
+
+.knowledge-link {
+  color: inherit !important;
+  text-decoration: none !important;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.knowledge-link::after {
+  content: "";
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 18px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.knowledge-link:hover {
+  transform: translateY(-6px);
+  border-color: rgba(17, 17, 17, 0.18);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+}
+
+.knowledge-link:hover::after {
+  opacity: 0.18;
+  transform: scaleX(1);
+}
+
+.card-link-text {
+  display: inline-flex;
+  margin-top: 22px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 760;
+  letter-spacing: -0.01em;
+  opacity: 0.72;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.knowledge-link:hover .card-link-text {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+:root.dark .knowledge-link:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.36);
+}
