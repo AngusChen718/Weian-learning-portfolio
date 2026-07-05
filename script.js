@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const fileInput = document.getElementById("fileInput");
   const fileName = document.getElementById("fileName");
   const articleText = document.getElementById("articleText");
+ const articleClearButton = document.getElementById("articleClearButton");
   const summaryButton = document.getElementById("summaryButton");
   const summaryOutput = document.getElementById("summaryOutput");
 
@@ -214,6 +215,14 @@ currentAnalysisContext = {
       generateLocalSummary(text);
     });
   }
+
+ if (articleText) {
+  articleText.addEventListener("input", updateArticleClearButton);
+}
+
+if (articleClearButton) {
+  articleClearButton.addEventListener("click", clearArticleAnalysis);
+}
 
   if (paperSearchButton) {
     paperSearchButton.addEventListener("click", searchPapers);
@@ -944,6 +953,40 @@ function formatHistoryTime(dateString) {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+ function updateArticleClearButton() {
+  if (!articleClearButton || !articleText) return;
+
+  articleClearButton.hidden = !articleText.value.trim();
+}
+
+function clearArticleAnalysis() {
+  if (!articleText) return;
+
+  articleText.value = "";
+  latestSummaryText = "";
+  currentAnalysisContext = null;
+
+  if (fileInput) {
+    fileInput.value = "";
+  }
+
+  if (fileName) {
+    fileName.textContent = "支援 TXT 示範摘要；PDF / DOC 會先顯示等待串接 AI。";
+  }
+
+  hideCreateJournalEntryButton();
+
+  setSummaryState("empty", `
+    <div class="summary-empty">
+      <div class="summary-empty-icon">✦</div>
+      <p>你的摘要結果會出現在這裡。</p>
+      <span>貼上文章內容後，選擇分析方式並開始生成。</span>
+    </div>
+  `);
+
+  updateArticleClearButton();
+  articleText.focus();
 }
   function updateClearButton() {
     if (!paperClearButton || !paperQuery) return;
