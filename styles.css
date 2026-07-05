@@ -3955,3 +3955,26 @@ html.theme-changing *::after {
   border-color: rgba(255, 255, 255, 0.18);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.36);
 }
+/* ==========================================================================
+   Fix Knowledge Card Link Alignment
+   ========================================================================== */
+
+.knowledge-grid {
+  align-items: stretch !important;
+}
+
+.knowledge-link {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+.knowledge-link p {
+  margin-bottom: 0 !important;
+}
+
+.knowledge-link .card-link-text {
+  margin-top: auto !important;
+  padding-top: 32px !important;
+  align-self: flex-start !important;
+}
