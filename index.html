@@ -323,10 +323,24 @@ Growing.
     </div>
 
     <div class="text-area-wrap">
-      <label for="articleText">或貼上一段文章：</label>
-      <textarea id="articleText" placeholder="Paste article text here..."></textarea>
-      <button class="button primary" id="summaryButton">Generate Summary</button>
-    </div>
+  <label for="articleText">或貼上一段文章：</label>
+
+  <div class="article-textarea-shell">
+    <textarea id="articleText" placeholder="Paste article text here..."></textarea>
+
+    <button
+      type="button"
+      class="article-clear-button"
+      id="articleClearButton"
+      aria-label="Clear article text"
+      hidden
+    >
+      Clear
+    </button>
+  </div>
+
+  <button class="button primary" id="summaryButton">Generate Summary</button>
+</div>
 
    <div class="summary-output" id="summaryOutput" data-state="empty">
   <p class="output-title">AI Research Assistant</p>
