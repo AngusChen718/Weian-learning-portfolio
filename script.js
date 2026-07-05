@@ -160,6 +160,7 @@ let thinkingIndex = 0;
 
         if (articleText) {
   articleText.value = text.slice(0, 8000);
+          updateArticleClearButton();
 }
 
 currentAnalysisContext = {
@@ -721,7 +722,7 @@ currentAnalysisContext = {
   researchTopic: paperQuery?.value?.trim() || "",
 };
       articleText.value = text;
-
+updateArticleClearButton();
       setSummaryState("loading", `
         <div class="summary-loading">
           <span class="thinking-dot"></span>
