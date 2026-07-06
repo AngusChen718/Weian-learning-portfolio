@@ -4097,3 +4097,30 @@ html.theme-changing *::after {
     font-size: 13px;
   }
 }
+.summary-error-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.summary-error-actions a {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+
+  background: var(--text);
+  color: var(--bg);
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 760;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-error-actions a:hover {
+  transform: translateY(-1px);
+}
