@@ -160,6 +160,7 @@ let thinkingIndex = 0;
 
         if (articleText) {
   articleText.value = text.slice(0, 8000);
+  updateArticleClearButton();
 }
 
 currentAnalysisContext = {
@@ -538,35 +539,20 @@ renderPaperResults(lastPaperResults);
   }
 
   function cleanAndRankPapers(papers) {
-    const MIN_YEAR = 2020;
-    const MIN_ABSTRACT_LENGTH = 80;
     const currentYear = new Date().getFullYear();
 
-    const usefulPapers = papers.filter((paper) => {
-      const year = Number(paper.year || 0);
-      const abstract = String(paper.abstract || "").trim();
-      const citations = Number(paper.citedByCount || 0);
-      const citationPerYear = getCitationPerYear(paper);
-      const journalBadge = getJournalBadge(paper);
-      const isVeryRecent = year >= currentYear - 1;
-
-      return (
-        year >= MIN_YEAR &&
-        abstract.length >= MIN_ABSTRACT_LENGTH &&
-        (citations >= 5 || citationPerYear >= 2 || isVeryRecent || journalBadge)
-      );
+    const withTitle = papers.filter((paper) => {
+      return String(paper.title || "").trim();
     });
 
-    const fallbackPapers = papers.filter((paper) => {
+    const recentPapers = withTitle.filter((paper) => {
       const year = Number(paper.year || 0);
-      const abstract = String(paper.abstract || "").trim();
-
-      return year >= MIN_YEAR && abstract.length >= MIN_ABSTRACT_LENGTH;
+      return year >= 2020;
     });
 
-    const finalPapers = usefulPapers.length >= 5 ? usefulPapers : fallbackPapers;
+    const papersToUse = recentPapers.length >= 5 ? recentPapers : withTitle;
 
-    return finalPapers.sort((a, b) => {
+    return papersToUse.sort((a, b) => {
       return getPaperQualityScore(b) - getPaperQualityScore(a);
     });
   }
@@ -836,6 +822,7 @@ currentAnalysisContext = {
   researchTopic: paperQuery?.value?.trim() || "",
 };
       articleText.value = text;
+      updateArticleClearButton();
 
       setSummaryState("loading", `
         <div class="summary-loading">
