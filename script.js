@@ -382,10 +382,20 @@ scrollToSummaryOutput();
       const friendlyMessage = getFriendlySummaryError(error);
 
       setSummaryState("error", `
-        <div class="summary-error">
-          ${escapeHtml(friendlyMessage)}
-        </div>
-      `);
+  <div class="summary-error">
+    <p>${escapeHtml(friendlyMessage).replace(/\n/g, "<br>")}</p>
+
+    <div class="summary-error-actions">
+      <a
+        href="https://gemini.google.com/"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Open Gemini
+      </a>
+    </div>
+  </div>
+`);
 
       scrollToSummaryOutput();
     }
