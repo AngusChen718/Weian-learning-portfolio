@@ -4025,3 +4025,22 @@ html.theme-changing *::after {
 .article-clear-button[hidden] {
   display: none !important;
 }
+/* Paper Scout journal badges */
+
+.journal-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 780;
+  vertical-align: middle;
+}
+
+:root.dark .journal-badge {
+  background: rgba(255, 255, 255, 0.07);
+}
