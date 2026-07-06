@@ -160,7 +160,6 @@ let thinkingIndex = 0;
 
         if (articleText) {
   articleText.value = text.slice(0, 8000);
-          updateArticleClearButton();
 }
 
 currentAnalysisContext = {
@@ -433,7 +432,7 @@ scrollToSummaryOutput();
 
     try {
       const response = await fetch(
-        `${PAPER_SEARCH_API_URL}?q=${encodeURIComponent(query)}&limit=20`
+        `${PAPER_SEARCH_API_URL}?q=${encodeURIComponent(query)}&limit=50`
       );
 
       const data = await response.json();
@@ -442,7 +441,7 @@ scrollToSummaryOutput();
         throw new Error(data.error || "文獻搜尋失敗。");
       }
 
-      lastPaperResults = data.papers || [];
+      lastPaperResults = cleanAndRankPapers(data.papers || []);
 currentPaperPage = 1;
 activeReadingFilter = "all";
 
@@ -460,6 +459,116 @@ renderPaperResults(lastPaperResults);
       paperStatus.textContent = `搜尋失敗：${error.message}`;
       setSearchButtonState("idle");
     }
+  }
+
+
+  function getCitationPerYear(paper) {
+    const year = Number(paper.year || 0);
+    const citations = Number(paper.citedByCount || 0);
+    const currentYear = new Date().getFullYear();
+
+    if (!year || !citations) return 0;
+
+    const age = Math.max(1, currentYear - year + 1);
+    return Math.round((citations / age) * 10) / 10;
+  }
+
+  function getJournalBadge(paper) {
+    const venue = String(paper.venue || "").toLowerCase().trim();
+
+    if (
+      venue === "nature" ||
+      venue.startsWith("nature ") ||
+      venue.includes("nature communications") ||
+      venue.includes("nature materials") ||
+      venue.includes("nature chemistry") ||
+      venue.includes("nature catalysis") ||
+      venue.includes("nature energy") ||
+      venue.includes("nature nanotechnology") ||
+      venue.includes("nature biotechnology")
+    ) {
+      return "Nature Family";
+    }
+
+    if (
+      venue === "science" ||
+      venue.includes("science advances") ||
+      venue.includes("science robotics") ||
+      venue.includes("science translational medicine") ||
+      venue.includes("science immunology") ||
+      venue.includes("science signaling")
+    ) {
+      return "Science Family";
+    }
+
+    if (
+      venue.includes("advanced materials") ||
+      venue.includes("chemical reviews") ||
+      venue.includes("journal of the american chemical society") ||
+      venue.includes("angewandte chemie") ||
+      venue.includes("acs nano") ||
+      venue.includes("nano letters") ||
+      venue.includes("energy & environmental science")
+    ) {
+      return "High Impact";
+    }
+
+    return "";
+  }
+
+  function getPaperQualityScore(paper) {
+    const year = Number(paper.year || 0);
+    const currentYear = new Date().getFullYear();
+    const citationPerYear = getCitationPerYear(paper);
+    const journalBadge = getJournalBadge(paper);
+
+    let score = citationPerYear * 10;
+
+    if (year >= currentYear - 1) score += 25;
+    else if (year >= currentYear - 3) score += 16;
+    else if (year >= 2020) score += 8;
+
+    if (journalBadge === "Nature Family" || journalBadge === "Science Family") {
+      score += 30;
+    } else if (journalBadge === "High Impact") {
+      score += 18;
+    }
+
+    return score;
+  }
+
+  function cleanAndRankPapers(papers) {
+    const MIN_YEAR = 2020;
+    const MIN_ABSTRACT_LENGTH = 80;
+    const currentYear = new Date().getFullYear();
+
+    const usefulPapers = papers.filter((paper) => {
+      const year = Number(paper.year || 0);
+      const abstract = String(paper.abstract || "").trim();
+      const citations = Number(paper.citedByCount || 0);
+      const citationPerYear = getCitationPerYear(paper);
+      const journalBadge = getJournalBadge(paper);
+      const isVeryRecent = year >= currentYear - 1;
+
+      return (
+        year >= MIN_YEAR &&
+        abstract.length >= MIN_ABSTRACT_LENGTH &&
+        (citations >= 5 || citationPerYear >= 2 || isVeryRecent || journalBadge)
+      );
+    });
+
+    const fallbackPapers = papers.filter((paper) => {
+      const year = Number(paper.year || 0);
+      const abstract = String(paper.abstract || "").trim();
+
+      return year >= MIN_YEAR && abstract.length >= MIN_ABSTRACT_LENGTH;
+    });
+
+    const finalPapers = usefulPapers.length >= 5 ? usefulPapers : fallbackPapers;
+
+    return finalPapers.sort((a, b) => {
+      return getPaperQualityScore(b) - getPaperQualityScore(a);
+    });
   }
 
   function renderPaperSkeletons(count = 5) {
@@ -557,12 +666,16 @@ renderPaperResults(lastPaperResults);
           .map((concept) => `<span>${escapeHtml(concept)}</span>`)
           .join("");
 
+        const journalBadge = getJournalBadge(paper);
+        const citationPerYear = getCitationPerYear(paper);
+
         return `
           <article class="paper-card">
             <div class="paper-card-top">
               <div>
                 <p class="paper-priority">
                   ${escapeHtml(paper.stars || "")} ${escapeHtml(paper.priority || "")}
+                  ${journalBadge ? `<span class="journal-badge">${escapeHtml(journalBadge)}</span>` : ""}
                 </p>
                 <h3>${escapeHtml(paper.title || "Untitled")}</h3>
               </div>
@@ -577,6 +690,7 @@ renderPaperResults(lastPaperResults);
               ${escapeHtml(String(paper.year || "Unknown"))}
               · ${escapeHtml(paper.venue || "Unknown source")}
               · Citations: ${paper.citedByCount || 0}
+              ${citationPerYear ? ` · ${citationPerYear}/year` : ""}
             </p>
 
             <p class="paper-authors">
@@ -722,7 +836,7 @@ currentAnalysisContext = {
   researchTopic: paperQuery?.value?.trim() || "",
 };
       articleText.value = text;
-updateArticleClearButton();
+
       setSummaryState("loading", `
         <div class="summary-loading">
           <span class="thinking-dot"></span>
