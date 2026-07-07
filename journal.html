@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
@@ -104,6 +104,33 @@
           <textarea id="entryContent" placeholder="今天做了什麼？遇到什麼問題？學到了什麼？下一步是什麼？"></textarea>
         </label>
 
+        <div class="journal-image-uploader">
+          <div class="journal-image-uploader-top">
+            <div>
+              <label>Images</label>
+              <p>上傳實驗、筆記或學習紀錄圖片。</p>
+            </div>
+
+            <button
+              type="button"
+              class="journal-image-button"
+              id="entryImageButton"
+            >
+              Add Images
+            </button>
+
+            <input
+              type="file"
+              id="entryImageInput"
+              accept="image/*"
+              multiple
+              hidden
+            />
+          </div>
+
+          <div class="journal-image-preview" id="entryImagePreview"></div>
+        </div>
+
         <div class="editor-actions">
           <button class="button ghost" id="clearEditorBtn">Cancel</button>
           <button class="button ghost" id="saveDraftBtn">Save Draft</button>
@@ -148,6 +175,8 @@
               從左邊選一篇 Journal，或按 New Entry 新增一篇。
             </p>
 
+            <div class="journal-detail-images" id="detailImages"></div>
+
             <div class="journal-tags" id="detailTags"></div>
 
             <div class="editor-actions detail-actions">
@@ -159,6 +188,19 @@
       </section>
     </section>
   </main>
+
+  <div class="journal-lightbox" id="journalLightbox" hidden>
+    <button
+      type="button"
+      class="journal-lightbox-close"
+      id="journalLightboxClose"
+      aria-label="Close image preview"
+    >
+      ×
+    </button>
+
+    <img id="journalLightboxImage" alt="Journal image preview" />
+  </div>
 
   <script src="script.js"></script>
 </body>
