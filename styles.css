@@ -4433,3 +4433,111 @@ html.theme-changing *::after {
     align-items: flex-start;
   }
 }
+/* ==========================================================================
+   Journal Detail Modal
+   ========================================================================== */
+
+.journal-detail-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.journal-detail-backdrop[hidden] {
+  display: none !important;
+}
+
+.journal-detail-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 190;
+
+  width: min(920px, calc(100vw - 40px));
+  max-height: min(82vh, 820px);
+  overflow-y: auto;
+
+  transform: translate(-50%, -48%) scale(0.96);
+  opacity: 0;
+
+  padding: 44px;
+  border: 1px solid var(--line);
+  border-radius: 34px;
+  background: var(--surface);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.22);
+
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.journal-detail-modal[hidden] {
+  display: none !important;
+}
+
+.journal-detail-modal.is-open {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.journal-detail-close {
+  position: sticky;
+  top: 0;
+  float: right;
+
+  width: 44px;
+  height: 44px;
+  margin: -16px -16px 12px 18px;
+
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--soft);
+  color: var(--text);
+
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+
+  display: grid;
+  place-items: center;
+}
+
+.journal-detail-modal h3 {
+  margin-top: 14px;
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.journal-detail-modal .detail-content {
+  margin-top: 28px;
+  white-space: pre-wrap;
+  font-size: 19px;
+  line-height: 1.85;
+  color: var(--muted);
+}
+
+.journal-detail-modal .detail-actions {
+  margin-top: 34px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 760px) {
+  .journal-detail-modal {
+    width: calc(100vw - 24px);
+    max-height: 86vh;
+    padding: 28px;
+    border-radius: 26px;
+  }
+
+  .journal-detail-modal h3 {
+    font-size: 40px;
+  }
+
+  .journal-detail-modal .detail-content {
+    font-size: 16px;
+  }
+}
