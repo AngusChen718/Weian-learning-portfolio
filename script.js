@@ -1355,6 +1355,7 @@ detailBackdrop: document.getElementById("journalDetailBackdrop"),
     visibility: document.getElementById("entryVisibility"),
     mood: document.getElementById("entryMood"),
     time: document.getElementById("entryTime"),
+   date: document.getElementById("entryDate"),
     tags: document.getElementById("entryTags"),
     content: document.getElementById("entryContent"),
     editor: document.getElementById("editor"),
@@ -1681,8 +1682,17 @@ ${imageBlock}
     elements.visibility.value = entry?.visibility || "public";
     elements.mood.value = entry?.mood || "🙂";
     elements.time.value = entry?.timeSpent || "";
-    elements.tags.value = (entry?.tags || []).join(", ");
-    elements.content.value = entry?.content || "";
+
+if (elements.date) {
+  const entryDate = entry?.createdAt
+    ? new Date(entry.createdAt).toISOString().slice(0, 10)
+    : new Date().toISOString().slice(0, 10);
+
+  elements.date.value = entryDate;
+}
+
+elements.tags.value = (entry?.tags || []).join(", ");
+elements.content.value = entry?.content || "";
 
     const editorTitle = elements.editor.querySelector("h2");
     editorTitle.textContent = entry ? "Edit Entry" : "New Entry";
@@ -1712,7 +1722,12 @@ ${imageBlock}
     }
 
     const now = new Date().toISOString();
-    const oldEntry = state.entries.find((entry) => entry.id === state.editingId);
+const oldEntry = state.entries.find((entry) => entry.id === state.editingId);
+
+const selectedDate = elements.date?.value;
+const selectedDateISO = selectedDate
+  ? `${selectedDate}T12:00:00.000Z`
+  : oldEntry?.createdAt || now;
 
     return {
       id: oldEntry?.id || createId(),
@@ -1727,12 +1742,12 @@ ${imageBlock}
         .map((tag) => tag.trim())
         .filter(Boolean),
       content,
-      createdAt: oldEntry?.createdAt || now,
-      updatedAt: now,
-      publishedAt:
-        status === "published"
-          ? oldEntry?.publishedAt || now
-          : oldEntry?.publishedAt || null,
+     createdAt: selectedDateISO,
+updatedAt: now,
+publishedAt:
+  status === "published"
+    ? selectedDateISO
+    : oldEntry?.publishedAt || null,
     };
   }
 
@@ -1862,8 +1877,13 @@ function consumePendingJournalEntry() {
     elements.visibility.value = "public";
     elements.mood.value = "🙂";
     elements.time.value = "";
-    elements.tags.value = "";
-    elements.content.value = "";
+
+if (elements.date) {
+  elements.date.value = new Date().toISOString().slice(0, 10);
+}
+
+elements.tags.value = "";
+elements.content.value = "";
 
     const editorTitle = elements.editor.querySelector("h2");
     editorTitle.textContent = "New Entry";
