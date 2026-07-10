@@ -166,7 +166,17 @@
 
   <div class="journal-feed-list" id="journalEntryList"></div>
 
-  <article class="journal-detail hidden-detail" id="journalDetail" hidden>
+<div class="journal-detail-backdrop" id="journalDetailBackdrop" hidden></div>
+
+<article class="journal-detail journal-detail-modal" id="journalDetail" hidden>
+  <button
+    type="button"
+    class="journal-detail-close"
+    id="journalDetailClose"
+    aria-label="Close journal detail"
+  >
+    ×
+  </button>
     <p class="journal-date" id="detailDate">Select an entry</p>
     <h3 id="detailTitle">No journal selected</h3>
 
