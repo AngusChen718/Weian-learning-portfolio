@@ -1925,8 +1925,18 @@ document.addEventListener("keydown", (event) => {
     setEditor(null);
   });
 
-  elements.editEntry.addEventListener("click", () => setEditor(getSelectedEntry()));
-  elements.deleteEntry.addEventListener("click", deleteSelectedEntry);
+  elements.editEntry.addEventListener("click", () => {
+  const entry = getSelectedEntry();
+
+  if (!entry) return;
+
+  closeJournalDetailModal();
+  setEditor(entry);
+});
+  elements.deleteEntry.addEventListener("click", () => {
+  deleteSelectedEntry();
+  closeJournalDetailModal();
+});
 
   elements.clearEditor.addEventListener("click", () => {
     clearEditor();
