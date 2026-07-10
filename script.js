@@ -1345,6 +1345,10 @@ renderSearchHistory();
     detailMeta: document.getElementById("detailMeta"),
     detailContent: document.getElementById("detailContent"),
     detailTags: document.getElementById("detailTags"),
+   detailImages: document.getElementById("detailImages"),
+detail: document.getElementById("journalDetail"),
+detailClose: document.getElementById("journalDetailClose"),
+detailBackdrop: document.getElementById("journalDetailBackdrop"),
 
     title: document.getElementById("entryTitle"),
     category: document.getElementById("entryCategory"),
@@ -1445,6 +1449,33 @@ function closeJournalLightbox() {
 
   lightbox.hidden = true;
   lightboxImage.src = "";
+}
+ function openJournalDetailModal() {
+  if (!elements.detail) return;
+
+  elements.detail.hidden = false;
+
+  if (elements.detailBackdrop) {
+    elements.detailBackdrop.hidden = false;
+  }
+
+  requestAnimationFrame(() => {
+    elements.detail.classList.add("is-open");
+  });
+}
+
+function closeJournalDetailModal() {
+  if (!elements.detail) return;
+
+  elements.detail.classList.remove("is-open");
+
+  setTimeout(() => {
+    elements.detail.hidden = true;
+
+    if (elements.detailBackdrop) {
+      elements.detailBackdrop.hidden = true;
+    }
+  }, 220);
 }
   function openEditor() {
     app.classList.add("editor-open");
@@ -1588,14 +1619,16 @@ ${imageBlock}
       })
       .join("");
 
-    elements.list.querySelectorAll("[data-entry-id]").forEach((card) => {
-      card.addEventListener("click", () => {
-        state.selectedId = card.dataset.entryId;
-        state.editingId = null;
-        renderList();
-        renderDetail(getSelectedEntry());
-      });
-    });
+   elements.list.querySelectorAll("[data-entry-id]").forEach((card) => {
+  card.addEventListener("click", () => {
+    state.selectedId = card.dataset.entryId;
+    state.editingId = null;
+
+    renderList();
+    renderDetail(getSelectedEntry());
+    openJournalDetailModal();
+  });
+});
    elements.list.querySelectorAll("[data-lightbox-image]").forEach((button) => {
   button.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -1849,6 +1882,19 @@ if (journalLightbox) {
     }
   });
 }
+ if (elements.detailClose) {
+  elements.detailClose.addEventListener("click", closeJournalDetailModal);
+}
+
+if (elements.detailBackdrop) {
+  elements.detailBackdrop.addEventListener("click", closeJournalDetailModal);
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeJournalDetailModal();
+  }
+});
   elements.newEntry.addEventListener("click", () => {
     if (app.classList.contains("editor-open")) {
       clearEditor();
