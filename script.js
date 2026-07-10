@@ -1427,7 +1427,25 @@ renderSearchHistory();
       toast.classList.remove("show");
     }, 1800);
   }
+function openJournalLightbox(imageUrl) {
+  const lightbox = document.getElementById("journalLightbox");
+  const lightboxImage = document.getElementById("journalLightboxImage");
 
+  if (!lightbox || !lightboxImage || !imageUrl) return;
+
+  lightboxImage.src = imageUrl;
+  lightbox.hidden = false;
+}
+
+function closeJournalLightbox() {
+  const lightbox = document.getElementById("journalLightbox");
+  const lightboxImage = document.getElementById("journalLightboxImage");
+
+  if (!lightbox || !lightboxImage) return;
+
+  lightbox.hidden = true;
+  lightboxImage.src = "";
+}
   function openEditor() {
     app.classList.add("editor-open");
 
@@ -1523,18 +1541,38 @@ renderSearchHistory();
           .slice(0, 3)
           .map((tag) => `<span>${escapeHtml(tag)}</span>`)
           .join("");
+       const images = (entry.images || [])
+  .slice(0, 3)
+  .map((image) => {
+    return `
+      <button
+        type="button"
+        class="journal-entry-image"
+        data-lightbox-image="${escapeHtml(image.dataUrl)}"
+      >
+        <img src="${escapeHtml(image.dataUrl)}" alt="${escapeHtml(image.name || "Journal image")}" />
+      </button>
+    `;
+  })
+  .join("");
+
+const imageBlock = images
+  ? `<div class="journal-entry-images">${images}</div>`
+  : "";
 
         return `
           <article class="journal-entry ${isActive ? "active" : ""}" data-entry-id="${entry.id}">
             <div>
               <p class="journal-date">${formatDate(entry.publishedAt || entry.createdAt)}</p>
               <h3>${escapeHtml(entry.title)}</h3>
-              <p>${escapeHtml(entry.content).slice(0, 120)}${entry.content.length > 120 ? "..." : ""}</p>
+              <p>${escapeHtml(entry.content).slice(0, 180)}${entry.content.length > 180 ? "..." : ""}</p>
 
-              <div class="journal-tags">
-                <span>${escapeHtml(entry.category)}</span>
-                ${tags}
-              </div>
+${imageBlock}
+
+<div class="journal-tags">
+  <span>${escapeHtml(entry.category)}</span>
+  ${tags}
+</div>
             </div>
 
             <div class="journal-meta">
@@ -1558,6 +1596,12 @@ renderSearchHistory();
         renderDetail(getSelectedEntry());
       });
     });
+   elements.list.querySelectorAll("[data-lightbox-image]").forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    openJournalLightbox(button.dataset.lightboxImage);
+  });
+});
 
     renderDetail(getSelectedEntry());
   }
@@ -1791,7 +1835,20 @@ function consumePendingJournalEntry() {
     const editorTitle = elements.editor.querySelector("h2");
     editorTitle.textContent = "New Entry";
   }
+const journalLightbox = document.getElementById("journalLightbox");
+const journalLightboxClose = document.getElementById("journalLightboxClose");
 
+if (journalLightboxClose) {
+  journalLightboxClose.addEventListener("click", closeJournalLightbox);
+}
+
+if (journalLightbox) {
+  journalLightbox.addEventListener("click", (event) => {
+    if (event.target === journalLightbox) {
+      closeJournalLightbox();
+    }
+  });
+}
   elements.newEntry.addEventListener("click", () => {
     if (app.classList.contains("editor-open")) {
       clearEditor();
