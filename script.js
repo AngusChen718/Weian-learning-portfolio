@@ -1940,13 +1940,33 @@ document.addEventListener("keydown", (event) => {
   closeJournalDetailModal();
 });
 
-  elements.clearEditor.addEventListener("click", () => {
+  if (elements.clearEditor) {
+  elements.clearEditor.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     clearEditor();
     closeEditor();
   });
+}
 
-  elements.saveDraft.addEventListener("click", () => upsertEntry("draft"));
-  elements.publish.addEventListener("click", () => upsertEntry("published"));
+if (elements.saveDraft) {
+  elements.saveDraft.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    upsertEntry("draft");
+  });
+}
+
+if (elements.publish) {
+  elements.publish.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    upsertEntry("published");
+  });
+}
 
   elements.search.addEventListener("input", (event) => {
     state.search = event.target.value;
