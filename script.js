@@ -1479,14 +1479,16 @@ function closeJournalDetailModal() {
   }, 220);
 }
   function openEditor() {
-    app.classList.add("editor-open");
+  closeJournalDetailModal();
+  closeJournalLightbox();
 
-    if (elements.newEntry) {
-      elements.newEntry.textContent = "Close Editor";
-      elements.newEntry.setAttribute("aria-expanded", "true");
-    }
+  app.classList.add("editor-open");
+
+  if (elements.newEntry) {
+    elements.newEntry.textContent = "Close Editor";
+    elements.newEntry.setAttribute("aria-expanded", "true");
   }
-
+}
   function closeEditor() {
     app.classList.remove("editor-open");
 
