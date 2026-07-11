@@ -1359,6 +1359,11 @@ detailBackdrop: document.getElementById("journalDetailBackdrop"),
     tags: document.getElementById("entryTags"),
     content: document.getElementById("entryContent"),
     editor: document.getElementById("editor"),
+   imageButton: document.getElementById("entryImageButton"),
+
+imageInput: document.getElementById("entryImageInput"),
+
+imagePreview: document.getElementById("entryImagePreview"),
   };
 
   const seedEntries = [
@@ -1401,7 +1406,7 @@ detailBackdrop: document.getElementById("journalDetailBackdrop"),
     filter: "all",
     search: "",
   };
-
+let editorImages = [];
   function loadEntries() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -1432,6 +1437,57 @@ detailBackdrop: document.getElementById("journalDetailBackdrop"),
       toast.classList.remove("show");
     }, 1800);
   }
+ function renderEditorImages() {
+  if (!elements.imagePreview) return;
+
+  if (!editorImages.length) {
+    elements.imagePreview.innerHTML = "";
+    return;
+  }
+
+  elements.imagePreview.innerHTML = editorImages
+    .map((image, index) => {
+      return `
+        <div class="journal-image-thumb">
+          <img src="${escapeHtml(image.dataUrl)}" alt="${escapeHtml(image.name || "Journal image")}" />
+
+          <button
+            type="button"
+            class="journal-image-remove"
+            data-remove-image="${index}"
+          >
+            ×
+          </button>
+        </div>
+      `;
+    })
+    .join("");
+
+  elements.imagePreview.querySelectorAll("[data-remove-image]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const index = Number(button.dataset.removeImage);
+      editorImages.splice(index, 1);
+      renderEditorImages();
+    });
+  });
+}
+
+function readImageFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      resolve({
+        name: file.name,
+        type: file.type,
+        dataUrl: reader.result,
+      });
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 function openJournalLightbox(imageUrl) {
   const lightbox = document.getElementById("journalLightbox");
   const lightboxImage = document.getElementById("journalLightboxImage");
@@ -1705,7 +1761,8 @@ if (elements.date) {
 
 elements.tags.value = (entry?.tags || []).join(", ");
 elements.content.value = entry?.content || "";
-
+editorImages = Array.isArray(entry?.images) ? [...entry.images] : [];
+renderEditorImages();
     const editorTitle = elements.editor.querySelector("h2");
     editorTitle.textContent = entry ? "Edit Entry" : "New Entry";
 
@@ -1754,6 +1811,7 @@ const selectedDateISO = selectedDate
         .map((tag) => tag.trim())
         .filter(Boolean),
       content,
+images: editorImages,
      createdAt: selectedDateISO,
 updatedAt: now,
 publishedAt:
@@ -1896,6 +1954,8 @@ if (elements.date) {
 
 elements.tags.value = "";
 elements.content.value = "";
+   editorImages = [];
+renderEditorImages();
 
     const editorTitle = elements.editor.querySelector("h2");
     editorTitle.textContent = "New Entry";
@@ -1928,6 +1988,30 @@ document.addEventListener("keydown", (event) => {
   }
 });
   if (elements.newEntry) {
+   if (elements.imageButton && elements.imageInput) {
+  elements.imageButton.addEventListener("click", () => {
+    elements.imageInput.click();
+  });
+}
+
+if (elements.imageInput) {
+  elements.imageInput.addEventListener("change", async (event) => {
+    const files = Array.from(event.target.files || []);
+
+    if (!files.length) return;
+
+    const remainingSlots = Math.max(0, 3 - editorImages.length);
+    const selectedFiles = files.slice(0, remainingSlots);
+
+    const images = await Promise.all(selectedFiles.map(readImageFile));
+
+    editorImages = [...editorImages, ...images].slice(0, 3);
+
+    renderEditorImages();
+
+    elements.imageInput.value = "";
+  });
+}
     elements.newEntry.addEventListener("click", () => {
       if (app.classList.contains("editor-open")) {
         clearEditor();
