@@ -4557,3 +4557,15 @@ html.theme-changing *::after {
 .journal-detail-modal {
   pointer-events: auto;
 }
+/* ==========================================================================
+   Emergency Fix: Disable Journal Detail Modal
+   ========================================================================== */
+
+.journal-detail-backdrop,
+.journal-detail-modal,
+#journalDetailBackdrop,
+#journalDetail {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
