@@ -1647,6 +1647,16 @@ ${imageBlock}
   }
 
   function renderDetail(entry) {
+    if (
+      !elements.detailDate ||
+      !elements.detailTitle ||
+      !elements.detailMeta ||
+      !elements.detailContent ||
+      !elements.detailTags
+    ) {
+      return;
+    }
+
     if (!entry) {
       elements.detailDate.textContent = "Select an entry";
       elements.detailTitle.textContent = "No journal selected";
@@ -1917,28 +1927,35 @@ document.addEventListener("keydown", (event) => {
     closeJournalDetailModal();
   }
 });
-  elements.newEntry.addEventListener("click", () => {
-    if (app.classList.contains("editor-open")) {
-      clearEditor();
-      closeEditor();
-      return;
-    }
+  if (elements.newEntry) {
+    elements.newEntry.addEventListener("click", () => {
+      if (app.classList.contains("editor-open")) {
+        clearEditor();
+        closeEditor();
+        return;
+      }
 
-    setEditor(null);
-  });
+      setEditor(null);
+    });
+  }
 
-  elements.editEntry.addEventListener("click", () => {
-  const entry = getSelectedEntry();
+  if (elements.editEntry) {
+    elements.editEntry.addEventListener("click", () => {
+      const entry = getSelectedEntry();
 
-  if (!entry) return;
+      if (!entry) return;
 
-  closeJournalDetailModal();
-  setEditor(entry);
-});
-  elements.deleteEntry.addEventListener("click", () => {
-  deleteSelectedEntry();
-  closeJournalDetailModal();
-});
+      closeJournalDetailModal();
+      setEditor(entry);
+    });
+  }
+
+  if (elements.deleteEntry) {
+    elements.deleteEntry.addEventListener("click", () => {
+      deleteSelectedEntry();
+      closeJournalDetailModal();
+    });
+  }
 
   if (elements.clearEditor) {
   elements.clearEditor.addEventListener("click", (event) => {
@@ -1968,10 +1985,12 @@ if (elements.publish) {
   });
 }
 
-  elements.search.addEventListener("input", (event) => {
-    state.search = event.target.value;
-    renderList();
-  });
+  if (elements.search) {
+    elements.search.addEventListener("input", (event) => {
+      state.search = event.target.value;
+      renderList();
+    });
+  }
 
   elements.filters.forEach((button) => {
     button.addEventListener("click", () => {
@@ -1983,6 +2002,33 @@ if (elements.publish) {
       renderList();
     });
   });
+
+  // Extra safe: make sure these three editor buttons always work.
+  // This is here to protect Journal from older modal/detail changes.
+  document.addEventListener("click", (event) => {
+    const publishButton = event.target.closest("#publishEntryBtn");
+    const draftButton = event.target.closest("#saveDraftBtn");
+    const cancelButton = event.target.closest("#clearEditorBtn");
+
+    if (!publishButton && !draftButton && !cancelButton) return;
+
+    event.preventDefault();
+
+    if (publishButton) {
+      upsertEntry("published");
+      return;
+    }
+
+    if (draftButton) {
+      upsertEntry("draft");
+      return;
+    }
+
+    if (cancelButton) {
+      clearEditor();
+      closeEditor();
+    }
+  }, true);
 
   closeEditor();
 renderList();
