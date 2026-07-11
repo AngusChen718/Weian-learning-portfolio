@@ -4541,3 +4541,19 @@ html.theme-changing *::after {
     font-size: 16px;
   }
 }
+/* Fix: prevent hidden journal modal/backdrop from blocking editor buttons */
+
+.journal-detail-backdrop[hidden],
+.journal-detail-modal[hidden],
+.journal-lightbox[hidden] {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+.journal-detail-backdrop {
+  pointer-events: auto;
+}
+
+.journal-detail-modal {
+  pointer-events: auto;
+}
