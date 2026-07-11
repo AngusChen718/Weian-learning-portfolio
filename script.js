@@ -1598,9 +1598,9 @@ function closeJournalDetailModal() {
           .toLowerCase()
           .includes(keyword);
       })
-      .sort((a, b) => {
-        return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
-      });
+     .sort((a, b) => {
+  return new Date(b.publishedAt || b.createdAt) - new Date(a.publishedAt || a.createdAt);
+});
   }
 
   function renderList() {
