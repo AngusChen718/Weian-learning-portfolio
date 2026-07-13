@@ -1919,18 +1919,18 @@ html.theme-changing .theme-toggle {
 
 /* Journal Fix: spacing + fixed filters */
 
-/* New Entry è· Journal æéè·é¢ */
+/* New Entry 跟 Journal 拉開距離 */
 .journal-editor-preview {
   margin-bottom: 52px !important;
 }
 
-/* Journal æ´ååå¡ä¸è¦è²¼å¤ªç· */
+/* Journal 整個區塊不要貼太緊 */
 .journal-shell {
   margin-top: 18px !important;
   align-items: start;
 }
 
-/* å·¦é Filters åºå®å¨ç«é¢ä¸ */
+/* 左邊 Filters 固定在畫面上 */
 .journal-sidebar {
   position: fixed !important;
   top: 118px !important;
@@ -1941,12 +1941,12 @@ html.theme-changing .theme-toggle {
   z-index: 5;
 }
 
-/* å çº filter è® fixedï¼å³éå§å®¹è¦çåºå·¦å´ç©ºé */
+/* 因為 filter 變 fixed，右邊內容要留出左側空間 */
 .journal-main {
   margin-left: 260px !important;
 }
 
-/* hover æä¸é¢é»ç·ä¸è¦è¢«è£æ */
+/* hover 時上面黑線不要被裁掉 */
 .journal-entry-list {
   padding: 10px 10px 22px 4px !important;
 }
@@ -1955,7 +1955,7 @@ html.theme-changing .theme-toggle {
   transform: translateY(-2px) !important;
 }
 
-/* iPad / ææ©ä¸è¦ fixedï¼ä¸ç¶ææ ç */
+/* iPad / 手機不要 fixed，不然會擠爆 */
 @media (max-width: 880px) {
   .journal-sidebar {
     position: static !important;
@@ -2028,13 +2028,13 @@ html.theme-changing .theme-toggle {
 
 /* Journal Fix: align cards + loosen title spacing */
 
-/* è® Journal æ¨é¡ä¸è¦é»å¨ä¸èµ· */
+/* 讓 Journal 標題不要黏在一起 */
 .journal-toolbar h2 {
   letter-spacing: -0.035em !important;
   line-height: 0.95 !important;
 }
 
-/* å·¦å³å§å®¹å¡çé ç«¯åé½ */
+/* 左右內容卡片頂端切齊 */
 .journal-entry-list {
   padding-top: 0 !important;
 }
@@ -2043,26 +2043,26 @@ html.theme-changing .theme-toggle {
   margin-top: 0 !important;
 }
 
-/* ä½ä¿çå·¦å³è·åºé¨ç©ºéï¼é¿å hover è¢«è£ */
+/* 但保留左右跟底部空間，避免 hover 被裁 */
 .journal-entry-list {
   padding-right: 10px !important;
   padding-bottom: 22px !important;
   padding-left: 4px !important;
 }
 
-/* å¡ç hover ä¸è¦å¾ä¸æµ®å¤ªå¤ï¼ä¸ç¶åæåå°ç· */
+/* 卡片 hover 不要往上浮太多，不然又會吃到線 */
 .journal-entry:hover {
   transform: translateY(-1px) !important;
 }
 
 /* Journal Fix: no vertical hover clipping */
 
-/* å·¦å³å©éä¸èµ·å¾ä¸ï¼çåºå¼å¸æ */
+/* 左右兩邊一起往下，留出呼吸感 */
 .journal-layout {
   padding-top: 14px !important;
 }
 
-/* å·¦éåè¡¨æ¬èº«ä¹çä¸é»ç©ºéï¼é¿åä¸ç·£è¢«è£ */
+/* 左邊列表本身也留一點空間，避免上緣被裁 */
 .journal-entry-list {
   padding-top: 10px !important;
   padding-right: 10px !important;
@@ -2070,12 +2070,12 @@ html.theme-changing .theme-toggle {
   padding-left: 4px !important;
 }
 
-/* å³éè©³ç´°å¡çä¹ä¸èµ·ä¸ç§»ï¼è·å·¦éåé½ */
+/* 右邊詳細卡片也一起下移，跟左邊切齊 */
 .journal-detail {
   margin-top: 10px !important;
 }
 
-/* ææä¸ä¸æµ®å */
+/* 拔掉上下浮動 */
 .journal-entry,
 .journal-entry:hover,
 .journal-card,
@@ -2083,7 +2083,7 @@ html.theme-changing .theme-toggle {
   transform: none !important;
 }
 
-/* hover æ¹æéæ¡ï¼é°å½±ï¼ä¸åç§»å */
+/* hover 改成邊框＋陰影，不再移動 */
 .journal-entry:hover {
   border-color: var(--text) !important;
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.08) !important;
@@ -2110,13 +2110,13 @@ html.theme-changing .theme-toggle {
   align-items: center !important;
 }
 
-/* ä¿® Time Spent number input çèµ·ä¾å¤ªé«çåé¡ */
+/* 修 Time Spent number input 看起來太高的問題 */
 .editor-card input[type="number"] {
   line-height: 58px !important;
   appearance: textfield;
 }
 
-/* Chrome / Safari ç number ä¸ä¸ç®­é ­ä¸è¦æé«åº¦ææ­ª */
+/* Chrome / Safari 的 number 上下箭頭不要把高度撐歪 */
 .editor-card input[type="number"]::-webkit-outer-spin-button,
 .editor-card input[type="number"]::-webkit-inner-spin-button {
   margin: 0;
@@ -2124,20 +2124,20 @@ html.theme-changing .theme-toggle {
 
 /* Journal Fix: softer active selected card */
 
-/* ä¸è¦è®ç®åé¸ä¸­ç journal åºç¾ç²é»æ¡ */
+/* 不要讓目前選中的 journal 出現粗黑框 */
 .journal-entry.active {
   border-color: var(--line) !important;
   background: rgba(17, 17, 17, 0.045) !important;
   box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.04) !important;
 }
 
-/* hover çæåä¹ä¸è¦è®é»æ¡ */
+/* hover 的時候也不要變黑框 */
 .journal-entry:hover {
   border-color: rgba(17, 17, 17, 0.18) !important;
   background: rgba(17, 17, 17, 0.055) !important;
 }
 
-/* dark mode å°æ */
+/* dark mode 對應 */
 :root.dark .journal-entry.active {
   border-color: var(--line) !important;
   background: rgba(255, 255, 255, 0.075) !important;
@@ -2242,12 +2242,12 @@ html.theme-changing .theme-toggle {
 
 /* Journal Interaction: clean Apple / Notion style */
 
-/* åæä¹åé£æ¢å·¦å´ accent bar éæ */
+/* 先把之前那條左側 accent bar 關掉 */
 .journal-entry::before {
   display: none !important;
 }
 
-/* åºæ¬çæ */
+/* 基本狀態 */
 .journal-entry {
   transform: none !important;
   cursor: pointer;
@@ -2260,7 +2260,7 @@ html.theme-changing .theme-toggle {
     box-shadow 0.18s ease;
 }
 
-/* æ¨é¡ãtag ä¹å ä¸é»äºå */
+/* 標題、tag 也加一點互動 */
 .journal-entry h3 {
   color: var(--text);
   opacity: 0.88;
@@ -2275,7 +2275,7 @@ html.theme-changing .theme-toggle {
     background-color 0.18s ease;
 }
 
-/* Hoverï¼åªå ä¸é»é»å±¤æ¬¡ï¼ä¸æµ®èµ·ä¾ */
+/* Hover：只加一點點層次，不浮起來 */
 .journal-entry:hover {
   transform: none !important;
   background: rgba(17, 17, 17, 0.04) !important;
@@ -2293,7 +2293,7 @@ html.theme-changing .theme-toggle {
   color: var(--text) !important;
 }
 
-/* Activeï¼ç®åé¸å°çæç« ï¼åªæ¯ hover åæé¡¯ä¸é»é» */
+/* Active：目前選到的文章，只比 hover 再明顯一點點 */
 .journal-entry.active {
   transform: none !important;
   background: rgba(17, 17, 17, 0.055) !important;
@@ -2346,7 +2346,7 @@ html.theme-changing .theme-toggle {
     box-shadow 0.28s ease !important;
 }
 
-/* é è¨­æ¶èµ· */
+/* 預設收起 */
 .journal-workspace:not(.editor-open) .journal-editor-preview {
   max-height: 0 !important;
   opacity: 0 !important;
@@ -2360,7 +2360,7 @@ html.theme-changing .theme-toggle {
   pointer-events: none !important;
 }
 
-/* å±éçæ */
+/* 展開狀態 */
 .journal-workspace.editor-open .journal-editor-preview {
   max-height: 1200px !important;
   opacity: 1 !important;
@@ -2369,7 +2369,7 @@ html.theme-changing .theme-toggle {
   margin-bottom: 76px !important;
 }
 
-/* Editor è£¡é¢é²å ´æ´æ¼äº® */
+/* Editor 裡面進場更漂亮 */
 .journal-workspace.editor-open .editor-card {
   animation: editorCardIn 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -2386,7 +2386,7 @@ html.theme-changing .theme-toggle {
   }
 }
 
-/* Editor æ¬ä½ focus è³ªæ */
+/* Editor 欄位 focus 質感 */
 .editor-card input:focus,
 .editor-card select:focus,
 .editor-card textarea:focus,
@@ -2406,7 +2406,7 @@ html.theme-changing .theme-toggle {
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Toast å°æç¤º */
+/* Toast 小提示 */
 .journal-toast {
   position: fixed;
   left: 50%;
@@ -2517,7 +2517,7 @@ html.theme-changing .theme-toggle {
 
 /* AI Summary v2: compact search + centered empty state */
 
-/* Generate Summary æéæ¹æå°å°æå°è å */
+/* Generate Summary 按鈕改成小小搜尋膠囊 */
 #summaryButton {
   width: min(520px, 100%) !important;
   height: 54px !important;
@@ -2550,7 +2550,7 @@ html.theme-changing .theme-toggle {
   transform: scale(0.985);
 }
 
-/* AI Summary å¤æ¡ä¸è¦å¤ªå·¨å¤§ */
+/* AI Summary 外框不要太巨大 */
 .summary-output {
   height: auto !important;
   min-height: 280px !important;
@@ -2558,12 +2558,12 @@ html.theme-changing .theme-toggle {
   overflow: hidden !important;
 }
 
-/* æ¨é¡å */
+/* 標題列 */
 .summary-output .output-title {
   padding: 20px 30px 14px !important;
 }
 
-/* placeholder ç½®ä¸­ */
+/* placeholder 置中 */
 .summary-output > .placeholder {
   min-height: 230px !important;
   margin: 0 !important;
@@ -2579,7 +2579,7 @@ html.theme-changing .theme-toggle {
   line-height: 1.5 !important;
 }
 
-/* Loading ä¹ç½®ä¸­ï¼ä½ä¸è¦æå¤ªé« */
+/* Loading 也置中，但不要撐太高 */
 .summary-output .ai-thinking {
   min-height: 280px !important;
   padding: 0 30px !important;
@@ -2593,7 +2593,7 @@ html.theme-changing .theme-toggle {
   border-radius: 0 !important;
 }
 
-/* Loading å§å®¹è®æå°å¡ç */
+/* Loading 內容變成小卡片 */
 .summary-output .ai-thinking > div {
   padding: 22px 26px;
   border: 1px solid var(--line);
@@ -2606,12 +2606,12 @@ html.theme-changing .theme-toggle {
   background: rgba(255, 255, 255, 0.055);
 }
 
-/* å·¦éé»é»ä¸è¦è·å¤ªé  */
+/* 左邊點點不要跑太遠 */
 .summary-output .thinking-dot {
   margin-right: 4px;
 }
 
-/* æè¦çµæå§å®¹ï¼å§å®¹å°å°±ç­ï¼å§å®¹å¤ææ» */
+/* 摘要結果內容：內容少就短，內容多才滑 */
 .summary-output .ai-summary,
 .summary-output .error-detail {
   max-height: 70vh !important;
@@ -2619,7 +2619,7 @@ html.theme-changing .theme-toggle {
   padding: 24px 30px 34px !important;
 }
 
-/* ç§»é¤èçåºé¨è¶å¤§ç©ºç½ */
+/* 移除舊的底部超大空白 */
 .summary-output .ai-summary::after,
 .summary-output .error-detail::after {
   display: none !important;
@@ -2631,7 +2631,7 @@ html.theme-changing .theme-toggle {
   margin-bottom: 0 !important;
 }
 
-/* ææ© / iPad */
+/* 手機 / iPad */
 @media (max-width: 760px) {
   #summaryButton {
     width: 100% !important;
@@ -2886,7 +2886,7 @@ button#summaryButton,
   margin-bottom: 0 !important;
 }
 
-/* placeholder ç½®ä¸­ */
+/* placeholder 置中 */
 .summary-output > .placeholder,
 .summary-output .placeholder {
   min-height: 180px !important;
@@ -2897,7 +2897,7 @@ button#summaryButton,
   text-align: center !important;
 }
 
-/* loading ä¸è¦æç */
+/* loading 不要撐爆 */
 .summary-output .ai-thinking {
   width: fit-content !important;
   max-width: min(520px, calc(100% - 48px)) !important;
@@ -3095,23 +3095,23 @@ margin-bottom: 24px !important;
 margin-bottom: 0 !important; 
 }
 
-/* è®å¤æ¡ä¸è¦ææå¾ä¸è¡è£æ */ 
+/* 讓外框不要把最後一行裁掉 */ 
 .summary-output[data-state="result"] { 
 overflow: visible !important; 
 }
 
 .your-summary-container {
-  /* åªé¤æè¨»è§£æåæ¬ç height: 400px; éç¨®å¯«æ³ */
+  /* 刪除或註解掉原本的 height: 400px; 這種寫法 */
   
-  height: auto;        /* è®é«åº¦é¨å§å®¹èªåä¼¸ç¸® */
-  min-height: 200px;   /* è¨­å®ä¸åä¿åºçæå°é«åº¦ */
+  height: auto;        /* 讓高度隨內容自動伸縮 */
+  min-height: 200px;   /* 設定一個保底的最小高度 */
 }
 
 /*  
 Paper Scout Search History Drawer 
  */
 
-/* Header å³å´ï¼OpenAlex èªªæ + History æé */ 
+/* Header 右側：OpenAlex 說明 + History 按鈕 */ 
 .paper-search-actions { 
 display: flex; 
 align-items: flex-start; 
@@ -3152,7 +3152,7 @@ box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
 transform: scale(0.96); 
 }
 
-/* èæ¯é®ç½© */ 
+/* 背景遮罩 */ 
 .history-backdrop { 
 position: fixed; 
 inset: 0; 
@@ -3175,7 +3175,7 @@ pointer-events: auto;
 display: none !important; 
 }
 
-/* å³å´æ½å± */ 
+/* 右側抽屜 */ 
 .history-drawer { 
 position: fixed; 
 top: 0; 
@@ -3254,7 +3254,7 @@ gap: 12px;
 flex: 1; 
 }
 
-/* æ²ææ­·å²ç´éæ */ 
+/* 沒有歷史紀錄時 */ 
 .history-empty { 
 min-height: 220px; 
 border: 1px dashed var(--line); 
@@ -3280,7 +3280,7 @@ font-size: 14px;
 line-height: 1.55; 
 }
 
-/* JS ä¹å¾æçæçæ¯ä¸ç­ç´é */ 
+/* JS 之後會生成的每一筆紀錄 */ 
 .history-item { 
 width: 100%; 
 text-align: left; 
@@ -3417,7 +3417,7 @@ margin-left: auto !important;
 max-width: none !important; 
 }
 
-/* ææ© / çªç«é¢ */ 
+/* 手機 / 窄畫面 */ 
 @media (max-width: 760px) { 
 .paper-title-row { 
 align-items: flex-start !important; 
@@ -3437,24 +3437,24 @@ margin-left: 0 !important;
 }
 
 /* ===================================================
-   ð¡ ä¿®æ­£åææ¨¡å¼ææå­éçèéé»çè¦èè¦å
+   💡 修正切換模式時文字閃爍與鈍點的覆蓋規則
    =================================================== */
 html.theme-changing *,
 html.theme-changing *::before,
 html.theme-changing *::after {
-  /* å¼·å¶å°è½å ´æéç¸®ç­è³ 0.35sï¼è body å®ç¾åæ­¥ï¼ä¸¦æ¹é¤åæ¬ !important é æçå»¶é² */
+  /* 強制將轉場時間縮短至 0.35s，與 body 完美同步，並抹除原本 !important 造成的延遲 */
   transition:
     background 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
   transition-property: background, background-color, color, border-color, box-shadow, opacity, transform !important;
 }
 
-/* ===== çµæ¥µä¿®æ­£çï¼å®ç¾èçææè²éï¼æ¶æ»åæé é» ===== */
+/* ===== 終極修正版：完美處理所有色階，消滅切換頓點 ===== */
 html.theme-changing *,
 html.theme-changing *::before,
 html.theme-changing *::after {
   /* 
-     ééµ 1ï¼åªéæ¸¡é¡è²ï¼æ¿æå®¹æè¡çªç backgroundï¼åªç background-colorï¼è transformã
-     ééµ 2ï¼æéè¨­å®çº 0.4sãéè½ç¢ºä¿åç«å¨ JS å®æå¨ç§»é¤é¡å¥åå°±ãææ©åªéå°èµ°å®ãï¼çµå°ä¸æåç¼çè¢«å¼·å¶è°æ¬çè·³åæï¼
+     關鍵 1：只過渡顏色，拿掉容易衝突的 background（只留 background-color）與 transform。
+     關鍵 2：時間設定為 0.4s。這能確保動畫在 JS 定時器移除類別前就「提早優雅地走完」，絕對不會再發生被強制腰斬的跳動感！
   */
   transition:
     background-color 0.4s ease,
@@ -3468,7 +3468,7 @@ html.theme-changing .theme-toggle {
 }
 
 /* ===================================================
-   â³ åè©¦æ¹æ¡ï¼å°å¨åè®è²æéæé·è³ 0.75s è¦èæ¸¬è©¦
+   ⏳ 嘗試方案：將全域變色時間拉長至 0.75s 覆蓋測試
    =================================================== */
 html.theme-changing *,
 html.theme-changing *::before,
@@ -3481,15 +3481,15 @@ html.theme-changing *::after {
 }
 
 /* ===================================================
-   ð¯ çµæ¥µå°é½ï¼ç²¾æºå¹é JavaScript ç 450ms è¨æå¨
+   🎯 終極對齊：精準匹配 JavaScript 的 450ms 計時器
    =================================================== */
 html.theme-changing *,
 html.theme-changing *::before,
 html.theme-changing *::after {
   /* 
-     å°è½å ´æéå®çº 0.42sï¼ç¢ºä¿å¨ JS å·è¡å® 450ms ç§»é¤é¡å¥åï¼
-     å¨åææè²éçæå­ãèæ¯ãå¡çé°å½±å°±å·²ç¶åªéå°ãææ©èµ°å®åç«ãã
-     éè½ 100% æ¶é¤åè·¯è¢«å¼·è¡æ·å¥ãè·³è²çéæï¼
+     將轉場時間定為 0.42s，確保在 JS 執行完 450ms 移除類別前，
+     全域所有色階的文字、背景、卡片陰影就已經優雅地「提早走完動畫」。
+     這能 100% 消除半路被強行斷句、跳色的鈍感！
   ```css
   */
   transition:
@@ -3500,7 +3500,7 @@ html.theme-changing *::after {
 }
 
 /* ===================================================
-   ð é»è²è®ç½å­ï¼åæè³æ·±è²æ¨¡å¼ï¼çåå­¸å¡é è£å
+   🌗 黑色變白字（切換至深色模式）的光學卡頓補償
    =================================================== */
 :root.dark html.theme-changing h1,
 :root.dark html.theme-changing h2,
@@ -3508,18 +3508,18 @@ html.theme-changing *::after {
 :root.dark html.theme-changing p,
 :root.dark html.theme-changing span {
   /* 
-     ç¶ãåæè³æ·±è²æ¨¡å¼ï¼æå­ç±é»è®ç½ï¼ãæï¼
-     å°å¤§æ¨é¡èä¸»è¦æå­ç color è½å ´æéå®ç¨å¾®èª¿æé·å° 0.45s æ»¿æ ¼ã
-     éæ¨£å¯ä»¥å®ç¾å»å JS ææ class çæå¾ä¸å¹ï¼æ¶æ»é»è®ç½æçåå­¸ææ¯æï¼
+     當「切換至深色模式（文字由黑變白）」時，
+     將大標題與主要文字的 color 轉場時間單獨微調拉長到 0.45s 滿格。
+     這樣可以完美吻合 JS 拔掉 class 的最後一幀，消滅黑變白時的光學拉扯感！
   */
   transition-duration: 0.45s !important;
-  transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important; /* æ´æåçæ¸éæ²ç· */
+  transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important; /* 更柔和的減速曲線 */
 }
 /* ===================================================
-   ð çµæ¥µå®ç¾å°ç¨±æµï¼å¾¹åºè§£æ±ºéååæï¼å«æ·±è²ååæ·ºè²ï¼çå¡é 
+   🏆 終極完美對稱流：徹底解決雙向切換（含深色切回淺色）的卡頓
    =================================================== */
 
-/* 1. åºç¤è¨­å®ï¼åææ¯æ´ body ç background ç¸®å¯«èå­å±¬æ§ï¼é²æ­¢å±¬æ§ä¸­æ· */
+/* 1. 基礎設定：同時支援 body 的 background 縮寫與子屬性，防止屬性中斷 */
 html.theme-changing,
 html.theme-changing *,
 html.theme-changing *::before,
@@ -3528,44 +3528,44 @@ html.theme-changing *::after {
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
-/* 2. âï¸ æ·ºè² â¡ï¸ ð æ·±è²ï¼æå­ç±é»è®ç½ï¼ï¼ç¶­æ 0.42s ææ©åªéæ¶å°¾ */
+/* 2. ☀️ 淺色 ➡️ 🌙 深色（文字由黑變白）：維持 0.42s 提早優雅收尾 */
 html.theme-changing.dark,
 html.theme-changing.dark * {
   transition-duration: 0.42s !important;
 }
 
-/* 3. ð æ·±è² â¡ï¸ âï¸ æ·ºè²ï¼æå­ç±ç½è®é»ï¼ï¼å¡é ççæ­£åå
-   éè£¡å°æéææ»¿å° 0.45s å®ç¾åæ»¿ JS çè¨æå¨ï¼ä¸¦éå®å­é«å¹³æ»åº¦ï¼é²æ­¢æå¾ä¸å¹åç´ è·³å */
+/* 3. 🌙 深色 ➡️ ☀️ 淺色（文字由白變黑）：卡頓的真正元兇
+   這裡將時間拉滿到 0.45s 完美吃滿 JS 的計時器，並鎖定字體平滑度，防止最後一幀像素跳動 */
 html.theme-changing:not(.dark),
 html.theme-changing:not(.dark) * {
   transition-duration: 0.45s !important;
-  /* â¨ æ ¸å¿ééµï¼å¼·å¶çè¦½å¨å¨è½å ´æéç¶­æç¸åçæå­æ¸²ææ¨¡å¼ï¼æ¶æ»ååæ·ºè²æçå¾®å°æå */
+  /* ✨ 核心關鍵：強制瀏覽器在轉場期間維持相同的文字渲染模式，消滅切回淺色時的微小抖動 */
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
 }
 /* ===================================================
-   ð çµæ¥µå®ç¾å¾®èª¿ï¼æé¤éåçæ¼¸è®å±¬æ§ ï¼ å®ç¾åé 
+   💎 終極完美微調：排除非原生漸變屬性 ＋ 完美停靠
    =================================================== */
 html.theme-changing,
 html.theme-changing *,
 html.theme-changing *::before,
 html.theme-changing *::after {
-  /* ð¡ æ ¸å¿ä¿®æ­£ 1ï¼å¾¹åºç§»é¤ 'background' ç¸®å¯«ï¼å´æ ¼å¯ç¨ä¿ç 'background-color'ã
-     éè½é»æ­¢çè¦½å¨å»çè¨ç® linear-gradientï¼ç´æ¥è§£æ¾ GPU æ¸²æå£åï¼ */
+  /* 💡 核心修正 1：徹底移除 'background' 縮寫，嚴格唯獨保留 'background-color'。
+     這能阻止瀏覽器去瞎計算 linear-gradient，直接解放 GPU 渲染壓力！ */
   transition-property: background-color, color, border-color, opacity !important;
   
-  /* ð¡ æ ¸å¿ä¿®æ­£ 2ï¼æéå®å¨ç¸®ç­è³ 0.38sã
-     è®è®è²åç«å¨ 380 æ¯«ç§æå°±å®å¨ãåå°éæ­¢ãï¼æ¯ JS ç 450ms ææ©èµ°å®ï¼
-     çåº 70 æ¯«ç§ççµå°å®å¨åæ³æï¼JS æéº¼æ class é½ä¸æåå¼èµ·ç«é¢è·³åã */
+  /* 💡 核心修正 2：時間安全縮短至 0.38s。
+     讓變色動畫在 380 毫秒時就完全「原地靜止」，比 JS 的 450ms 提早走完，
+     留出 70 毫秒的絕對安全停泊期，JS 怎麼拔 class 都不會再引起畫面跳動。 */
   transition-duration: 0.38s !important;
   
-  /* ð¡ æ ¸å¿ä¿®æ­£ 3ï¼æ¹ç¨æ¨æºç ease-in-outï¼å¹³æ»æ·¡å¥æ·¡åºï¼ã
-     ç¢ºä¿åç«å¨åå¾å©ç«¯é½è½å®ç¾æ¸éæ­¸é¶ï¼å¾¹åºèåå©ç«¯åæçå¾®å°çç¡¬æã */
+  /* 💡 核心修正 3：改用標準的 ease-in-out（平滑淡入淡出）。
+     確保動畫在前後兩端都能完美減速歸零，徹底融化兩端切換的微小生硬感。 */
   transition-timing-function: ease-in-out !important;
 }
 
 /* ==========================================================================
-   AI Summary â Journal Bridge
+   AI Summary → Journal Bridge
    ========================================================================== */
 
 .summary-journal-actions {
@@ -3691,7 +3691,7 @@ html.theme-changing *::after {
   padding: 0 22px;
 }
 
-/* é¿åèçå¤§åå­æ¨£å¼å½±é¿æ°ç hero */
+/* 避免舊的大名字樣式影響新版 hero */
 .hero h1.hero-flow-title {
   text-shadow: none;
 }
@@ -4323,7 +4323,7 @@ html.theme-changing *::after {
   gap: 24px;
 }
 
-/* æåæ¬çå°å¡æ¹æå¯¬ç Journal Card */
+/* 把原本的小卡改成寬版 Journal Card */
 .journal-feed-list .journal-entry {
   width: 100%;
   padding: 34px;
@@ -4365,12 +4365,12 @@ html.theme-changing *::after {
   align-items: flex-end;
 }
 
-/* åæå³é detail é±èï¼é¿åå¹²æ¾æ°ç Feed */
+/* 先把右邊 detail 隱藏，避免干擾新版 Feed */
 .hidden-detail {
   display: none !important;
 }
 
-/* ä¹å¾åçç¸®åæç¨ */
+/* 之後圖片縮圖會用 */
 .journal-entry-images {
   display: flex;
   gap: 10px;
@@ -6512,18 +6512,18 @@ html.theme-changing .theme-toggle {
 
 /* Journal Fix: spacing + fixed filters */
 
-/* New Entry è· Journal æéè·é¢ */
+/* New Entry 跟 Journal 拉開距離 */
 .journal-editor-preview {
   margin-bottom: 52px !important;
 }
 
-/* Journal æ´ååå¡ä¸è¦è²¼å¤ªç· */
+/* Journal 整個區塊不要貼太緊 */
 .journal-shell {
   margin-top: 18px !important;
   align-items: start;
 }
 
-/* å·¦é Filters åºå®å¨ç«é¢ä¸ */
+/* 左邊 Filters 固定在畫面上 */
 .journal-sidebar {
   position: fixed !important;
   top: 118px !important;
@@ -6534,12 +6534,12 @@ html.theme-changing .theme-toggle {
   z-index: 5;
 }
 
-/* å çº filter è® fixedï¼å³éå§å®¹è¦çåºå·¦å´ç©ºé */
+/* 因為 filter 變 fixed，右邊內容要留出左側空間 */
 .journal-main {
   margin-left: 260px !important;
 }
 
-/* hover æä¸é¢é»ç·ä¸è¦è¢«è£æ */
+/* hover 時上面黑線不要被裁掉 */
 .journal-entry-list {
   padding: 10px 10px 22px 4px !important;
 }
@@ -6548,7 +6548,7 @@ html.theme-changing .theme-toggle {
   transform: translateY(-2px) !important;
 }
 
-/* iPad / ææ©ä¸è¦ fixedï¼ä¸ç¶ææ ç */
+/* iPad / 手機不要 fixed，不然會擠爆 */
 @media (max-width: 880px) {
   .journal-sidebar {
     position: static !important;
@@ -6621,13 +6621,13 @@ html.theme-changing .theme-toggle {
 
 /* Journal Fix: align cards + loosen title spacing */
 
-/* è® Journal æ¨é¡ä¸è¦é»å¨ä¸èµ· */
+/* 讓 Journal 標題不要黏在一起 */
 .journal-toolbar h2 {
   letter-spacing: -0.035em !important;
   line-height: 0.95 !important;
 }
 
-/* å·¦å³å§å®¹å¡çé ç«¯åé½ */
+/* 左右內容卡片頂端切齊 */
 .journal-entry-list {
   padding-top: 0 !important;
 }
@@ -6636,26 +6636,26 @@ html.theme-changing .theme-toggle {
   margin-top: 0 !important;
 }
 
-/* ä½ä¿çå·¦å³è·åºé¨ç©ºéï¼é¿å hover è¢«è£ */
+/* 但保留左右跟底部空間，避免 hover 被裁 */
 .journal-entry-list {
   padding-right: 10px !important;
   padding-bottom: 22px !important;
   padding-left: 4px !important;
 }
 
-/* å¡ç hover ä¸è¦å¾ä¸æµ®å¤ªå¤ï¼ä¸ç¶åæåå°ç· */
+/* 卡片 hover 不要往上浮太多，不然又會吃到線 */
 .journal-entry:hover {
   transform: translateY(-1px) !important;
 }
 
 /* Journal Fix: no vertical hover clipping */
 
-/* å·¦å³å©éä¸èµ·å¾ä¸ï¼çåºå¼å¸æ */
+/* 左右兩邊一起往下，留出呼吸感 */
 .journal-layout {
   padding-top: 14px !important;
 }
 
-/* å·¦éåè¡¨æ¬èº«ä¹çä¸é»ç©ºéï¼é¿åä¸ç·£è¢«è£ */
+/* 左邊列表本身也留一點空間，避免上緣被裁 */
 .journal-entry-list {
   padding-top: 10px !important;
   padding-right: 10px !important;
@@ -6663,12 +6663,12 @@ html.theme-changing .theme-toggle {
   padding-left: 4px !important;
 }
 
-/* å³éè©³ç´°å¡çä¹ä¸èµ·ä¸ç§»ï¼è·å·¦éåé½ */
+/* 右邊詳細卡片也一起下移，跟左邊切齊 */
 .journal-detail {
   margin-top: 10px !important;
 }
 
-/* ææä¸ä¸æµ®å */
+/* 拔掉上下浮動 */
 .journal-entry,
 .journal-entry:hover,
 .journal-card,
@@ -6676,7 +6676,7 @@ html.theme-changing .theme-toggle {
   transform: none !important;
 }
 
-/* hover æ¹æéæ¡ï¼é°å½±ï¼ä¸åç§»å */
+/* hover 改成邊框＋陰影，不再移動 */
 .journal-entry:hover {
   border-color: var(--text) !important;
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.08) !important;
@@ -6703,13 +6703,13 @@ html.theme-changing .theme-toggle {
   align-items: center !important;
 }
 
-/* ä¿® Time Spent number input çèµ·ä¾å¤ªé«çåé¡ */
+/* 修 Time Spent number input 看起來太高的問題 */
 .editor-card input[type="number"] {
   line-height: 58px !important;
   appearance: textfield;
 }
 
-/* Chrome / Safari ç number ä¸ä¸ç®­é ­ä¸è¦æé«åº¦ææ­ª */
+/* Chrome / Safari 的 number 上下箭頭不要把高度撐歪 */
 .editor-card input[type="number"]::-webkit-outer-spin-button,
 .editor-card input[type="number"]::-webkit-inner-spin-button {
   margin: 0;
@@ -6717,20 +6717,20 @@ html.theme-changing .theme-toggle {
 
 /* Journal Fix: softer active selected card */
 
-/* ä¸è¦è®ç®åé¸ä¸­ç journal åºç¾ç²é»æ¡ */
+/* 不要讓目前選中的 journal 出現粗黑框 */
 .journal-entry.active {
   border-color: var(--line) !important;
   background: rgba(17, 17, 17, 0.045) !important;
   box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.04) !important;
 }
 
-/* hover çæåä¹ä¸è¦è®é»æ¡ */
+/* hover 的時候也不要變黑框 */
 .journal-entry:hover {
   border-color: rgba(17, 17, 17, 0.18) !important;
   background: rgba(17, 17, 17, 0.055) !important;
 }
 
-/* dark mode å°æ */
+/* dark mode 對應 */
 :root.dark .journal-entry.active {
   border-color: var(--line) !important;
   background: rgba(255, 255, 255, 0.075) !important;
@@ -6835,12 +6835,12 @@ html.theme-changing .theme-toggle {
 
 /* Journal Interaction: clean Apple / Notion style */
 
-/* åæä¹åé£æ¢å·¦å´ accent bar éæ */
+/* 先把之前那條左側 accent bar 關掉 */
 .journal-entry::before {
   display: none !important;
 }
 
-/* åºæ¬çæ */
+/* 基本狀態 */
 .journal-entry {
   transform: none !important;
   cursor: pointer;
@@ -6853,7 +6853,7 @@ html.theme-changing .theme-toggle {
     box-shadow 0.18s ease;
 }
 
-/* æ¨é¡ãtag ä¹å ä¸é»äºå */
+/* 標題、tag 也加一點互動 */
 .journal-entry h3 {
   color: var(--text);
   opacity: 0.88;
@@ -6868,7 +6868,7 @@ html.theme-changing .theme-toggle {
     background-color 0.18s ease;
 }
 
-/* Hoverï¼åªå ä¸é»é»å±¤æ¬¡ï¼ä¸æµ®èµ·ä¾ */
+/* Hover：只加一點點層次，不浮起來 */
 .journal-entry:hover {
   transform: none !important;
   background: rgba(17, 17, 17, 0.04) !important;
@@ -6886,7 +6886,7 @@ html.theme-changing .theme-toggle {
   color: var(--text) !important;
 }
 
-/* Activeï¼ç®åé¸å°çæç« ï¼åªæ¯ hover åæé¡¯ä¸é»é» */
+/* Active：目前選到的文章，只比 hover 再明顯一點點 */
 .journal-entry.active {
   transform: none !important;
   background: rgba(17, 17, 17, 0.055) !important;
@@ -6939,7 +6939,7 @@ html.theme-changing .theme-toggle {
     box-shadow 0.28s ease !important;
 }
 
-/* é è¨­æ¶èµ· */
+/* 預設收起 */
 .journal-workspace:not(.editor-open) .journal-editor-preview {
   max-height: 0 !important;
   opacity: 0 !important;
@@ -6953,7 +6953,7 @@ html.theme-changing .theme-toggle {
   pointer-events: none !important;
 }
 
-/* å±éçæ */
+/* 展開狀態 */
 .journal-workspace.editor-open .journal-editor-preview {
   max-height: 1200px !important;
   opacity: 1 !important;
@@ -6962,7 +6962,7 @@ html.theme-changing .theme-toggle {
   margin-bottom: 76px !important;
 }
 
-/* Editor è£¡é¢é²å ´æ´æ¼äº® */
+/* Editor 裡面進場更漂亮 */
 .journal-workspace.editor-open .editor-card {
   animation: editorCardIn 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -6979,7 +6979,7 @@ html.theme-changing .theme-toggle {
   }
 }
 
-/* Editor æ¬ä½ focus è³ªæ */
+/* Editor 欄位 focus 質感 */
 .editor-card input:focus,
 .editor-card select:focus,
 .editor-card textarea:focus,
@@ -6999,7 +6999,7 @@ html.theme-changing .theme-toggle {
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Toast å°æç¤º */
+/* Toast 小提示 */
 .journal-toast {
   position: fixed;
   left: 50%;
@@ -7110,7 +7110,7 @@ html.theme-changing .theme-toggle {
 
 /* AI Summary v2: compact search + centered empty state */
 
-/* Generate Summary æéæ¹æå°å°æå°è å */
+/* Generate Summary 按鈕改成小小搜尋膠囊 */
 #summaryButton {
   width: min(520px, 100%) !important;
   height: 54px !important;
@@ -7143,7 +7143,7 @@ html.theme-changing .theme-toggle {
   transform: scale(0.985);
 }
 
-/* AI Summary å¤æ¡ä¸è¦å¤ªå·¨å¤§ */
+/* AI Summary 外框不要太巨大 */
 .summary-output {
   height: auto !important;
   min-height: 280px !important;
@@ -7151,12 +7151,12 @@ html.theme-changing .theme-toggle {
   overflow: hidden !important;
 }
 
-/* æ¨é¡å */
+/* 標題列 */
 .summary-output .output-title {
   padding: 20px 30px 14px !important;
 }
 
-/* placeholder ç½®ä¸­ */
+/* placeholder 置中 */
 .summary-output > .placeholder {
   min-height: 230px !important;
   margin: 0 !important;
@@ -7172,7 +7172,7 @@ html.theme-changing .theme-toggle {
   line-height: 1.5 !important;
 }
 
-/* Loading ä¹ç½®ä¸­ï¼ä½ä¸è¦æå¤ªé« */
+/* Loading 也置中，但不要撐太高 */
 .summary-output .ai-thinking {
   min-height: 280px !important;
   padding: 0 30px !important;
@@ -7186,7 +7186,7 @@ html.theme-changing .theme-toggle {
   border-radius: 0 !important;
 }
 
-/* Loading å§å®¹è®æå°å¡ç */
+/* Loading 內容變成小卡片 */
 .summary-output .ai-thinking > div {
   padding: 22px 26px;
   border: 1px solid var(--line);
@@ -7199,12 +7199,12 @@ html.theme-changing .theme-toggle {
   background: rgba(255, 255, 255, 0.055);
 }
 
-/* å·¦éé»é»ä¸è¦è·å¤ªé  */
+/* 左邊點點不要跑太遠 */
 .summary-output .thinking-dot {
   margin-right: 4px;
 }
 
-/* æè¦çµæå§å®¹ï¼å§å®¹å°å°±ç­ï¼å§å®¹å¤ææ» */
+/* 摘要結果內容：內容少就短，內容多才滑 */
 .summary-output .ai-summary,
 .summary-output .error-detail {
   max-height: 70vh !important;
@@ -7212,7 +7212,7 @@ html.theme-changing .theme-toggle {
   padding: 24px 30px 34px !important;
 }
 
-/* ç§»é¤èçåºé¨è¶å¤§ç©ºç½ */
+/* 移除舊的底部超大空白 */
 .summary-output .ai-summary::after,
 .summary-output .error-detail::after {
   display: none !important;
@@ -7224,7 +7224,7 @@ html.theme-changing .theme-toggle {
   margin-bottom: 0 !important;
 }
 
-/* ææ© / iPad */
+/* 手機 / iPad */
 @media (max-width: 760px) {
   #summaryButton {
     width: 100% !important;
@@ -7479,7 +7479,7 @@ button#summaryButton,
   margin-bottom: 0 !important;
 }
 
-/* placeholder ç½®ä¸­ */
+/* placeholder 置中 */
 .summary-output > .placeholder,
 .summary-output .placeholder {
   min-height: 180px !important;
@@ -7490,7 +7490,7 @@ button#summaryButton,
   text-align: center !important;
 }
 
-/* loading ä¸è¦æç */
+/* loading 不要撐爆 */
 .summary-output .ai-thinking {
   width: fit-content !important;
   max-width: min(520px, calc(100% - 48px)) !important;
@@ -7688,23 +7688,23 @@ margin-bottom: 24px !important;
 margin-bottom: 0 !important; 
 }
 
-/* è®å¤æ¡ä¸è¦ææå¾ä¸è¡è£æ */ 
+/* 讓外框不要把最後一行裁掉 */ 
 .summary-output[data-state="result"] { 
 overflow: visible !important; 
 }
 
 .your-summary-container {
-  /* åªé¤æè¨»è§£æåæ¬ç height: 400px; éç¨®å¯«æ³ */
+  /* 刪除或註解掉原本的 height: 400px; 這種寫法 */
   
-  height: auto;        /* è®é«åº¦é¨å§å®¹èªåä¼¸ç¸® */
-  min-height: 200px;   /* è¨­å®ä¸åä¿åºçæå°é«åº¦ */
+  height: auto;        /* 讓高度隨內容自動伸縮 */
+  min-height: 200px;   /* 設定一個保底的最小高度 */
 }
 
 /*  
 Paper Scout Search History Drawer 
  */
 
-/* Header å³å´ï¼OpenAlex èªªæ + History æé */ 
+/* Header 右側：OpenAlex 說明 + History 按鈕 */ 
 .paper-search-actions { 
 display: flex; 
 align-items: flex-start; 
@@ -7745,7 +7745,7 @@ box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
 transform: scale(0.96); 
 }
 
-/* èæ¯é®ç½© */ 
+/* 背景遮罩 */ 
 .history-backdrop { 
 position: fixed; 
 inset: 0; 
@@ -7768,7 +7768,7 @@ pointer-events: auto;
 display: none !important; 
 }
 
-/* å³å´æ½å± */ 
+/* 右側抽屜 */ 
 .history-drawer { 
 position: fixed; 
 top: 0; 
@@ -7847,7 +7847,7 @@ gap: 12px;
 flex: 1; 
 }
 
-/* æ²ææ­·å²ç´éæ */ 
+/* 沒有歷史紀錄時 */ 
 .history-empty { 
 min-height: 220px; 
 border: 1px dashed var(--line); 
@@ -7873,7 +7873,7 @@ font-size: 14px;
 line-height: 1.55; 
 }
 
-/* JS ä¹å¾æçæçæ¯ä¸ç­ç´é */ 
+/* JS 之後會生成的每一筆紀錄 */ 
 .history-item { 
 width: 100%; 
 text-align: left; 
@@ -8010,7 +8010,7 @@ margin-left: auto !important;
 max-width: none !important; 
 }
 
-/* ææ© / çªç«é¢ */ 
+/* 手機 / 窄畫面 */ 
 @media (max-width: 760px) { 
 .paper-title-row { 
 align-items: flex-start !important; 
@@ -8030,24 +8030,24 @@ margin-left: 0 !important;
 }
 
 /* ===================================================
-   ð¡ ä¿®æ­£åææ¨¡å¼ææå­éçèéé»çè¦èè¦å
+   💡 修正切換模式時文字閃爍與鈍點的覆蓋規則
    =================================================== */
 html.theme-changing *,
 html.theme-changing *::before,
 html.theme-changing *::after {
-  /* å¼·å¶å°è½å ´æéç¸®ç­è³ 0.35sï¼è body å®ç¾åæ­¥ï¼ä¸¦æ¹é¤åæ¬ !important é æçå»¶é² */
+  /* 強制將轉場時間縮短至 0.35s，與 body 完美同步，並抹除原本 !important 造成的延遲 */
   transition:
     background 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
   transition-property: background, background-color, color, border-color, box-shadow, opacity, transform !important;
 }
 
-/* ===== çµæ¥µä¿®æ­£çï¼å®ç¾èçææè²éï¼æ¶æ»åæé é» ===== */
+/* ===== 終極修正版：完美處理所有色階，消滅切換頓點 ===== */
 html.theme-changing *,
 html.theme-changing *::before,
 html.theme-changing *::after {
   /* 
-     ééµ 1ï¼åªéæ¸¡é¡è²ï¼æ¿æå®¹æè¡çªç backgroundï¼åªç background-colorï¼è transformã
-     ééµ 2ï¼æéè¨­å®çº 0.4sãéè½ç¢ºä¿åç«å¨ JS å®æå¨ç§»é¤é¡å¥åå°±ãææ©åªéå°èµ°å®ãï¼çµå°ä¸æåç¼çè¢«å¼·å¶è°æ¬çè·³åæï¼
+     關鍵 1：只過渡顏色，拿掉容易衝突的 background（只留 background-color）與 transform。
+     關鍵 2：時間設定為 0.4s。這能確保動畫在 JS 定時器移除類別前就「提早優雅地走完」，絕對不會再發生被強制腰斬的跳動感！
   */
   transition:
     background-color 0.4s ease,
@@ -8061,7 +8061,7 @@ html.theme-changing .theme-toggle {
 }
 
 /* ===================================================
-   â³ åè©¦æ¹æ¡ï¼å°å¨åè®è²æéæé·è³ 0.75s è¦èæ¸¬è©¦
+   ⏳ 嘗試方案：將全域變色時間拉長至 0.75s 覆蓋測試
    =================================================== */
 html.theme-changing *,
 html.theme-changing *::before,
@@ -8074,15 +8074,15 @@ html.theme-changing *::after {
 }
 
 /* ===================================================
-   ð¯ çµæ¥µå°é½ï¼ç²¾æºå¹é JavaScript ç 450ms è¨æå¨
+   🎯 終極對齊：精準匹配 JavaScript 的 450ms 計時器
    =================================================== */
 html.theme-changing *,
 html.theme-changing *::before,
 html.theme-changing *::after {
   /* 
-     å°è½å ´æéå®çº 0.42sï¼ç¢ºä¿å¨ JS å·è¡å® 450ms ç§»é¤é¡å¥åï¼
-     å¨åææè²éçæå­ãèæ¯ãå¡çé°å½±å°±å·²ç¶åªéå°ãææ©èµ°å®åç«ãã
-     éè½ 100% æ¶é¤åè·¯è¢«å¼·è¡æ·å¥ãè·³è²çéæï¼
+     將轉場時間定為 0.42s，確保在 JS 執行完 450ms 移除類別前，
+     全域所有色階的文字、背景、卡片陰影就已經優雅地「提早走完動畫」。
+     這能 100% 消除半路被強行斷句、跳色的鈍感！
   ```css
   */
   transition:
@@ -8093,7 +8093,7 @@ html.theme-changing *::after {
 }
 
 /* ===================================================
-   ð é»è²è®ç½å­ï¼åæè³æ·±è²æ¨¡å¼ï¼çåå­¸å¡é è£å
+   🌗 黑色變白字（切換至深色模式）的光學卡頓補償
    =================================================== */
 :root.dark html.theme-changing h1,
 :root.dark html.theme-changing h2,
@@ -8101,18 +8101,18 @@ html.theme-changing *::after {
 :root.dark html.theme-changing p,
 :root.dark html.theme-changing span {
   /* 
-     ç¶ãåæè³æ·±è²æ¨¡å¼ï¼æå­ç±é»è®ç½ï¼ãæï¼
-     å°å¤§æ¨é¡èä¸»è¦æå­ç color è½å ´æéå®ç¨å¾®èª¿æé·å° 0.45s æ»¿æ ¼ã
-     éæ¨£å¯ä»¥å®ç¾å»å JS ææ class çæå¾ä¸å¹ï¼æ¶æ»é»è®ç½æçåå­¸ææ¯æï¼
+     當「切換至深色模式（文字由黑變白）」時，
+     將大標題與主要文字的 color 轉場時間單獨微調拉長到 0.45s 滿格。
+     這樣可以完美吻合 JS 拔掉 class 的最後一幀，消滅黑變白時的光學拉扯感！
   */
   transition-duration: 0.45s !important;
-  transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important; /* æ´æåçæ¸éæ²ç· */
+  transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important; /* 更柔和的減速曲線 */
 }
 /* ===================================================
-   ð çµæ¥µå®ç¾å°ç¨±æµï¼å¾¹åºè§£æ±ºéååæï¼å«æ·±è²ååæ·ºè²ï¼çå¡é 
+   🏆 終極完美對稱流：徹底解決雙向切換（含深色切回淺色）的卡頓
    =================================================== */
 
-/* 1. åºç¤è¨­å®ï¼åææ¯æ´ body ç background ç¸®å¯«èå­å±¬æ§ï¼é²æ­¢å±¬æ§ä¸­æ· */
+/* 1. 基礎設定：同時支援 body 的 background 縮寫與子屬性，防止屬性中斷 */
 html.theme-changing,
 html.theme-changing *,
 html.theme-changing *::before,
@@ -8121,44 +8121,44 @@ html.theme-changing *::after {
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
-/* 2. âï¸ æ·ºè² â¡ï¸ ð æ·±è²ï¼æå­ç±é»è®ç½ï¼ï¼ç¶­æ 0.42s ææ©åªéæ¶å°¾ */
+/* 2. ☀️ 淺色 ➡️ 🌙 深色（文字由黑變白）：維持 0.42s 提早優雅收尾 */
 html.theme-changing.dark,
 html.theme-changing.dark * {
   transition-duration: 0.42s !important;
 }
 
-/* 3. ð æ·±è² â¡ï¸ âï¸ æ·ºè²ï¼æå­ç±ç½è®é»ï¼ï¼å¡é ççæ­£åå
-   éè£¡å°æéææ»¿å° 0.45s å®ç¾åæ»¿ JS çè¨æå¨ï¼ä¸¦éå®å­é«å¹³æ»åº¦ï¼é²æ­¢æå¾ä¸å¹åç´ è·³å */
+/* 3. 🌙 深色 ➡️ ☀️ 淺色（文字由白變黑）：卡頓的真正元兇
+   這裡將時間拉滿到 0.45s 完美吃滿 JS 的計時器，並鎖定字體平滑度，防止最後一幀像素跳動 */
 html.theme-changing:not(.dark),
 html.theme-changing:not(.dark) * {
   transition-duration: 0.45s !important;
-  /* â¨ æ ¸å¿ééµï¼å¼·å¶çè¦½å¨å¨è½å ´æéç¶­æç¸åçæå­æ¸²ææ¨¡å¼ï¼æ¶æ»ååæ·ºè²æçå¾®å°æå */
+  /* ✨ 核心關鍵：強制瀏覽器在轉場期間維持相同的文字渲染模式，消滅切回淺色時的微小抖動 */
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
 }
 /* ===================================================
-   ð çµæ¥µå®ç¾å¾®èª¿ï¼æé¤éåçæ¼¸è®å±¬æ§ ï¼ å®ç¾åé 
+   💎 終極完美微調：排除非原生漸變屬性 ＋ 完美停靠
    =================================================== */
 html.theme-changing,
 html.theme-changing *,
 html.theme-changing *::before,
 html.theme-changing *::after {
-  /* ð¡ æ ¸å¿ä¿®æ­£ 1ï¼å¾¹åºç§»é¤ 'background' ç¸®å¯«ï¼å´æ ¼å¯ç¨ä¿ç 'background-color'ã
-     éè½é»æ­¢çè¦½å¨å»çè¨ç® linear-gradientï¼ç´æ¥è§£æ¾ GPU æ¸²æå£åï¼ */
+  /* 💡 核心修正 1：徹底移除 'background' 縮寫，嚴格唯獨保留 'background-color'。
+     這能阻止瀏覽器去瞎計算 linear-gradient，直接解放 GPU 渲染壓力！ */
   transition-property: background-color, color, border-color, opacity !important;
   
-  /* ð¡ æ ¸å¿ä¿®æ­£ 2ï¼æéå®å¨ç¸®ç­è³ 0.38sã
-     è®è®è²åç«å¨ 380 æ¯«ç§æå°±å®å¨ãåå°éæ­¢ãï¼æ¯ JS ç 450ms ææ©èµ°å®ï¼
-     çåº 70 æ¯«ç§ççµå°å®å¨åæ³æï¼JS æéº¼æ class é½ä¸æåå¼èµ·ç«é¢è·³åã */
+  /* 💡 核心修正 2：時間安全縮短至 0.38s。
+     讓變色動畫在 380 毫秒時就完全「原地靜止」，比 JS 的 450ms 提早走完，
+     留出 70 毫秒的絕對安全停泊期，JS 怎麼拔 class 都不會再引起畫面跳動。 */
   transition-duration: 0.38s !important;
   
-  /* ð¡ æ ¸å¿ä¿®æ­£ 3ï¼æ¹ç¨æ¨æºç ease-in-outï¼å¹³æ»æ·¡å¥æ·¡åºï¼ã
-     ç¢ºä¿åç«å¨åå¾å©ç«¯é½è½å®ç¾æ¸éæ­¸é¶ï¼å¾¹åºèåå©ç«¯åæçå¾®å°çç¡¬æã */
+  /* 💡 核心修正 3：改用標準的 ease-in-out（平滑淡入淡出）。
+     確保動畫在前後兩端都能完美減速歸零，徹底融化兩端切換的微小生硬感。 */
   transition-timing-function: ease-in-out !important;
 }
 
 /* ==========================================================================
-   AI Summary â Journal Bridge
+   AI Summary → Journal Bridge
    ========================================================================== */
 
 .summary-journal-actions {
@@ -8284,7 +8284,7 @@ html.theme-changing *::after {
   padding: 0 22px;
 }
 
-/* é¿åèçå¤§åå­æ¨£å¼å½±é¿æ°ç hero */
+/* 避免舊的大名字樣式影響新版 hero */
 .hero h1.hero-flow-title {
   text-shadow: none;
 }
@@ -8916,7 +8916,7 @@ html.theme-changing *::after {
   gap: 24px;
 }
 
-/* æåæ¬çå°å¡æ¹æå¯¬ç Journal Card */
+/* 把原本的小卡改成寬版 Journal Card */
 .journal-feed-list .journal-entry {
   width: 100%;
   padding: 34px;
@@ -8958,12 +8958,12 @@ html.theme-changing *::after {
   align-items: flex-end;
 }
 
-/* åæå³é detail é±èï¼é¿åå¹²æ¾æ°ç Feed */
+/* 先把右邊 detail 隱藏，避免干擾新版 Feed */
 .hidden-detail {
   display: none !important;
 }
 
-/* ä¹å¾åçç¸®åæç¨ */
+/* 之後圖片縮圖會用 */
 .journal-entry-images {
   display: flex;
   gap: 10px;
@@ -9161,252 +9161,4 @@ html.theme-changing *::after {
   display: none !important;
   pointer-events: none !important;
   visibility: hidden !important;
-}
-
-/* ==========================================================================
-   FINAL JOURNAL STABILITY PATCH
-   Keep this block at the very bottom of styles.css.
-   ========================================================================== */
-
-/* Hidden overlays must never block the editor. */
-#journalDetailBackdrop[hidden],
-#journalDetail[hidden],
-#journalLightbox[hidden] {
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-/* Restore the Journal modal when JavaScript opens it. */
-#journalDetailBackdrop:not([hidden]) {
-  display: block !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-}
-
-#journalDetail:not([hidden]) {
-  display: block !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-}
-
-/* Keep editor buttons clickable above ordinary page layers. */
-.journal-editor-preview,
-.editor-card,
-.editor-actions {
-  position: relative;
-}
-
-.editor-actions {
-  z-index: 20 !important;
-  pointer-events: auto !important;
-}
-
-#clearEditorBtn,
-#saveDraftBtn,
-#publishEntryBtn {
-  position: relative;
-  z-index: 21 !important;
-  pointer-events: auto !important;
-  cursor: pointer !important;
-}
-
-/* Hide the native image input; the Add Images button opens it. */
-#entryImageInput[hidden] {
-  display: none !important;
-}
-
-/* Journal feed */
-.journal-feed-section {
-  width: min(1180px, calc(100% - 48px));
-  margin: 0 auto 120px;
-}
-
-.journal-feed-list {
-  display: grid;
-  gap: 24px;
-  max-height: none !important;
-  overflow: visible !important;
-  padding: 0 !important;
-}
-
-.journal-feed-list .journal-entry {
-  width: 100%;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
-  gap: 28px;
-  padding: 34px;
-  border-radius: 30px;
-  cursor: pointer;
-}
-
-.journal-entry-main {
-  min-width: 0;
-}
-
-.journal-feed-list .journal-entry h3 {
-  margin: 10px 0 16px;
-  font-size: clamp(32px, 4.5vw, 56px);
-  line-height: 1.04;
-  letter-spacing: -0.045em;
-  font-weight: 620;
-}
-
-.journal-entry-excerpt {
-  max-width: 820px;
-  color: rgba(17, 17, 17, 0.76) !important;
-  font-size: 18px;
-  line-height: 1.75;
-  font-weight: 450;
-}
-
-:root.dark .journal-entry-excerpt {
-  color: rgba(245, 245, 247, 0.82) !important;
-}
-
-/* Image uploader and thumbnails */
-.journal-image-preview,
-.journal-entry-images,
-.journal-detail-image-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.journal-image-thumb,
-.journal-entry-image,
-.journal-detail-image {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  padding: 0;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: var(--soft);
-  cursor: pointer;
-}
-
-.journal-image-thumb img,
-.journal-entry-image img,
-.journal-detail-image img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-.journal-image-remove {
-  position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(17, 17, 17, 0.14);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #111;
-  cursor: pointer;
-}
-
-/* Journal detail modal */
-#journalDetailBackdrop:not([hidden]) {
-  position: fixed;
-  inset: 0;
-  z-index: 180;
-  background: rgba(0, 0, 0, 0.34);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-#journalDetail.journal-detail-modal:not([hidden]) {
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  z-index: 190 !important;
-  width: min(920px, calc(100vw - 40px));
-  max-height: min(84vh, 840px);
-  overflow-y: auto;
-  margin: 0 !important;
-  padding: 44px;
-  border: 1px solid var(--line);
-  border-radius: 34px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 248, 246, 0.93)),
-    var(--surface);
-  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.24);
-  opacity: 0;
-  transform: translate(-50%, -48%) scale(0.97);
-  transition: opacity 0.22s ease, transform 0.22s ease;
-}
-
-#journalDetail.journal-detail-modal.is-open {
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) scale(1) !important;
-}
-
-:root.dark #journalDetail.journal-detail-modal:not([hidden]) {
-  background:
-    linear-gradient(180deg, rgba(30, 30, 32, 0.97), rgba(18, 18, 20, 0.95)),
-    var(--surface);
-}
-
-#journalDetail .detail-content {
-  margin-top: 32px;
-  color: rgba(17, 17, 17, 0.82) !important;
-  font-size: 20px;
-  line-height: 1.9;
-  font-weight: 450;
-  white-space: normal !important;
-}
-
-#journalDetail .detail-content p {
-  margin: 0 0 26px;
-}
-
-#journalDetail .detail-content p:last-child {
-  margin-bottom: 0;
-}
-
-:root.dark #journalDetail .detail-content {
-  color: rgba(245, 245, 247, 0.86) !important;
-}
-
-/* Image lightbox */
-#journalLightbox:not([hidden]) {
-  display: flex !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-}
-
-/* Responsive */
-@media (max-width: 760px) {
-  .journal-feed-section {
-    width: min(100% - 32px, 1180px);
-  }
-
-  .journal-feed-list .journal-entry {
-    grid-template-columns: 1fr !important;
-    padding: 24px;
-  }
-
-  .journal-feed-list .journal-meta {
-    align-items: flex-start;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  #journalDetail.journal-detail-modal:not([hidden]) {
-    width: calc(100vw - 24px);
-    max-height: 88vh;
-    padding: 28px;
-    border-radius: 26px;
-  }
-
-  #journalDetail .detail-content {
-    font-size: 17px;
-    line-height: 1.82;
-  }
 }
