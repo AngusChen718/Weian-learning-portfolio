@@ -101,9 +101,9 @@ let thinkingIndex = 0;
 
   const SUMMARY_EMPTY_HTML = `
     <div class="summary-empty">
-      <div class="summary-empty-icon">✦</div>
-      <p>你的摘要結果會出現在這裡。</p>
-      <span>貼上文章內容後，選擇分析方式並開始生成。</span>
+      <div class="summary-empty-icon">â¦</div>
+      <p>ä½ çæè¦çµææåºç¾å¨éè£¡ã</p>
+      <span>è²¼ä¸æç« å§å®¹å¾ï¼é¸æåææ¹å¼ä¸¦éå§çæã</span>
     </div>
   `;
 
@@ -132,10 +132,10 @@ let thinkingIndex = 0;
       message.includes("overloaded");
 
     if (isBusy) {
-      return "AI 目前太忙了，請稍後再試。\n\n你的文章內容已保留，不需要重新貼上。";
+      return "AI ç®åå¤ªå¿äºï¼è«ç¨å¾åè©¦ã\n\nä½ çæç« å§å®¹å·²ä¿çï¼ä¸éè¦éæ°è²¼ä¸ã";
     }
 
-    return `目前無法產生摘要：\n\n${message}`;
+    return `ç®åç¡æ³ç¢çæè¦ï¼\n\n${message}`;
   }
 
   if (uploadButton && fileInput) {
@@ -177,9 +177,9 @@ generateLocalSummary(text);
           <div class="summary-error">
             <strong>Prototype Notice</strong>
 
-            已收到檔案：${escapeHtml(file.name)}
+            å·²æ¶å°æªæ¡ï¼${escapeHtml(file.name)}
 
-            這個版本先完成上傳介面。PDF / Word 的真正 AI 摘要需要後續串接後端與 AI API。
+            éåçæ¬åå®æä¸å³ä»é¢ãPDF / Word ççæ­£ AI æè¦éè¦å¾çºä¸²æ¥å¾ç«¯è AI APIã
           </div>
         `);
 
@@ -197,9 +197,9 @@ generateLocalSummary(text);
       if (!text) {
         setSummaryState("empty", `
           <div class="summary-empty">
-            <div class="summary-empty-icon">✦</div>
-            <p>請先貼上文章內容。</p>
-            <span>貼上一段文章或上傳 TXT 檔後，再點擊 Generate Summary。</span>
+            <div class="summary-empty-icon">â¦</div>
+            <p>è«åè²¼ä¸æç« å§å®¹ã</p>
+            <span>è²¼ä¸ä¸æ®µæç« æä¸å³ TXT æªå¾ï¼åé»æ Generate Summaryã</span>
           </div>
         `);
 
@@ -251,7 +251,7 @@ if (articleClearButton) {
       }
 
       if (paperStatus) {
-        paperStatus.textContent = "請輸入關鍵字開始搜尋。";
+        paperStatus.textContent = "è«è¼¸å¥ééµå­éå§æå°ã";
       }
 
       lastPaperResults = [];
@@ -361,7 +361,7 @@ document.addEventListener("keydown", (event) => {
         "";
 
       if (!summary) {
-        throw new Error("AI 沒有回傳摘要內容。");
+        throw new Error("AI æ²æåå³æè¦å§å®¹ã");
       }
 
       stopThinkingLines();
@@ -414,11 +414,11 @@ scrollToSummaryOutput();
       )
       .replace(
         /^\s*- (.*)$/gm,
-        '<p class="summary-point"><span>•</span> $1</p>'
+        '<p class="summary-point"><span>â¢</span> $1</p>'
       )
       .replace(
-        /^\s*•\s*(.*)$/gm,
-        '<p class="summary-point"><span>•</span> $1</p>'
+        /^\s*â¢\s*(.*)$/gm,
+        '<p class="summary-point"><span>â¢</span> $1</p>'
       )
       .replace(/\n{3,}/g, "\n\n")
       .split("\n")
@@ -432,12 +432,12 @@ scrollToSummaryOutput();
     const query = paperQuery.value.trim();
 
     if (!query) {
-      paperStatus.textContent = "請先輸入研究主題。";
+      paperStatus.textContent = "è«åè¼¸å¥ç ç©¶ä¸»é¡ã";
       setSearchButtonState("idle");
       return;
     }
 
-    paperStatus.textContent = "正在搜尋文獻，請稍等...";
+    paperStatus.textContent = "æ­£å¨æå°æç»ï¼è«ç¨ç­...";
     renderPaperSkeletons();
     setSearchButtonState("loading");
 
@@ -449,7 +449,7 @@ scrollToSummaryOutput();
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "文獻搜尋失敗。");
+        throw new Error(data.error || "æç»æå°å¤±æã");
       }
 
       lastPaperResults = cleanAndRankPapers(data.papers || []);
@@ -467,7 +467,7 @@ renderPaperResults(lastPaperResults);
         setSearchButtonState("idle");
       }, 1200);
     } catch (error) {
-      paperStatus.textContent = `搜尋失敗：${error.message}`;
+      paperStatus.textContent = `æå°å¤±æï¼${error.message}`;
       setSearchButtonState("idle");
     }
   }
@@ -607,11 +607,11 @@ renderPaperResults(lastPaperResults);
     updateReadingFilterUI();
 
     if (!papers.length) {
-      paperStatus.textContent = "找不到相關文獻。";
+      paperStatus.textContent = "æ¾ä¸å°ç¸éæç»ã";
 
       paperResults.innerHTML = `
         <div class="paper-empty">
-          找不到相關文獻，請換一個關鍵字。
+          æ¾ä¸å°ç¸éæç»ï¼è«æä¸åééµå­ã
         </div>
       `;
       return;
@@ -620,11 +620,11 @@ renderPaperResults(lastPaperResults);
     const filteredPapers = filterPapersByReadingLabel(papers);
 
     if (!filteredPapers.length) {
-      paperStatus.textContent = `目前沒有 ${getFilterDisplayName(activeReadingFilter)} 類型的文獻。`;
+      paperStatus.textContent = `ç®åæ²æ ${getFilterDisplayName(activeReadingFilter)} é¡åçæç»ã`;
 
       paperResults.innerHTML = `
         <div class="paper-empty">
-          目前沒有符合這個分類的文獻，可以切回 All 查看全部結果。
+          ç®åæ²æç¬¦åéååé¡çæç»ï¼å¯ä»¥åå All æ¥çå¨é¨çµæã
         </div>
       `;
       return;
@@ -643,9 +643,9 @@ renderPaperResults(lastPaperResults);
     );
 
     if (activeReadingFilter === "all") {
-      paperStatus.textContent = `找到 ${papers.length} 篇文獻，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
+      paperStatus.textContent = `æ¾å° ${papers.length} ç¯æç»ï¼ç®åé¡¯ç¤ºç¬¬ ${currentPaperPage} / ${totalPages} é ã`;
     } else {
-      paperStatus.textContent = `${getFilterDisplayName(activeReadingFilter)}：${filteredPapers.length} 篇，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
+      paperStatus.textContent = `${getFilterDisplayName(activeReadingFilter)}ï¼${filteredPapers.length} ç¯ï¼ç®åé¡¯ç¤ºç¬¬ ${currentPaperPage} / ${totalPages} é ã`;
     }
 
     const paperCards = visiblePapers
@@ -684,9 +684,9 @@ renderPaperResults(lastPaperResults);
 
             <p class="paper-meta">
               ${escapeHtml(String(paper.year || "Unknown"))}
-              · ${escapeHtml(paper.venue || "Unknown source")}
-              · Citations: ${paper.citedByCount || 0}
-              ${citationPerYear ? ` · ${citationPerYear}/year` : ""}
+              Â· ${escapeHtml(paper.venue || "Unknown source")}
+              Â· Citations: ${paper.citedByCount || 0}
+              ${citationPerYear ? ` Â· ${citationPerYear}/year` : ""}
             </p>
 
             <p class="paper-authors">
@@ -707,7 +707,7 @@ renderPaperResults(lastPaperResults);
             </div>
 
             <div class="paper-reasons">
-              <strong>推薦原因</strong>
+              <strong>æ¨è¦åå </strong>
               <ul>${reasons}</ul>
             </div>
 
@@ -731,7 +731,7 @@ renderPaperResults(lastPaperResults);
           id="prevPaperPage"
           ${currentPaperPage === 1 ? "disabled" : ""}
         >
-          ← Previous
+          â Previous
         </button>
 
         <span>
@@ -743,7 +743,7 @@ renderPaperResults(lastPaperResults);
           id="nextPaperPage"
           ${currentPaperPage === totalPages ? "disabled" : ""}
         >
-          Next →
+          Next â
         </button>
       </div>
     `;
@@ -819,7 +819,7 @@ Priority:
 ${paper.priority}
 
 Reasons:
-${(paper.reasons || []).join("、")}
+${(paper.reasons || []).join("ã")}
 
 Abstract:
 ${paper.abstract}
@@ -868,7 +868,7 @@ function ensureSummaryJournalActions() {
       class="create-journal-entry-button"
       id="createJournalEntryButton"
     >
-      ＋ Create Journal Entry
+      ï¼ Create Journal Entry
     </button>
   `;
 
@@ -931,9 +931,9 @@ function createJournalEntryFromSummary() {
     if (!themeToggle) return;
 
     if (root.classList.contains("dark")) {
-      themeToggle.textContent = "☀︎";
+      themeToggle.textContent = "âï¸";
     } else {
-      themeToggle.textContent = "☾";
+      themeToggle.textContent = "â¾";
     }
   }
 function openHistoryDrawer() {
@@ -1013,7 +1013,7 @@ function renderSearchHistory() {
     historyList.innerHTML = `
       <div class="history-empty">
         <p>No search history yet.</p>
-        <span>搜尋文獻後，紀錄會出現在這裡。</span>
+        <span>æå°æç»å¾ï¼ç´éæåºç¾å¨éè£¡ã</span>
       </div>
     `;
     return;
@@ -1029,7 +1029,7 @@ function renderSearchHistory() {
         >
           <p class="history-query">${escapeHtml(item.query)}</p>
           <p class="history-meta">
-            ${Number(item.resultCount || 0)} papers · ${formatHistoryTime(item.searchedAt)}
+            ${Number(item.resultCount || 0)} papers Â· ${formatHistoryTime(item.searchedAt)}
           </p>
         </button>
       `;
@@ -1084,16 +1084,16 @@ function clearArticleAnalysis() {
   }
 
   if (fileName) {
-    fileName.textContent = "支援 TXT 示範摘要；PDF / DOC 會先顯示等待串接 AI。";
+    fileName.textContent = "æ¯æ´ TXT ç¤ºç¯æè¦ï¼PDF / DOC æåé¡¯ç¤ºç­å¾ä¸²æ¥ AIã";
   }
 
   hideCreateJournalEntryButton();
 
   setSummaryState("empty", `
     <div class="summary-empty">
-      <div class="summary-empty-icon">✦</div>
-      <p>你的摘要結果會出現在這裡。</p>
-      <span>貼上文章內容後，選擇分析方式並開始生成。</span>
+      <div class="summary-empty-icon">â¦</div>
+      <p>ä½ çæè¦çµææåºç¾å¨éè£¡ã</p>
+      <span>è²¼ä¸æç« å§å®¹å¾ï¼é¸æåææ¹å¼ä¸¦éå§çæã</span>
     </div>
   `);
 
@@ -1195,7 +1195,7 @@ function clearArticleAnalysis() {
     if (state === "done") {
       paperSearchButton.disabled = true;
       paperSearchButton.classList.remove("is-searching");
-      paperSearchButton.textContent = "✓ Done";
+      paperSearchButton.textContent = "â Done";
       return;
     }
 
@@ -1326,7 +1326,8 @@ renderSearchHistory();
   if (!app) return;
 
   const STORAGE_KEY = "weian-journal-v0";
- const PENDING_JOURNAL_KEY = "weian-pending-journal-entry";
+  const PENDING_JOURNAL_KEY = "weian-pending-journal-entry";
+  const MAX_IMAGES = 3;
 
   const elements = {
     list: document.getElementById("journalEntryList"),
@@ -1345,26 +1346,50 @@ renderSearchHistory();
     detailMeta: document.getElementById("detailMeta"),
     detailContent: document.getElementById("detailContent"),
     detailTags: document.getElementById("detailTags"),
-   detailImages: document.getElementById("detailImages"),
-detail: document.getElementById("journalDetail"),
-detailClose: document.getElementById("journalDetailClose"),
-detailBackdrop: document.getElementById("journalDetailBackdrop"),
+    detailImages: document.getElementById("detailImages"),
+    detail: document.getElementById("journalDetail"),
+    detailClose: document.getElementById("journalDetailClose"),
+    detailBackdrop: document.getElementById("journalDetailBackdrop"),
 
     title: document.getElementById("entryTitle"),
     category: document.getElementById("entryCategory"),
     visibility: document.getElementById("entryVisibility"),
     mood: document.getElementById("entryMood"),
     time: document.getElementById("entryTime"),
-   date: document.getElementById("entryDate"),
+    date: document.getElementById("entryDate"),
     tags: document.getElementById("entryTags"),
     content: document.getElementById("entryContent"),
     editor: document.getElementById("editor"),
-   imageButton: document.getElementById("entryImageButton"),
 
-imageInput: document.getElementById("entryImageInput"),
+    imageButton: document.getElementById("entryImageButton"),
+    imageInput: document.getElementById("entryImageInput"),
+    imagePreview: document.getElementById("entryImagePreview"),
 
-imagePreview: document.getElementById("entryImagePreview"),
+    lightbox: document.getElementById("journalLightbox"),
+    lightboxImage: document.getElementById("journalLightboxImage"),
+    lightboxClose: document.getElementById("journalLightboxClose"),
   };
+
+  const requiredEditorElements = [
+    elements.list,
+    elements.newEntry,
+    elements.clearEditor,
+    elements.saveDraft,
+    elements.publish,
+    elements.title,
+    elements.category,
+    elements.visibility,
+    elements.mood,
+    elements.time,
+    elements.tags,
+    elements.content,
+    elements.editor,
+  ];
+
+  if (requiredEditorElements.some((element) => !element)) {
+    console.error("Journal HTML è script.js æ²æå°ä¸ï¼è«ç¢ºèª Journal æ¬ä½ IDã");
+    return;
+  }
 
   const seedEntries = [
     {
@@ -1373,14 +1398,15 @@ imagePreview: document.getElementById("entryImagePreview"),
       category: "Development",
       visibility: "public",
       status: "published",
-      mood: "😵",
+      mood: "ðµ",
       timeSpent: 4,
       tags: ["CSS", "JavaScript", "Paper Scout"],
+      images: [],
       content:
-        "今天整理了 Paper Scout 的介面、AI Summary 面板與搜尋結果互動。\n\n遇到最大的問題是 Summary 區塊的捲動與固定 Navbar 互相影響。\n\n下一步是建立 Journal Workspace，讓學習紀錄可以直接在網站上新增與管理。",
-      createdAt: "2026-07-01T10:00:00.000Z",
-      updatedAt: "2026-07-01T10:00:00.000Z",
-      publishedAt: "2026-07-01T10:00:00.000Z",
+        "ä»å¤©æ´çäº Paper Scout çä»é¢ãAI Summary é¢æ¿èæå°çµæäºåã\n\néå°æå¤§çåé¡æ¯ Summary åå¡çæ²åèåºå® Navbar äºç¸å½±é¿ã\n\nä¸ä¸æ­¥æ¯å»ºç« Journal Workspaceï¼è®å­¸ç¿ç´éå¯ä»¥ç´æ¥å¨ç¶²ç«ä¸æ°å¢èç®¡çã",
+      createdAt: "2026-07-01T12:00:00.000Z",
+      updatedAt: "2026-07-01T12:00:00.000Z",
+      publishedAt: "2026-07-01T12:00:00.000Z",
     },
     {
       id: "seed-2",
@@ -1388,13 +1414,14 @@ imagePreview: document.getElementById("entryImagePreview"),
       category: "Research",
       visibility: "private",
       status: "draft",
-      mood: "🙂",
+      mood: "ð",
       timeSpent: 2,
       tags: ["AI", "Literature", "Research Notes"],
+      images: [],
       content:
-        "測試把 AI Summary 改成 Research Notes 格式。\n\n希望未來每篇文獻都可以自動整理研究問題、方法、重要發現、限制與閱讀策略。",
-      createdAt: "2026-06-30T10:00:00.000Z",
-      updatedAt: "2026-06-30T10:00:00.000Z",
+        "æ¸¬è©¦æ AI Summary æ¹æ Research Notes æ ¼å¼ã\n\nå¸ææªä¾æ¯ç¯æç»é½å¯ä»¥èªåæ´çç ç©¶åé¡ãæ¹æ³ãéè¦ç¼ç¾ãéå¶èé±è®ç­ç¥ã",
+      createdAt: "2026-06-30T12:00:00.000Z",
+      updatedAt: "2026-06-30T12:00:00.000Z",
       publishedAt: null,
     },
   ];
@@ -1406,18 +1433,43 @@ imagePreview: document.getElementById("entryImagePreview"),
     filter: "all",
     search: "",
   };
-let editorImages = [];
+
+  let editorImages = [];
+
   function loadEntries() {
     try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      return Array.isArray(saved) && saved.length ? saved : seedEntries;
-    } catch {
-      return seedEntries;
+      const raw = localStorage.getItem(STORAGE_KEY);
+
+      if (raw === null) {
+        return seedEntries.map((entry) => ({ ...entry }));
+      }
+
+      const saved = JSON.parse(raw);
+
+      if (!Array.isArray(saved)) {
+        return seedEntries.map((entry) => ({ ...entry }));
+      }
+
+      return saved.map((entry) => ({
+        ...entry,
+        tags: Array.isArray(entry.tags) ? entry.tags : [],
+        images: Array.isArray(entry.images) ? entry.images : [],
+      }));
+    } catch (error) {
+      console.error("Journal è®åå¤±æï¼", error);
+      return seedEntries.map((entry) => ({ ...entry }));
     }
   }
 
   function saveEntries() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.entries));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.entries));
+      return true;
+    } catch (error) {
+      console.error("Journal å²å­å¤±æï¼", error);
+      alert("Journal å²å­å¤±æãåçå¯è½å¤ªå¤§ï¼è«ç§»é¤ä¸å¼µåçå¾åè©¦ã");
+      return false;
+    }
   }
 
   function showToast(message) {
@@ -1437,140 +1489,53 @@ let editorImages = [];
       toast.classList.remove("show");
     }, 1800);
   }
- function renderEditorImages() {
-  if (!elements.imagePreview) return;
 
-  if (!editorImages.length) {
-    elements.imagePreview.innerHTML = "";
-    return;
-  }
-
-  elements.imagePreview.innerHTML = editorImages
-    .map((image, index) => {
-      return `
-        <div class="journal-image-thumb">
-          <img src="${escapeHtml(image.dataUrl)}" alt="${escapeHtml(image.name || "Journal image")}" />
-
-          <button
-            type="button"
-            class="journal-image-remove"
-            data-remove-image="${index}"
-          >
-            ×
-          </button>
-        </div>
-      `;
-    })
-    .join("");
-
-  elements.imagePreview.querySelectorAll("[data-remove-image]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const index = Number(button.dataset.removeImage);
-      editorImages.splice(index, 1);
-      renderEditorImages();
-    });
-  });
-}
-
-function readImageFile(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      resolve({
-        name: file.name,
-        type: file.type,
-        dataUrl: reader.result,
-      });
-    };
-
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-function openJournalLightbox(imageUrl) {
-  const lightbox = document.getElementById("journalLightbox");
-  const lightboxImage = document.getElementById("journalLightboxImage");
-
-  if (!lightbox || !lightboxImage || !imageUrl) return;
-
-  lightboxImage.src = imageUrl;
-  lightbox.hidden = false;
-}
-
-function closeJournalLightbox() {
-  const lightbox = document.getElementById("journalLightbox");
-  const lightboxImage = document.getElementById("journalLightboxImage");
-
-  if (!lightbox || !lightboxImage) return;
-
-  lightbox.hidden = true;
-  lightboxImage.src = "";
-}
- function openJournalDetailModal() {
-  if (!elements.detail) return;
-
-  elements.detail.hidden = false;
-
-  if (elements.detailBackdrop) {
-    elements.detailBackdrop.hidden = false;
-  }
-
-  requestAnimationFrame(() => {
-    elements.detail.classList.add("is-open");
-  });
-}
-
-function closeJournalDetailModal() {
-  if (!elements.detail) return;
-
-  elements.detail.classList.remove("is-open");
-
-  setTimeout(() => {
-    elements.detail.hidden = true;
-
-    if (elements.detailBackdrop) {
-      elements.detailBackdrop.hidden = true;
-    }
-  }, 220);
-}
-  function openEditor() {
-  closeJournalDetailModal();
-  closeJournalLightbox();
-
-  app.classList.add("editor-open");
-
-  if (elements.newEntry) {
-    elements.newEntry.textContent = "Close Editor";
-    elements.newEntry.setAttribute("aria-expanded", "true");
-  }
-}
-  function closeEditor() {
-    app.classList.remove("editor-open");
-
-    if (elements.newEntry) {
-      elements.newEntry.textContent = "＋ New Entry";
-      elements.newEntry.setAttribute("aria-expanded", "false");
-    }
+  function todayValue() {
+    const now = new Date();
+    const offset = now.getTimezoneOffset();
+    return new Date(now.getTime() - offset * 60000).toISOString().slice(0, 10);
   }
 
   function createId() {
-    if (window.crypto && crypto.randomUUID) {
+    if (window.crypto?.randomUUID) {
       return crypto.randomUUID();
     }
 
     return `entry-${Date.now()}-${Math.random().toString(16).slice(2)}`;
   }
 
+  function getEntryDate(entry) {
+    return entry?.publishedAt || entry?.createdAt || entry?.updatedAt || "";
+  }
+
   function formatDate(dateString) {
     if (!dateString) return "Draft";
-    const date = new Date(dateString);
 
-    return date.toLocaleDateString("en-CA", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).replaceAll("-", ".");
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) return "Unknown date";
+
+    return date
+      .toLocaleDateString("en-CA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .replaceAll("-", ".");
+  }
+
+  function formatJournalContent(content) {
+    const cleanContent = String(content || "").trim();
+
+    if (!cleanContent) {
+      return "<p>å°æªè¼¸å¥å§å®¹ã</p>";
+    }
+
+    return cleanContent
+      .split(/\n\s*\n/)
+      .map((paragraph) => {
+        return `<p>${escapeHtml(paragraph).replace(/\n/g, "<br>")}</p>`;
+      })
+      .join("");
   }
 
   function getVisibleEntries() {
@@ -1598,9 +1563,143 @@ function closeJournalDetailModal() {
           .toLowerCase()
           .includes(keyword);
       })
-     .sort((a, b) => {
-  return new Date(b.publishedAt || b.createdAt) - new Date(a.publishedAt || a.createdAt);
-});
+      .sort((a, b) => {
+        return new Date(getEntryDate(b)) - new Date(getEntryDate(a));
+      });
+  }
+
+  function renderEditorImages() {
+    if (!elements.imagePreview) return;
+
+    elements.imagePreview.innerHTML = editorImages
+      .map(
+        (image, index) => `
+          <div class="journal-image-thumb">
+            <img
+              src="${escapeHtml(image.dataUrl || "")}"
+              alt="${escapeHtml(image.name || "Journal image")}"
+            />
+            <button
+              type="button"
+              class="journal-image-remove"
+              data-remove-image="${index}"
+              aria-label="Remove image"
+            >
+              Ã
+            </button>
+          </div>
+        `
+      )
+      .join("");
+
+    elements.imagePreview
+      .querySelectorAll("[data-remove-image]")
+      .forEach((button) => {
+        button.addEventListener("click", () => {
+          editorImages.splice(Number(button.dataset.removeImage), 1);
+          renderEditorImages();
+        });
+      });
+  }
+
+  function compressImage(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onerror = () => reject(new Error(`ç¡æ³è®å ${file.name}`));
+
+      reader.onload = () => {
+        const image = new Image();
+
+        image.onerror = () => reject(new Error(`ç¡æ³èç ${file.name}`));
+
+        image.onload = () => {
+          const maxSize = 1200;
+          const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+          const width = Math.max(1, Math.round(image.width * scale));
+          const height = Math.max(1, Math.round(image.height * scale));
+
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+
+          const context = canvas.getContext("2d");
+          if (!context) {
+            reject(new Error("çè¦½å¨ç¡æ³èçåçã"));
+            return;
+          }
+
+          context.drawImage(image, 0, 0, width, height);
+
+          resolve({
+            name: file.name,
+            type: "image/jpeg",
+            dataUrl: canvas.toDataURL("image/jpeg", 0.76),
+          });
+        };
+
+        image.src = reader.result;
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function openJournalLightbox(imageUrl) {
+    if (!elements.lightbox || !elements.lightboxImage || !imageUrl) return;
+
+    elements.lightboxImage.src = imageUrl;
+    elements.lightbox.hidden = false;
+  }
+
+  function closeJournalLightbox() {
+    if (!elements.lightbox || !elements.lightboxImage) return;
+
+    elements.lightbox.hidden = true;
+    elements.lightboxImage.src = "";
+  }
+
+  function openJournalDetailModal() {
+    if (!elements.detail) return;
+
+    elements.detail.hidden = false;
+
+    if (elements.detailBackdrop) {
+      elements.detailBackdrop.hidden = false;
+    }
+
+    requestAnimationFrame(() => {
+      elements.detail.classList.add("is-open");
+    });
+  }
+
+  function closeJournalDetailModal() {
+    if (!elements.detail) return;
+
+    elements.detail.classList.remove("is-open");
+
+    setTimeout(() => {
+      elements.detail.hidden = true;
+
+      if (elements.detailBackdrop) {
+        elements.detailBackdrop.hidden = true;
+      }
+    }, 220);
+  }
+
+  function openEditor() {
+    closeJournalDetailModal();
+    closeJournalLightbox();
+    app.classList.add("editor-open");
+
+    elements.newEntry.textContent = "Close Editor";
+    elements.newEntry.setAttribute("aria-expanded", "true");
+  }
+
+  function closeEditor() {
+    app.classList.remove("editor-open");
+    elements.newEntry.textContent = "ï¼ New Entry";
+    elements.newEntry.setAttribute("aria-expanded", "false");
   }
 
   function renderList() {
@@ -1608,11 +1707,11 @@ function closeJournalDetailModal() {
 
     if (!entries.length) {
       elements.list.innerHTML = `
-        <article class="journal-entry">
+        <article class="journal-entry journal-empty-entry">
           <div>
             <p class="journal-date">No results</p>
             <h3>No journal found</h3>
-            <p>換個關鍵字或分類試試看。</p>
+            <p>æåééµå­æåé¡è©¦è©¦çã</p>
           </div>
         </article>
       `;
@@ -1626,74 +1725,80 @@ function closeJournalDetailModal() {
 
     elements.list.innerHTML = entries
       .map((entry) => {
-        const isActive = entry.id === state.selectedId;
         const tags = (entry.tags || [])
           .slice(0, 3)
           .map((tag) => `<span>${escapeHtml(tag)}</span>`)
           .join("");
-       const images = (entry.images || [])
-  .slice(0, 3)
-  .map((image) => {
-    return `
-      <button
-        type="button"
-        class="journal-entry-image"
-        data-lightbox-image="${escapeHtml(image.dataUrl)}"
-      >
-        <img src="${escapeHtml(image.dataUrl)}" alt="${escapeHtml(image.name || "Journal image")}" />
-      </button>
-    `;
-  })
-  .join("");
 
-const imageBlock = images
-  ? `<div class="journal-entry-images">${images}</div>`
-  : "";
+        const images = (entry.images || [])
+          .slice(0, 3)
+          .map(
+            (image) => `
+              <button
+                type="button"
+                class="journal-entry-image"
+                data-lightbox-image="${escapeHtml(image.dataUrl || "")}"
+                aria-label="Preview image"
+              >
+                <img
+                  src="${escapeHtml(image.dataUrl || "")}"
+                  alt="${escapeHtml(image.name || "Journal image")}"
+                />
+              </button>
+            `
+          )
+          .join("");
 
         return `
-          <article class="journal-entry ${isActive ? "active" : ""}" data-entry-id="${entry.id}">
-            <div>
-              <p class="journal-date">${formatDate(entry.publishedAt || entry.createdAt)}</p>
-              <h3>${escapeHtml(entry.title)}</h3>
-              <p>${escapeHtml(entry.content).slice(0, 180)}${entry.content.length > 180 ? "..." : ""}</p>
+          <article
+            class="journal-entry ${entry.id === state.selectedId ? "active" : ""}"
+            data-entry-id="${escapeHtml(entry.id)}"
+          >
+            <div class="journal-entry-main">
+              <p class="journal-date">${formatDate(getEntryDate(entry))}</p>
+              <h3>${escapeHtml(entry.title || "Untitled")}</h3>
+              <p class="journal-entry-excerpt">
+                ${escapeHtml(String(entry.content || "")).slice(0, 220)}
+                ${String(entry.content || "").length > 220 ? "..." : ""}
+              </p>
 
-${imageBlock}
+              ${images ? `<div class="journal-entry-images">${images}</div>` : ""}
 
-<div class="journal-tags">
-  <span>${escapeHtml(entry.category)}</span>
-  ${tags}
-</div>
+              <div class="journal-tags">
+                <span>${escapeHtml(entry.category || "Other")}</span>
+                ${tags}
+              </div>
             </div>
 
             <div class="journal-meta">
               <span class="status ${entry.visibility === "public" ? "public" : "private"}">
-                ${escapeHtml(entry.visibility)}
+                ${escapeHtml(entry.visibility || "private")}
               </span>
               <span>${entry.status === "published" ? "Published" : "Draft"}</span>
-              <span>⏱ ${entry.timeSpent || 0}h</span>
-              <span>${escapeHtml(entry.mood || "🙂")}</span>
+              <span>â± ${Number(entry.timeSpent || 0)}h</span>
+              <span>${escapeHtml(entry.mood || "ð")}</span>
             </div>
           </article>
         `;
       })
       .join("");
 
-   elements.list.querySelectorAll("[data-entry-id]").forEach((card) => {
-  card.addEventListener("click", () => {
-    state.selectedId = card.dataset.entryId;
-    state.editingId = null;
+    elements.list.querySelectorAll("[data-entry-id]").forEach((card) => {
+      card.addEventListener("click", () => {
+        state.selectedId = card.dataset.entryId;
+        state.editingId = null;
+        renderList();
+        renderDetail(getSelectedEntry());
+        openJournalDetailModal();
+      });
+    });
 
-    renderList();
-    renderDetail(getSelectedEntry());
-    openJournalDetailModal();
-  });
-});
-   elements.list.querySelectorAll("[data-lightbox-image]").forEach((button) => {
-  button.addEventListener("click", (event) => {
-    event.stopPropagation();
-    openJournalLightbox(button.dataset.lightboxImage);
-  });
-});
+    elements.list.querySelectorAll("[data-lightbox-image]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        openJournalLightbox(button.dataset.lightboxImage);
+      });
+    });
 
     renderDetail(getSelectedEntry());
   }
@@ -1717,23 +1822,61 @@ ${imageBlock}
       elements.detailDate.textContent = "Select an entry";
       elements.detailTitle.textContent = "No journal selected";
       elements.detailMeta.innerHTML = "";
-      elements.detailContent.textContent = "從左邊選一篇 Journal，或按 New Entry 新增一篇。";
+      elements.detailContent.innerHTML = "<p>å¾ä¸æ¹é¸ä¸ç¯ Journalï¼ææ New Entry æ°å¢ä¸ç¯ã</p>";
       elements.detailTags.innerHTML = "";
+
+      if (elements.detailImages) {
+        elements.detailImages.innerHTML = "";
+      }
       return;
     }
 
-    elements.detailDate.textContent = formatDate(entry.publishedAt || entry.createdAt);
-    elements.detailTitle.textContent = entry.title;
+    elements.detailDate.textContent = formatDate(getEntryDate(entry));
+    elements.detailTitle.textContent = entry.title || "Untitled";
 
     elements.detailMeta.innerHTML = `
-      <span>${escapeHtml(entry.category)}</span>
+      <span>${escapeHtml(entry.category || "Other")}</span>
       <span>${entry.status === "published" ? "Published" : "Draft"}</span>
-      <span>${escapeHtml(entry.visibility)}</span>
-      <span>⏱ ${entry.timeSpent || 0}h</span>
-      <span>${escapeHtml(entry.mood || "🙂")}</span>
+      <span>${escapeHtml(entry.visibility || "private")}</span>
+      <span>â± ${Number(entry.timeSpent || 0)}h</span>
+      <span>${escapeHtml(entry.mood || "ð")}</span>
     `;
 
-    elements.detailContent.textContent = entry.content;
+    elements.detailContent.innerHTML = formatJournalContent(entry.content);
+
+    if (elements.detailImages) {
+      elements.detailImages.innerHTML = (entry.images || []).length
+        ? `
+          <div class="journal-detail-image-grid">
+            ${(entry.images || [])
+              .map(
+                (image) => `
+                  <button
+                    type="button"
+                    class="journal-detail-image"
+                    data-detail-lightbox-image="${escapeHtml(image.dataUrl || "")}"
+                    aria-label="Preview image"
+                  >
+                    <img
+                      src="${escapeHtml(image.dataUrl || "")}"
+                      alt="${escapeHtml(image.name || "Journal image")}"
+                    />
+                  </button>
+                `
+              )
+              .join("")}
+          </div>
+        `
+        : "";
+
+      elements.detailImages
+        .querySelectorAll("[data-detail-lightbox-image]")
+        .forEach((button) => {
+          button.addEventListener("click", () => {
+            openJournalLightbox(button.dataset.detailLightboxImage);
+          });
+        });
+    }
 
     elements.detailTags.innerHTML = (entry.tags || [])
       .map((tag) => `<span>${escapeHtml(tag)}</span>`)
@@ -1741,30 +1884,33 @@ ${imageBlock}
   }
 
   function setEditor(entry = null) {
-    state.editingId = entry ? entry.id : null;
-
+    state.editingId = entry?.id || null;
     openEditor();
 
     elements.title.value = entry?.title || "";
     elements.category.value = entry?.category || "Development";
     elements.visibility.value = entry?.visibility || "public";
-    elements.mood.value = entry?.mood || "🙂";
-    elements.time.value = entry?.timeSpent || "";
+    elements.mood.value = entry?.mood || "ð";
+    elements.time.value = entry?.timeSpent ?? "";
 
-if (elements.date) {
-  const entryDate = entry?.createdAt
-    ? new Date(entry.createdAt).toISOString().slice(0, 10)
-    : new Date().toISOString().slice(0, 10);
+    if (elements.date) {
+      const entryDate = getEntryDate(entry);
+      elements.date.value = entryDate
+        ? new Date(entryDate).toISOString().slice(0, 10)
+        : todayValue();
+    }
 
-  elements.date.value = entryDate;
-}
+    elements.tags.value = (entry?.tags || []).join(", ");
+    elements.content.value = entry?.content || "";
+    editorImages = Array.isArray(entry?.images)
+      ? entry.images.map((image) => ({ ...image }))
+      : [];
+    renderEditorImages();
 
-elements.tags.value = (entry?.tags || []).join(", ");
-elements.content.value = entry?.content || "";
-editorImages = Array.isArray(entry?.images) ? [...entry.images] : [];
-renderEditorImages();
     const editorTitle = elements.editor.querySelector("h2");
-    editorTitle.textContent = entry ? "Edit Entry" : "New Entry";
+    if (editorTitle) {
+      editorTitle.textContent = entry ? "Edit Entry" : "New Entry";
+    }
 
     setTimeout(() => {
       elements.editor.scrollIntoView({
@@ -1779,24 +1925,21 @@ renderEditorImages();
     const content = elements.content.value.trim();
 
     if (!title) {
-      alert("先輸入標題。");
+      alert("åè¼¸å¥æ¨é¡ã");
       elements.title.focus();
       return null;
     }
 
     if (!content) {
-      alert("先輸入內容。");
+      alert("åè¼¸å¥å§å®¹ã");
       elements.content.focus();
       return null;
     }
 
     const now = new Date().toISOString();
-const oldEntry = state.entries.find((entry) => entry.id === state.editingId);
-
-const selectedDate = elements.date?.value;
-const selectedDateISO = selectedDate
-  ? `${selectedDate}T12:00:00.000Z`
-  : oldEntry?.createdAt || now;
+    const oldEntry = state.entries.find((entry) => entry.id === state.editingId);
+    const selectedDate = elements.date?.value || todayValue();
+    const selectedDateISO = `${selectedDate}T12:00:00.000Z`;
 
     return {
       id: oldEntry?.id || createId(),
@@ -1811,13 +1954,13 @@ const selectedDateISO = selectedDate
         .map((tag) => tag.trim())
         .filter(Boolean),
       content,
-images: editorImages,
-     createdAt: selectedDateISO,
-updatedAt: now,
-publishedAt:
-  status === "published"
-    ? selectedDateISO
-    : oldEntry?.publishedAt || null,
+      images: editorImages.map((image) => ({ ...image })),
+      createdAt: selectedDateISO,
+      updatedAt: now,
+      publishedAt:
+        status === "published"
+          ? selectedDateISO
+          : oldEntry?.publishedAt || null,
     };
   }
 
@@ -1825,6 +1968,7 @@ publishedAt:
     const entry = readEditor(status);
     if (!entry) return;
 
+    const previousEntries = state.entries.map((item) => ({ ...item }));
     const existingIndex = state.entries.findIndex((item) => item.id === entry.id);
 
     if (existingIndex >= 0) {
@@ -1833,14 +1977,17 @@ publishedAt:
       state.entries.unshift(entry);
     }
 
-    state.selectedId = entry.id;
-    state.editingId = entry.id;
+    if (!saveEntries()) {
+      state.entries = previousEntries;
+      return;
+    }
 
-    saveEntries();
+    state.selectedId = entry.id;
+    state.editingId = null;
+
     renderList();
     renderDetail(entry);
-
-    showToast(status === "published" ? "✓ Published" : "✓ Draft saved");
+    showToast(status === "published" ? "â Published" : "â Draft saved");
     clearEditor();
     closeEditor();
   }
@@ -1849,40 +1996,47 @@ publishedAt:
     const entry = getSelectedEntry();
     if (!entry) return;
 
-    const confirmDelete = confirm(`確定要刪除「${entry.title}」嗎？`);
+    if (!confirm(`ç¢ºå®è¦åªé¤ã${entry.title}ãåï¼`)) return;
 
-    if (!confirmDelete) return;
-
+    const previousEntries = state.entries.map((item) => ({ ...item }));
     state.entries = state.entries.filter((item) => item.id !== entry.id);
+
+    if (!saveEntries()) {
+      state.entries = previousEntries;
+      return;
+    }
+
     state.selectedId = null;
     state.editingId = null;
-
-    saveEntries();
     clearEditor();
     renderList();
+    closeJournalDetailModal();
   }
-function buildPendingJournalContent(pending) {
-  const tags = Array.isArray(pending.tags)
-    ? pending.tags.filter(Boolean)
-    : [];
 
-  const tagLine = tags.length
-    ? `Tags: ${tags.map((tag) => `#${String(tag).replace(/\s+/g, "-")}`).join(" ")}\n`
-    : "";
+  function buildPendingJournalContent(pending) {
+    const tags = Array.isArray(pending.tags)
+      ? pending.tags.filter(Boolean)
+      : [];
 
-  const topicLine = pending.researchTopic
-    ? `Topic: ${pending.researchTopic}\n`
-    : "";
+    const tagLine = tags.length
+      ? `Tags: ${tags
+          .map((tag) => `#${String(tag).replace(/\s+/g, "-")}`)
+          .join(" ")}\n`
+      : "";
 
-  const sourceLine = pending.sourceUrl
-    ? `Source: ${pending.sourceUrl}\n`
-    : "";
+    const topicLine = pending.researchTopic
+      ? `Topic: ${pending.researchTopic}\n`
+      : "";
 
-  return `## My Reflection
+    const sourceLine = pending.sourceUrl
+      ? `Source: ${pending.sourceUrl}\n`
+      : "";
+
+    return `## My Reflection
 
 Created from AI Summary
 
-今天閱讀這篇文獻後，我的想法是：
+ä»å¤©é±è®éç¯æç»å¾ï¼æçæ³æ³æ¯ï¼
 
 
 ---
@@ -1895,138 +2049,111 @@ ${topicLine}${sourceLine}${tagLine}
 
 ## AI Summary
 
-${pending.summary || "尚未產生摘要內容。"}`;
-}
-
-function consumePendingJournalEntry() {
-  const raw = localStorage.getItem(PENDING_JOURNAL_KEY);
-
-  if (!raw) return;
-
-  let pending = null;
-
-  try {
-    pending = JSON.parse(raw);
-  } catch {
-    localStorage.removeItem(PENDING_JOURNAL_KEY);
-    return;
+${pending.summary || "å°æªç¢çæè¦å§å®¹ã"}`;
   }
 
-  localStorage.removeItem(PENDING_JOURNAL_KEY);
+  function consumePendingJournalEntry() {
+    const raw = localStorage.getItem(PENDING_JOURNAL_KEY);
+    if (!raw) return;
 
-  setEditor({
-    title: pending.title || "AI Research Note",
-    category: pending.category || "Research",
-    visibility: "private",
-    mood: "🙂",
-    timeSpent: "",
-    tags:
-      Array.isArray(pending.tags) && pending.tags.length
-        ? pending.tags
-        : ["AI Summary", "Research"],
-    content: buildPendingJournalContent(pending),
-  });
+    try {
+      const pending = JSON.parse(raw);
+      localStorage.removeItem(PENDING_JOURNAL_KEY);
 
-  setTimeout(() => {
-    elements.content.focus();
-
-    const marker = "今天閱讀這篇文獻後，我的想法是：\n";
-    const position = elements.content.value.indexOf(marker);
-
-    if (position >= 0) {
-      const cursorPosition = position + marker.length;
-      elements.content.setSelectionRange(cursorPosition, cursorPosition);
+      setEditor({
+        title: pending.title || "AI Research Note",
+        category: pending.category || "Research",
+        visibility: "private",
+        mood: "ð",
+        timeSpent: "",
+        tags:
+          Array.isArray(pending.tags) && pending.tags.length
+            ? pending.tags
+            : ["AI Summary", "Research"],
+        images: [],
+        content: buildPendingJournalContent(pending),
+        createdAt: pending.createdAt || new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("AI Summary è½ Journal å¤±æï¼", error);
+      localStorage.removeItem(PENDING_JOURNAL_KEY);
     }
-  }, 260);
-}
+  }
+
   function clearEditor() {
     state.editingId = null;
 
     elements.title.value = "";
     elements.category.value = "Development";
     elements.visibility.value = "public";
-    elements.mood.value = "🙂";
+    elements.mood.value = "ð";
     elements.time.value = "";
 
-if (elements.date) {
-  elements.date.value = new Date().toISOString().slice(0, 10);
-}
-
-elements.tags.value = "";
-elements.content.value = "";
-   editorImages = [];
-renderEditorImages();
-
-    const editorTitle = elements.editor.querySelector("h2");
-    editorTitle.textContent = "New Entry";
-  }
-const journalLightbox = document.getElementById("journalLightbox");
-const journalLightboxClose = document.getElementById("journalLightboxClose");
-
-if (journalLightboxClose) {
-  journalLightboxClose.addEventListener("click", closeJournalLightbox);
-}
-
-if (journalLightbox) {
-  journalLightbox.addEventListener("click", (event) => {
-    if (event.target === journalLightbox) {
-      closeJournalLightbox();
+    if (elements.date) {
+      elements.date.value = todayValue();
     }
-  });
-}
- if (elements.detailClose) {
-  elements.detailClose.addEventListener("click", closeJournalDetailModal);
-}
 
-if (elements.detailBackdrop) {
-  elements.detailBackdrop.addEventListener("click", closeJournalDetailModal);
-}
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    closeJournalDetailModal();
-  }
-});
-  if (elements.newEntry) {
-   if (elements.imageButton && elements.imageInput) {
-  elements.imageButton.addEventListener("click", () => {
-    elements.imageInput.click();
-  });
-}
-
-if (elements.imageInput) {
-  elements.imageInput.addEventListener("change", async (event) => {
-    const files = Array.from(event.target.files || []);
-
-    if (!files.length) return;
-
-    const remainingSlots = Math.max(0, 3 - editorImages.length);
-    const selectedFiles = files.slice(0, remainingSlots);
-
-    const images = await Promise.all(selectedFiles.map(readImageFile));
-
-    editorImages = [...editorImages, ...images].slice(0, 3);
-
+    elements.tags.value = "";
+    elements.content.value = "";
+    editorImages = [];
     renderEditorImages();
 
-    elements.imageInput.value = "";
-  });
-}
-    elements.newEntry.addEventListener("click", () => {
-      if (app.classList.contains("editor-open")) {
-        clearEditor();
-        closeEditor();
+    const editorTitle = elements.editor.querySelector("h2");
+    if (editorTitle) {
+      editorTitle.textContent = "New Entry";
+    }
+  }
+
+  if (elements.imageButton && elements.imageInput) {
+    elements.imageButton.addEventListener("click", () => {
+      elements.imageInput.click();
+    });
+
+    elements.imageInput.addEventListener("change", async (event) => {
+      const files = Array.from(event.target.files || []).filter((file) =>
+        file.type.startsWith("image/")
+      );
+
+      if (!files.length) return;
+
+      const remainingSlots = Math.max(0, MAX_IMAGES - editorImages.length);
+
+      if (remainingSlots === 0) {
+        alert(`æ¯ç¯ Journal æå¤ ${MAX_IMAGES} å¼µåçã`);
+        elements.imageInput.value = "";
         return;
       }
 
-      setEditor(null);
+      try {
+        const selectedFiles = files.slice(0, remainingSlots);
+        const images = await Promise.all(selectedFiles.map(compressImage));
+        editorImages = [...editorImages, ...images].slice(0, MAX_IMAGES);
+        renderEditorImages();
+
+        if (files.length > remainingSlots) {
+          alert(`æ¯ç¯ Journal æå¤ ${MAX_IMAGES} å¼µåçã`);
+        }
+      } catch (error) {
+        alert(error.message || "åçèçå¤±æã");
+      } finally {
+        elements.imageInput.value = "";
+      }
     });
   }
+
+  elements.newEntry.addEventListener("click", () => {
+    if (app.classList.contains("editor-open")) {
+      clearEditor();
+      closeEditor();
+      return;
+    }
+
+    setEditor(null);
+  });
 
   if (elements.editEntry) {
     elements.editEntry.addEventListener("click", () => {
       const entry = getSelectedEntry();
-
       if (!entry) return;
 
       closeJournalDetailModal();
@@ -2035,39 +2162,24 @@ if (elements.imageInput) {
   }
 
   if (elements.deleteEntry) {
-    elements.deleteEntry.addEventListener("click", () => {
-      deleteSelectedEntry();
-      closeJournalDetailModal();
-    });
+    elements.deleteEntry.addEventListener("click", deleteSelectedEntry);
   }
 
-  if (elements.clearEditor) {
   elements.clearEditor.addEventListener("click", (event) => {
     event.preventDefault();
-    event.stopPropagation();
-
     clearEditor();
     closeEditor();
   });
-}
 
-if (elements.saveDraft) {
   elements.saveDraft.addEventListener("click", (event) => {
     event.preventDefault();
-    event.stopPropagation();
-
     upsertEntry("draft");
   });
-}
 
-if (elements.publish) {
   elements.publish.addEventListener("click", (event) => {
     event.preventDefault();
-    event.stopPropagation();
-
     upsertEntry("published");
   });
-}
 
   if (elements.search) {
     elements.search.addEventListener("input", (event) => {
@@ -2087,34 +2199,38 @@ if (elements.publish) {
     });
   });
 
-  // Extra safe: make sure these three editor buttons always work.
-  // This is here to protect Journal from older modal/detail changes.
-  document.addEventListener("click", (event) => {
-    const publishButton = event.target.closest("#publishEntryBtn");
-    const draftButton = event.target.closest("#saveDraftBtn");
-    const cancelButton = event.target.closest("#clearEditorBtn");
+  if (elements.detailClose) {
+    elements.detailClose.addEventListener("click", closeJournalDetailModal);
+  }
 
-    if (!publishButton && !draftButton && !cancelButton) return;
+  if (elements.detailBackdrop) {
+    elements.detailBackdrop.addEventListener("click", closeJournalDetailModal);
+  }
 
-    event.preventDefault();
+  if (elements.lightboxClose) {
+    elements.lightboxClose.addEventListener("click", closeJournalLightbox);
+  }
 
-    if (publishButton) {
-      upsertEntry("published");
-      return;
+  if (elements.lightbox) {
+    elements.lightbox.addEventListener("click", (event) => {
+      if (event.target === elements.lightbox) {
+        closeJournalLightbox();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeJournalLightbox();
+      closeJournalDetailModal();
     }
+  });
 
-    if (draftButton) {
-      upsertEntry("draft");
-      return;
-    }
-
-    if (cancelButton) {
-      clearEditor();
-      closeEditor();
-    }
-  }, true);
+  if (elements.date && !elements.date.value) {
+    elements.date.value = todayValue();
+  }
 
   closeEditor();
-renderList();
-consumePendingJournalEntry();
+  renderList();
+  consumePendingJournalEntry();
 })();
