@@ -9162,3 +9162,93 @@ html.theme-changing *::after {
   pointer-events: none !important;
   visibility: hidden !important;
 }
+/* ==========================================================================
+   Journal Modal: diary reading style
+   ========================================================================== */
+
+.journal-detail-modal {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)),
+    var(--surface) !important;
+}
+
+.journal-detail-modal .detail-content {
+  margin-top: 34px !important;
+  max-width: 780px;
+  color: rgba(17, 17, 17, 0.78) !important;
+  font-size: 21px !important;
+  line-height: 1.95 !important;
+  font-weight: 520 !important;
+  letter-spacing: -0.015em;
+}
+
+.journal-detail-modal .detail-content p {
+  margin: 0 0 28px !important;
+}
+
+.journal-detail-modal .detail-content p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.journal-detail-modal h3 {
+  max-width: 780px;
+  line-height: 1.02 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.journal-detail-image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 14px;
+  margin: 30px 0 24px;
+  max-width: 780px;
+}
+
+.journal-detail-image {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 0;
+  background: var(--soft);
+  cursor: pointer;
+}
+
+.journal-detail-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Feed 卡片文字也加深一點 */
+.journal-feed-list .journal-entry p {
+  color: rgba(17, 17, 17, 0.68) !important;
+  font-weight: 520;
+}
+
+/* Dark mode */
+:root.dark .journal-detail-modal {
+  background:
+    linear-gradient(180deg, rgba(28, 28, 30, 0.94), rgba(18, 18, 20, 0.88)),
+    var(--surface) !important;
+}
+
+:root.dark .journal-detail-modal .detail-content {
+  color: rgba(245, 245, 247, 0.82) !important;
+}
+
+:root.dark .journal-feed-list .journal-entry p {
+  color: rgba(245, 245, 247, 0.72) !important;
+}
+
+@media (max-width: 760px) {
+  .journal-detail-modal .detail-content {
+    font-size: 17px !important;
+    line-height: 1.85 !important;
+  }
+
+  .journal-detail-image-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
