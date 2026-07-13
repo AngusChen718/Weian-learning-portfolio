@@ -1701,20 +1701,7 @@ ${imageBlock}
   function getSelectedEntry() {
     return state.entries.find((entry) => entry.id === state.selectedId) || null;
   }
-function formatJournalContent(content) {
-  const cleanContent = String(content || "").trim();
 
-  if (!cleanContent) {
-    return `<p>尚未輸入內容。</p>`;
-  }
-
-  return cleanContent
-    .split(/\n\s*\n/)
-    .map((paragraph) => {
-      return `<p>${escapeHtml(paragraph).replace(/\n/g, "<br>")}</p>`;
-    })
-    .join("");
-}
   function renderDetail(entry) {
     if (
       !elements.detailDate ||
@@ -1746,37 +1733,11 @@ function formatJournalContent(content) {
       <span>${escapeHtml(entry.mood || "🙂")}</span>
     `;
 
-elements.detailContent.innerHTML = formatJournalContent(entry.content);
-if (elements.detailImages) {
-  const images = (entry.images || [])
-    .map((image) => {
-      return `
-        <button
-          type="button"
-          class="journal-detail-image"
-          data-lightbox-image="${escapeHtml(image.dataUrl)}"
-        >
-          <img src="${escapeHtml(image.dataUrl)}" alt="${escapeHtml(image.name || "Journal image")}" />
-        </button>
-      `;
-    })
-    .join("");
+    elements.detailContent.textContent = entry.content;
 
-  elements.detailImages.innerHTML = images
-    ? `<div class="journal-detail-image-grid">${images}</div>`
-    : "";
-}
     elements.detailTags.innerHTML = (entry.tags || [])
       .map((tag) => `<span>${escapeHtml(tag)}</span>`)
       .join("");
-   if (elements.detailImages) {
-  elements.detailImages.querySelectorAll("[data-lightbox-image]").forEach((button) => {
-    button.addEventListener("click", (event) => {
-      event.stopPropagation();
-      openJournalLightbox(button.dataset.lightboxImage);
-    });
-  });
-}
   }
 
   function setEditor(entry = null) {
