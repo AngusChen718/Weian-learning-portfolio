@@ -9162,3 +9162,42 @@ html.theme-changing *::after {
   pointer-events: none !important;
   visibility: hidden !important;
 }
+/* Paper Scout Citation Count */
+
+.paper-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.paper-meta-row .paper-meta {
+  margin: 0;
+}
+
+.paper-citation-count {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 720;
+  white-space: nowrap;
+}
+
+:root.dark .paper-citation-count {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+@media (max-width: 760px) {
+  .paper-meta-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+}
