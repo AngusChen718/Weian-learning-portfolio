@@ -682,13 +682,16 @@ renderPaperResults(lastPaperResults);
               </div>
             </div>
 
-            <p class="paper-meta">
-              ${escapeHtml(String(paper.year || "Unknown"))}
-              · ${escapeHtml(paper.venue || "Unknown source")}
-              · Citations: ${paper.citedByCount || 0}
-              ${citationPerYear ? ` · ${citationPerYear}/year` : ""}
-            </p>
+           <div class="paper-meta-row">
+  <p class="paper-meta">
+    ${escapeHtml(String(paper.year || "Unknown"))}
+    · ${escapeHtml(paper.venue || "Unknown source")}
+  </p>
 
+  <span class="paper-citation-count">
+    Cited by ${Number(paper.citedByCount || 0).toLocaleString()}
+  </span>
+</div>
             <p class="paper-authors">
               ${escapeHtml(paper.authors || "Unknown authors")}
             </p>
