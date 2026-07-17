@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Language Hub｜Weian Chen</title>
+  <meta name="description" content="用一個清楚的工作台管理多種語言的目標、練習與進度。" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="language.css" />
+</head>
+
+<body>
+  <div class="grain"></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html#home">Weian Chen</a>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="journal.html">Journal</a>
+      <a href="index.html#knowledge">Knowledge</a>
+      <a href="index.html#literature">Literature</a>
+      <a href="index.html#projects">Projects</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☾</button>
+  </header>
+
+  <main class="language-hub" data-language-hub>
+    <section class="language-hero">
+      <p class="eyebrow">Language Hub · V1</p>
+      <h1>Learn in<br /><span>your own rhythm.</span></h1>
+      <p>
+        管理不同語言的學習目標、短練習與下一步。第一版不使用 AI，所有紀錄只保留在這台裝置。
+      </p>
+      <a class="button ghost" href="index.html#knowledge">Back to Knowledge</a>
+    </section>
+
+    <section class="language-section language-control-panel" aria-labelledby="languageSelectorTitle">
+      <div class="language-section-heading">
+        <div>
+          <p class="tiny">Your languages</p>
+          <h2 id="languageSelectorTitle">先選語言，再開始練習。</h2>
+        </div>
+        <p>「全部」讓你看整體節奏；點選特定語言後，快速紀錄會自動切換到該語言。</p>
+      </div>
+
+      <div class="language-tabs" id="languageTabs" role="tablist" aria-label="Language filters"></div>
+
+      <form class="language-add-form" id="languageAddForm">
+        <label>
+          <span>New language</span>
+          <input id="newLanguageName" name="languageName" type="text" maxlength="40" placeholder="例如 English、Japanese、German" required />
+        </label>
+        <label>
+          <span>Weekly sessions</span>
+          <input id="newLanguageGoal" name="weeklyGoal" type="number" min="1" max="14" value="3" required />
+        </label>
+        <button class="button primary" type="submit">＋ Add language</button>
+      </form>
+      <p class="language-form-status" id="languageFormStatus" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="language-section" aria-labelledby="languageOverviewTitle">
+      <div class="language-section-heading compact">
+        <div>
+          <p class="tiny">Weekly overview</p>
+          <h2 id="languageOverviewTitle">這週的語言節奏。</h2>
+        </div>
+        <p id="languageOverviewDescription">Add a language to start your overview.</p>
+      </div>
+      <div class="language-overview-grid" id="languageOverview"></div>
+    </section>
+
+    <section class="language-section language-practice-grid" aria-labelledby="practiceTitle">
+      <form class="language-practice-form" id="practiceForm">
+        <div>
+          <p class="tiny">Quick practice log</p>
+          <h2 id="practiceTitle">記下一次小練習。</h2>
+          <p>不需要完整日記；用幾分鐘留下學習軌跡就足夠。</p>
+        </div>
+
+        <div class="language-form-grid">
+          <label>
+            <span>Language</span>
+            <select id="practiceLanguage" name="languageId" required></select>
+          </label>
+          <label>
+            <span>Practice type</span>
+            <select id="practiceType" name="type">
+              <option value="Vocabulary">Vocabulary</option>
+              <option value="Reading">Reading</option>
+              <option value="Listening">Listening</option>
+              <option value="Speaking">Speaking</option>
+              <option value="Writing">Writing</option>
+            </select>
+          </label>
+          <label>
+            <span>Minutes</span>
+            <input id="practiceMinutes" name="minutes" type="number" min="1" max="600" value="15" required />
+          </label>
+        </div>
+
+        <label>
+          <span>What did you practise?</span>
+          <textarea id="practiceNote" name="note" rows="4" maxlength="280" placeholder="例如：跟讀一段英文訪談，記下兩個想使用的片語。"></textarea>
+        </label>
+
+        <button class="button primary" id="savePracticeButton" type="submit">Save practice</button>
+      </form>
+
+      <aside class="language-next-card" aria-labelledby="nextStepTitle">
+        <p class="tiny">Next step</p>
+        <h2 id="nextStepTitle">Start small</h2>
+        <p id="languageNextDetail">Add a language, then log a short practice session.</p>
+        <p class="language-device-note">No account · No API · Stored on this device</p>
+      </aside>
+    </section>
+
+    <section class="language-section language-recent-section" aria-labelledby="recentPracticeTitle">
+      <div class="language-section-heading compact">
+        <div>
+          <p class="tiny">Recent practice</p>
+          <h2 id="recentPracticeTitle">你的練習紀錄。</h2>
+        </div>
+        <p id="recentPracticeDescription">The latest sessions for your selected language appear here.</p>
+      </div>
+      <div class="practice-list" id="practiceList"></div>
+    </section>
+  </main>
+
+  <script type="module" src="language.js"></script>
+</body>
+</html>

@@ -6,6 +6,7 @@ export const BACKUP_KEYS = [
   { key: "weian-paper-search-history", format: "json" },
   { key: "weian-paper-library-v1", format: "json" },
   { key: "weian-pending-journal-entry", format: "json" },
+  { key: "weian-language-hub-v1", format: "json" },
 ];
 
 function readStorageRecord(storage, definition, warnings) {

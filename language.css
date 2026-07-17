@@ -1,0 +1,428 @@
+/* ===========================================================================
+   Language Hub V1
+   ========================================================================== */
+
+.language-hub {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 142px 0 110px;
+}
+
+.language-hero {
+  max-width: 860px;
+  padding: 36px 0 96px;
+}
+
+.language-hero h1 {
+  margin: 18px 0;
+  font-size: clamp(56px, 9vw, 116px);
+  line-height: 0.92;
+  letter-spacing: -0.075em;
+}
+
+.language-hero h1 span {
+  color: var(--muted);
+  font-size: 0.63em;
+}
+
+.language-hero > p:not(.eyebrow) {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+.language-hero .button {
+  margin-top: 30px;
+}
+
+.language-section {
+  margin-top: 24px;
+  padding: clamp(28px, 5vw, 48px);
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.language-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 28px;
+}
+
+.language-section-heading.compact {
+  margin-bottom: 24px;
+}
+
+.language-section-heading .tiny {
+  margin: 0 0 10px;
+}
+
+.language-section-heading h2,
+.language-practice-form h2,
+.language-next-card h2 {
+  margin: 0;
+  font-size: clamp(30px, 4.2vw, 54px);
+  letter-spacing: -0.06em;
+}
+
+.language-section-heading > p {
+  max-width: 390px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.language-tabs {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.language-tab {
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.language-tab:hover {
+  transform: translateY(-1px);
+  color: var(--text);
+}
+
+.language-tab.is-active {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--bg);
+}
+
+.language-add-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px auto;
+  gap: 12px;
+  align-items: end;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.language-add-form label,
+.language-practice-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.language-add-form input,
+.language-practice-form input,
+.language-practice-form select,
+.language-practice-form textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--soft);
+  color: var(--text);
+  font: inherit;
+  outline: none;
+}
+
+.language-add-form input,
+.language-practice-form input,
+.language-practice-form select {
+  min-height: 48px;
+  padding: 0 14px;
+}
+
+.language-practice-form textarea {
+  min-height: 112px;
+  padding: 13px 14px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.language-add-form input:focus,
+.language-practice-form input:focus,
+.language-practice-form select:focus,
+.language-practice-form textarea:focus {
+  border-color: var(--text);
+}
+
+.language-add-form .button,
+.language-practice-form .button {
+  min-height: 48px;
+  border: 0;
+  cursor: pointer;
+}
+
+.language-add-form .button:disabled,
+.language-practice-form .button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.language-form-status {
+  min-height: 20px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.language-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.language-overview-card,
+.language-empty-state,
+.practice-item {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--soft);
+}
+
+.language-overview-card {
+  min-height: 204px;
+  padding: 22px;
+}
+
+.language-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.language-card-top span {
+  color: var(--text);
+  font-weight: 760;
+}
+
+.language-overview-card > strong {
+  display: block;
+  margin-top: 46px;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.07em;
+}
+
+.language-overview-card > strong span {
+  color: var(--muted);
+  font-size: 0.48em;
+  letter-spacing: -0.04em;
+}
+
+.language-overview-card > p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.language-progress {
+  height: 6px;
+  margin-top: 17px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.language-progress span {
+  display: block;
+  width: var(--language-progress);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--text);
+}
+
+.language-empty-state {
+  grid-column: 1 / -1;
+  padding: 28px;
+}
+
+.language-empty-state strong {
+  display: block;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+}
+
+.language-empty-state p {
+  max-width: 560px;
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.language-practice-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(270px, 0.55fr);
+  gap: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.language-practice-form,
+.language-next-card {
+  padding: clamp(28px, 5vw, 44px);
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.language-practice-form > div:first-child > p:not(.tiny) {
+  max-width: 570px;
+  margin: 12px 0 26px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.language-practice-form .tiny,
+.language-next-card .tiny {
+  margin: 0 0 10px;
+}
+
+.language-form-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.55fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.language-practice-form > label + .button {
+  margin-top: 18px;
+}
+
+.language-next-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--text);
+  color: var(--bg);
+}
+
+.language-next-card .tiny,
+.language-next-card p {
+  color: currentColor;
+  opacity: 0.68;
+}
+
+.language-next-card > p:not(.tiny):not(.language-device-note) {
+  margin: 18px 0 0;
+  line-height: 1.7;
+}
+
+.language-device-note {
+  margin: auto 0 0;
+  padding-top: 26px;
+  font-size: 12px;
+}
+
+.practice-list {
+  display: grid;
+  gap: 10px;
+}
+
+.practice-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 19px 20px;
+}
+
+.practice-item-meta,
+.practice-item-note {
+  margin: 0;
+}
+
+.practice-item-meta {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.practice-item-note {
+  margin-top: 8px;
+  line-height: 1.55;
+}
+
+.practice-delete {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.practice-delete:hover {
+  color: var(--text);
+}
+
+:root.dark .language-next-card {
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+@media (max-width: 900px) {
+  .language-overview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .language-practice-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .language-hub {
+    padding-top: 112px;
+  }
+
+  .language-hero {
+    padding-bottom: 64px;
+  }
+
+  .language-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .language-add-form,
+  .language-form-grid,
+  .language-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .language-add-form .button {
+    width: 100%;
+  }
+
+  .language-overview-card {
+    min-height: 184px;
+  }
+
+  .practice-item {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
