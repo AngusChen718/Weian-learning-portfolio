@@ -75,6 +75,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const paperResults = document.getElementById("paperResults");
   const paperClearButton = document.getElementById("paperClearButton");
   const readingFilter = document.getElementById("readingFilter");
+  const paperLibraryCount = document.getElementById("paperLibraryCount");
+  const libraryStatusFilter = document.getElementById("libraryStatusFilter");
+  const paperLibraryList = document.getElementById("paperLibraryList");
+  const compareSelectedCount = document.getElementById("compareSelectedCount");
+  const compareSelectionList = document.getElementById("compareSelectionList");
+  const compareRunButton = document.getElementById("compareRunButton");
+  const compareClearButton = document.getElementById("compareClearButton");
+  const paperCompareOutput = document.getElementById("paperCompareOutput");
  const historyOpenButton = document.getElementById("historyOpenButton");
 const historyCloseButton = document.getElementById("historyCloseButton");
 const historyBackdrop = document.getElementById("historyBackdrop");
@@ -83,11 +91,14 @@ const historyList = document.getElementById("historyList");
 const historyClearButton = document.getElementById("historyClearButton");
 
 const SEARCH_HISTORY_KEY = "weian-paper-search-history";
+const PAPER_LIBRARY_KEY = "weian-paper-library-v1";
 
  let lastPaperResults = [];
 let currentPaperPage = 1;
 let activeReadingFilter = "all";
 let searchHistory = loadSearchHistory();
+let paperLibrary = loadPaperLibrary();
+let selectedPaperKeys = new Set();
 
 let currentAnalysisContext = null;
 let latestSummaryText = "";
@@ -284,6 +295,24 @@ if (articleClearButton) {
       renderPaperResults(lastPaperResults);
     });
   }
+
+  if (libraryStatusFilter) {
+    libraryStatusFilter.addEventListener("change", renderPaperLibrary);
+  }
+
+  if (paperLibraryList) {
+    paperLibraryList.addEventListener("click", handleLibraryClick);
+    paperLibraryList.addEventListener("change", handleLibraryChange);
+    paperLibraryList.addEventListener("input", handleLibraryChange);
+  }
+
+  if (compareRunButton) {
+    compareRunButton.addEventListener("click", renderPaperComparison);
+  }
+
+  if (compareClearButton) {
+    compareClearButton.addEventListener("click", clearPaperComparison);
+  }
  if (historyOpenButton) {
   historyOpenButton.addEventListener("click", openHistoryDrawer);
 }
@@ -441,9 +470,13 @@ scrollToSummaryOutput();
     renderPaperSkeletons();
     setSearchButtonState("loading");
 
+    const searchController = new AbortController();
+    const searchTimeout = setTimeout(() => searchController.abort(), 25000);
+
     try {
       const response = await fetch(
-        `${PAPER_SEARCH_API_URL}?q=${encodeURIComponent(query)}&limit=50`
+        `${PAPER_SEARCH_API_URL}?q=${encodeURIComponent(query)}&limit=100`,
+        { signal: searchController.signal }
       );
 
       const data = await response.json();
@@ -460,6 +493,7 @@ saveSearchHistory(query, lastPaperResults.length);
 
 updateReadingFilterUI();
 renderPaperResults(lastPaperResults);
+renderCompareWorkspace();
 
       setSearchButtonState("done");
 
@@ -467,8 +501,15 @@ renderPaperResults(lastPaperResults);
         setSearchButtonState("idle");
       }, 1200);
     } catch (error) {
-      paperStatus.textContent = `搜尋失敗：${error.message}`;
+      const message =
+        error.name === "AbortError"
+          ? "搜尋逾時，OpenAlex 目前回應較慢，請稍後再試。"
+          : `搜尋失敗：${error.message}`;
+
+      paperStatus.textContent = message;
       setSearchButtonState("idle");
+    } finally {
+      clearTimeout(searchTimeout);
     }
   }
 
@@ -548,23 +589,67 @@ renderPaperResults(lastPaperResults);
     return score;
   }
 
+  function normalizePaperTitle(title) {
+    return String(title || "")
+      .toLowerCase()
+      .replace(/<[^>]*>/g, " ")
+      .replace(/[^a-z0-9\u00c0-\u024f\u4e00-\u9fff]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function getPaperDoi(paper) {
+    const rawDoi = paper?.doi || paper?.ids?.doi || "";
+
+    return String(rawDoi)
+      .toLowerCase()
+      .replace(/^https?:\/\/(dx\.)?doi\.org\//, "")
+      .trim();
+  }
+
+  function getPaperKey(paper) {
+    const doi = getPaperDoi(paper);
+
+    if (doi) {
+      return `doi:${doi}`;
+    }
+
+    const normalizedTitle = normalizePaperTitle(paper?.title);
+    const year = Number(paper?.year || 0);
+
+    return `title:${normalizedTitle}|year:${year}`;
+  }
+
   function cleanAndRankPapers(papers) {
-    const currentYear = new Date().getFullYear();
+    const uniquePapers = new Map();
 
-    const withTitle = papers.filter((paper) => {
-      return String(paper.title || "").trim();
-    });
+    papers
+      .filter((paper) => String(paper?.title || "").trim())
+      .forEach((paper) => {
+        const key = getPaperKey(paper);
+        const savedPaper = uniquePapers.get(key);
 
-    const recentPapers = withTitle.filter((paper) => {
-      const year = Number(paper.year || 0);
-      return year >= 2020;
-    });
+        if (
+          !savedPaper ||
+          Number(paper.citedByCount || 0) >
+            Number(savedPaper.citedByCount || 0)
+        ) {
+          uniquePapers.set(key, paper);
+        }
+      });
 
-    const papersToUse = recentPapers.length >= 5 ? recentPapers : withTitle;
+    return [...uniquePapers.values()]
+      .sort((a, b) => {
+        const citationDifference =
+          Number(b.citedByCount || 0) - Number(a.citedByCount || 0);
 
-    return papersToUse.sort((a, b) => {
-      return getPaperQualityScore(b) - getPaperQualityScore(a);
-    });
+        if (citationDifference !== 0) {
+          return citationDifference;
+        }
+
+        return Number(b.year || 0) - Number(a.year || 0);
+      })
+      .slice(0, 50);
   }
 
   function renderPaperSkeletons(count = 5) {
@@ -664,6 +749,9 @@ renderPaperResults(lastPaperResults);
 
         const journalBadge = getJournalBadge(paper);
         const citationPerYear = getCitationPerYear(paper);
+        const paperKey = getPaperKey(paper);
+        const isSaved = paperLibrary.some((item) => item.key === paperKey);
+        const isSelected = selectedPaperKeys.has(paperKey);
 
         return `
           <article class="paper-card">
@@ -720,6 +808,22 @@ renderPaperResults(lastPaperResults);
               </button>
               <button type="button" data-action="open" data-index="${index}">
                 Open
+              </button>
+              <button
+                type="button"
+                data-action="save"
+                data-index="${index}"
+                class="${isSaved ? "is-active" : ""}"
+              >
+                ${isSaved ? "Saved" : "Save"}
+              </button>
+              <button
+                type="button"
+                data-action="compare"
+                data-index="${index}"
+                class="${isSelected ? "is-active" : ""}"
+              >
+                ${isSelected ? "Selected" : "Compare"}
               </button>
             </div>
           </article>
@@ -789,20 +893,38 @@ renderPaperResults(lastPaperResults);
 
     if (!paper) return;
 
+    if (action === "save") {
+      togglePaperInLibrary(paper);
+      return;
+    }
+
+    if (action === "compare") {
+      togglePaperComparison(paper);
+      return;
+    }
+
     if (action === "open") {
-      const url = paper.openAccessUrl || paper.doi || paper.openAlexUrl;
-
-      if (url) {
-        window.open(url, "_blank");
-      }
-
+      openPaper(paper);
       return;
     }
 
     if (action === "analyze") {
-      if (!articleText || !summaryOutput) return;
+      analyzePaper(paper);
+    }
+  }
 
-      const text = `
+  function openPaper(paper) {
+    const url = getPaperUrl(paper);
+
+    if (url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  function analyzePaper(paper) {
+    if (!articleText || !summaryOutput) return;
+
+    const text = `
 Title:
 ${paper.title}
 
@@ -827,30 +949,531 @@ ${(paper.reasons || []).join("、")}
 Abstract:
 ${paper.abstract}
       `.trim();
-currentAnalysisContext = {
-  title: paper.title || "Research Note",
-  category: "Research",
-  tags: (paper.concepts || []).slice(0, 4),
-  sourceUrl: paper.openAccessUrl || paper.doi || paper.openAlexUrl || "",
-  researchTopic: paperQuery?.value?.trim() || "",
-};
-      articleText.value = text;
-      updateArticleClearButton();
+    currentAnalysisContext = {
+      title: paper.title || "Research Note",
+      category: "Research",
+      tags: (paper.concepts || []).slice(0, 4),
+      sourceUrl: paper.openAccessUrl || paper.doi || paper.openAlexUrl || "",
+      researchTopic: paperQuery?.value?.trim() || "",
+    };
+    articleText.value = text;
+    updateArticleClearButton();
 
-      setSummaryState("loading", `
-        <div class="summary-loading">
-          <span class="thinking-dot"></span>
-          <div>
-            <p class="thinking-label">AI Research Assistant</p>
-            <p class="thinking-text show" id="thinkingText">Preparing paper analysis...</p>
-          </div>
+    setSummaryState("loading", `
+      <div class="summary-loading">
+        <span class="thinking-dot"></span>
+        <div>
+          <p class="thinking-label">AI Research Assistant</p>
+          <p class="thinking-text show" id="thinkingText">Preparing paper analysis...</p>
         </div>
-      `);
+      </div>
+    `);
 
-      scrollToSummaryOutput();
-      generateLocalSummary(text);
+    scrollToSummaryOutput();
+    generateLocalSummary(text);
+  }
+
+  function getPaperUrl(paper) {
+    const directUrl = paper?.openAccessUrl || paper?.openAlexUrl || "";
+
+    if (directUrl) {
+      return directUrl;
+    }
+
+    const doi = getPaperDoi(paper);
+    return doi ? `https://doi.org/${doi}` : "";
+  }
+
+  function createPaperSnapshot(paper) {
+    return {
+      title: paper.title || "Untitled",
+      year: paper.year || "",
+      venue: paper.venue || "Unknown source",
+      doi: paper.doi || "",
+      citedByCount: Number(paper.citedByCount || 0),
+      authors: paper.authors || "Unknown authors",
+      abstract: paper.abstract || "",
+      openAccessUrl: paper.openAccessUrl || "",
+      openAlexUrl: paper.openAlexUrl || "",
+      priority: paper.priority || "",
+      score: Number(paper.score || 0),
+      reasons: Array.isArray(paper.reasons) ? paper.reasons.slice(0, 3) : [],
+      concepts: Array.isArray(paper.concepts) ? paper.concepts.slice(0, 6) : [],
+      stars: paper.stars || "",
+    };
+  }
+
+  function loadPaperLibrary() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(PAPER_LIBRARY_KEY));
+
+      if (!Array.isArray(saved)) {
+        return [];
+      }
+
+      return saved.filter((item) => {
+        return (
+          item &&
+          typeof item.key === "string" &&
+          item.paper &&
+          String(item.paper.title || "").trim()
+        );
+      });
+    } catch {
+      return [];
     }
   }
+
+  function savePaperLibrary() {
+    localStorage.setItem(PAPER_LIBRARY_KEY, JSON.stringify(paperLibrary));
+  }
+
+  function togglePaperInLibrary(paper) {
+    const key = getPaperKey(paper);
+    const savedIndex = paperLibrary.findIndex((item) => item.key === key);
+
+    if (savedIndex >= 0) {
+      paperLibrary.splice(savedIndex, 1);
+
+      const remainsInResults = lastPaperResults.some(
+        (result) => getPaperKey(result) === key
+      );
+
+      if (!remainsInResults) {
+        selectedPaperKeys.delete(key);
+      }
+    } else {
+      const now = new Date().toISOString();
+
+      paperLibrary.unshift({
+        key,
+        paper: createPaperSnapshot(paper),
+        status: "to-read",
+        note: "",
+        savedAt: now,
+        updatedAt: now,
+      });
+    }
+
+    savePaperLibrary();
+    renderPaperLibrary();
+    renderCompareWorkspace();
+
+    if (lastPaperResults.length) {
+      renderPaperResults(lastPaperResults);
+    }
+  }
+
+  function renderPaperLibrary() {
+    if (!paperLibraryList) return;
+
+    const activeStatus = libraryStatusFilter?.value || "all";
+    const visibleItems =
+      activeStatus === "all"
+        ? paperLibrary
+        : paperLibrary.filter((item) => item.status === activeStatus);
+
+    if (paperLibraryCount) {
+      paperLibraryCount.textContent = `${paperLibrary.length} ${
+        paperLibrary.length === 1 ? "paper" : "papers"
+      }`;
+    }
+
+    if (!visibleItems.length) {
+      paperLibraryList.innerHTML = `
+        <div class="paper-workspace-empty">
+          ${
+            paperLibrary.length
+              ? "這個閱讀狀態目前沒有論文。"
+              : "儲存搜尋結果後，可在這裡管理閱讀狀態與筆記。"
+          }
+        </div>
+      `;
+      return;
+    }
+
+    paperLibraryList.innerHTML = visibleItems
+      .map((item) => {
+        const paper = item.paper;
+        const isSelected = selectedPaperKeys.has(item.key);
+
+        return `
+          <article class="library-item">
+            <div class="library-item-top">
+              <div>
+                <p class="library-item-meta">
+                  ${escapeHtml(String(paper.year || "Unknown"))}
+                  · ${escapeHtml(paper.venue || "Unknown source")}
+                  · Cited by ${Number(paper.citedByCount || 0).toLocaleString()}
+                </p>
+                <h4>${escapeHtml(paper.title || "Untitled")}</h4>
+              </div>
+              <button
+                type="button"
+                class="library-remove-button"
+                data-library-action="remove"
+                data-paper-key="${escapeHtml(item.key)}"
+                aria-label="Remove paper from Reading Library"
+              >
+                ×
+              </button>
+            </div>
+
+            <div class="library-controls">
+              <label>
+                <span>Reading status</span>
+                <select
+                  data-library-field="status"
+                  data-paper-key="${escapeHtml(item.key)}"
+                >
+                  <option value="to-read" ${item.status === "to-read" ? "selected" : ""}>To Read</option>
+                  <option value="reading" ${item.status === "reading" ? "selected" : ""}>Reading</option>
+                  <option value="read" ${item.status === "read" ? "selected" : ""}>Read</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Reading note</span>
+                <textarea
+                  data-library-field="note"
+                  data-paper-key="${escapeHtml(item.key)}"
+                  rows="3"
+                  placeholder="記下問題、發現或下一步…"
+                >${escapeHtml(item.note || "")}</textarea>
+              </label>
+            </div>
+
+            <div class="library-item-actions">
+              <button type="button" data-library-action="analyze" data-paper-key="${escapeHtml(item.key)}">
+                Analyze
+              </button>
+              <button type="button" data-library-action="open" data-paper-key="${escapeHtml(item.key)}">
+                Open
+              </button>
+              <button
+                type="button"
+                data-library-action="compare"
+                data-paper-key="${escapeHtml(item.key)}"
+                class="${isSelected ? "is-active" : ""}"
+              >
+                ${isSelected ? "Selected" : "Compare"}
+              </button>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+  }
+
+  function handleLibraryClick(event) {
+    const button = event.target.closest("[data-library-action]");
+    if (!button) return;
+
+    const key = button.dataset.paperKey;
+    const action = button.dataset.libraryAction;
+    const item = paperLibrary.find((entry) => entry.key === key);
+
+    if (!item) return;
+
+    if (action === "remove") {
+      togglePaperInLibrary(item.paper);
+      return;
+    }
+
+    if (action === "open") {
+      openPaper(item.paper);
+      return;
+    }
+
+    if (action === "analyze") {
+      analyzePaper(item.paper);
+      return;
+    }
+
+    if (action === "compare") {
+      togglePaperComparison(item.paper);
+    }
+  }
+
+  function handleLibraryChange(event) {
+    const field = event.target.closest("[data-library-field]");
+    if (!field) return;
+
+    const item = paperLibrary.find(
+      (entry) => entry.key === field.dataset.paperKey
+    );
+
+    if (!item) return;
+
+    if (field.dataset.libraryField === "status") {
+      item.status = ["to-read", "reading", "read"].includes(field.value)
+        ? field.value
+        : "to-read";
+    }
+
+    if (field.dataset.libraryField === "note") {
+      item.note = field.value;
+    }
+
+    item.updatedAt = new Date().toISOString();
+    savePaperLibrary();
+
+    if (
+      field.dataset.libraryField === "status" &&
+      libraryStatusFilter?.value !== "all"
+    ) {
+      renderPaperLibrary();
+    }
+  }
+
+  function getPaperByKey(key) {
+    const searchPaper = lastPaperResults.find(
+      (paper) => getPaperKey(paper) === key
+    );
+
+    if (searchPaper) {
+      return searchPaper;
+    }
+
+    return paperLibrary.find((item) => item.key === key)?.paper || null;
+  }
+
+  function togglePaperComparison(paper) {
+    const key = getPaperKey(paper);
+
+    if (selectedPaperKeys.has(key)) {
+      selectedPaperKeys.delete(key);
+    } else if (selectedPaperKeys.size >= 4) {
+      if (paperCompareOutput) {
+        paperCompareOutput.innerHTML = `
+          <div class="compare-message is-error">
+            最多可比較 4 篇論文；請先取消一篇再加入。
+          </div>
+        `;
+      }
+      return;
+    } else {
+      selectedPaperKeys.add(key);
+    }
+
+    if (paperCompareOutput) {
+      paperCompareOutput.innerHTML = "";
+    }
+
+    renderCompareWorkspace();
+    renderPaperLibrary();
+
+    if (lastPaperResults.length) {
+      renderPaperResults(lastPaperResults);
+    }
+  }
+
+  function renderCompareWorkspace() {
+    if (!compareSelectionList) return;
+
+    selectedPaperKeys = new Set(
+      [...selectedPaperKeys].filter((key) => getPaperByKey(key))
+    );
+
+    const selectedPapers = [...selectedPaperKeys]
+      .map((key) => ({ key, paper: getPaperByKey(key) }))
+      .filter((item) => item.paper);
+
+    if (compareSelectedCount) {
+      compareSelectedCount.textContent = `${selectedPapers.length} / 4`;
+    }
+
+    if (compareRunButton) {
+      compareRunButton.disabled = selectedPapers.length < 2;
+    }
+
+    if (compareClearButton) {
+      compareClearButton.disabled = selectedPapers.length === 0;
+    }
+
+    if (!selectedPapers.length) {
+      compareSelectionList.innerHTML = `
+        <div class="paper-workspace-empty">
+          從搜尋結果或 Reading Library 選擇 2–4 篇論文。
+        </div>
+      `;
+      return;
+    }
+
+    compareSelectionList.innerHTML = selectedPapers
+      .map(
+        ({ key, paper }, index) => `
+          <div class="compare-selection-item">
+            <span>${index + 1}</span>
+            <p>${escapeHtml(paper.title || "Untitled")}</p>
+            <button
+              type="button"
+              data-compare-remove="${escapeHtml(key)}"
+              aria-label="Remove paper from comparison"
+            >
+              ×
+            </button>
+          </div>
+        `
+      )
+      .join("");
+
+    compareSelectionList
+      .querySelectorAll("[data-compare-remove]")
+      .forEach((button) => {
+        button.addEventListener("click", () => {
+          const paper = getPaperByKey(button.dataset.compareRemove);
+
+          if (paper) {
+            togglePaperComparison(paper);
+          }
+        });
+      });
+  }
+
+  function clearPaperComparison() {
+    selectedPaperKeys.clear();
+
+    if (paperCompareOutput) {
+      paperCompareOutput.innerHTML = "";
+    }
+
+    renderCompareWorkspace();
+    renderPaperLibrary();
+
+    if (lastPaperResults.length) {
+      renderPaperResults(lastPaperResults);
+    }
+  }
+
+  function renderPaperComparison() {
+    const papers = [...selectedPaperKeys]
+      .map((key) => getPaperByKey(key))
+      .filter(Boolean);
+
+    if (!paperCompareOutput || papers.length < 2 || papers.length > 4) {
+      return;
+    }
+
+    const paperColumns = papers
+      .map(
+        (paper, index) => `
+          <th scope="col">
+            <span>Paper ${index + 1}</span>
+            ${escapeHtml(shortenText(paper.title || "Untitled", 90))}
+          </th>
+        `
+      )
+      .join("");
+
+    const comparisonRows = [
+      [
+        "Year",
+        ...papers.map((paper) => escapeHtml(String(paper.year || "Unknown"))),
+      ],
+      [
+        "Venue",
+        ...papers.map((paper) =>
+          escapeHtml(paper.venue || "Unknown source")
+        ),
+      ],
+      [
+        "Cited by",
+        ...papers.map((paper) =>
+          Number(paper.citedByCount || 0).toLocaleString()
+        ),
+      ],
+      [
+        "Authors",
+        ...papers.map((paper) =>
+          escapeHtml(shortenText(paper.authors || "Unknown authors", 150))
+        ),
+      ],
+      [
+        "Research focus",
+        ...papers.map((paper) =>
+          escapeHtml(
+            shortenText(paper.abstract || "No abstract available.", 260)
+          )
+        ),
+      ],
+      [
+        "Source",
+        ...papers.map((paper) => {
+          const url = getPaperUrl(paper);
+          return url
+            ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Open paper</a>`
+            : "Unavailable";
+        }),
+      ],
+    ];
+
+    paperCompareOutput.innerHTML = `
+      <div class="compare-message">
+        比較表已建立；AI Research Assistant 正在整理共同點、差異與閱讀建議。
+      </div>
+      <div class="paper-compare-table-wrap">
+        <table class="paper-compare-table">
+          <thead>
+            <tr>
+              <th scope="col">Field</th>
+              ${paperColumns}
+            </tr>
+          </thead>
+          <tbody>
+            ${comparisonRows
+              .map(
+                ([label, ...values]) => `
+                  <tr>
+                    <th scope="row">${label}</th>
+                    ${values.map((value) => `<td>${value}</td>`).join("")}
+                  </tr>
+                `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    const comparisonText = papers
+      .map(
+        (paper, index) => `
+Paper ${index + 1}
+Title: ${paper.title || "Untitled"}
+Authors: ${paper.authors || "Unknown authors"}
+Year: ${paper.year || "Unknown"}
+Source: ${paper.venue || "Unknown source"}
+Citations: ${Number(paper.citedByCount || 0)}
+Abstract: ${shortenText(paper.abstract || "No abstract available.", 1800)}
+        `.trim()
+      )
+      .join("\n\n");
+
+    const comparisonTags = [
+      "Paper Comparison",
+      ...papers.flatMap((paper) => paper.concepts || []),
+    ].slice(0, 6);
+
+    currentAnalysisContext = {
+      title: `Paper Comparison: ${
+        paperQuery?.value?.trim() || `${papers.length} selected papers`
+      }`,
+      category: "Research",
+      tags: comparisonTags,
+      sourceUrl: getPaperUrl(papers[0]),
+      researchTopic: paperQuery?.value?.trim() || "Paper comparison",
+    };
+
+    if (articleText) {
+      articleText.value = comparisonText;
+      updateArticleClearButton();
+    }
+
+    generateLocalSummary(comparisonText);
+    scrollToSummaryOutput();
+  }
+
 function ensureSummaryJournalActions() {
   if (!summaryOutput) return null;
 
@@ -1322,6 +1945,8 @@ function clearArticleAnalysis() {
  updateClearButton();
 updateArticleClearButton();
 renderSearchHistory();
+renderPaperLibrary();
+renderCompareWorkspace();
 });
 
 (() => {

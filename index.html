@@ -265,6 +265,62 @@ Growing.
 
     <div id="paperResults" class="paper-results"></div>
   </div>
+
+  <div class="paper-workspace-grid">
+    <section class="paper-workspace-panel" id="paperLibraryPanel">
+      <div class="paper-workspace-header">
+        <div>
+          <p class="tiny">Personal Reading Queue</p>
+          <h3>Reading Library</h3>
+        </div>
+        <span class="paper-workspace-count" id="paperLibraryCount">0 papers</span>
+      </div>
+
+      <div class="library-toolbar">
+        <label for="libraryStatusFilter">Status</label>
+        <select id="libraryStatusFilter">
+          <option value="all">All</option>
+          <option value="to-read">To Read</option>
+          <option value="reading">Reading</option>
+          <option value="read">Read</option>
+        </select>
+      </div>
+
+      <div class="paper-library-list" id="paperLibraryList">
+        <div class="paper-workspace-empty">
+          儲存搜尋結果後，可在這裡管理閱讀狀態與筆記。
+        </div>
+      </div>
+    </section>
+
+    <section class="paper-workspace-panel" id="paperComparePanel">
+      <div class="paper-workspace-header">
+        <div>
+          <p class="tiny">Research Comparison</p>
+          <h3>Compare Papers</h3>
+        </div>
+        <span class="paper-workspace-count" id="compareSelectedCount">0 / 4</span>
+      </div>
+
+      <div class="compare-selection-list" id="compareSelectionList">
+        <div class="paper-workspace-empty">
+          從搜尋結果或 Reading Library 選擇 2–4 篇論文。
+        </div>
+      </div>
+
+      <div class="compare-actions">
+        <button type="button" class="button primary" id="compareRunButton" disabled>
+          Compare &amp; Analyze
+        </button>
+        <button type="button" class="button secondary" id="compareClearButton" disabled>
+          Clear
+        </button>
+      </div>
+
+      <div class="paper-compare-output" id="paperCompareOutput" aria-live="polite"></div>
+    </section>
+  </div>
+
  <div class="history-backdrop" id="historyBackdrop" hidden></div>
 
 
