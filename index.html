@@ -64,6 +64,52 @@
   </div>
 </section>
 
+    <section
+      class="section learning-snapshot"
+      id="snapshot"
+      aria-labelledby="snapshotTitle"
+    >
+      <div class="snapshot-heading">
+        <div>
+          <p class="tiny">Learning Snapshot</p>
+          <h2 id="snapshotTitle">你的學習，正在累積。</h2>
+        </div>
+        <p>
+          將這台裝置上的 Journal 與 Reading Library 資料，整理成一眼看得懂的本週節奏。
+        </p>
+      </div>
+
+      <div class="snapshot-grid" id="learningSnapshot">
+        <article class="snapshot-card">
+          <span class="snapshot-label">Study rhythm</span>
+          <strong class="snapshot-value" id="snapshotRhythmValue">0 days</strong>
+          <p id="snapshotRhythmDetail">No learning records in the last 7 days.</p>
+        </article>
+
+        <article class="snapshot-card">
+          <span class="snapshot-label">Journal</span>
+          <strong class="snapshot-value" id="snapshotJournalValue">0 entries</strong>
+          <p id="snapshotJournalDetail">Start your first learning record.</p>
+        </article>
+
+        <article class="snapshot-card">
+          <span class="snapshot-label">Reading queue</span>
+          <strong class="snapshot-value" id="snapshotReadingValue">0 papers</strong>
+          <p id="snapshotReadingDetail">Save papers from Paper Scout to plan your reading.</p>
+        </article>
+
+        <article class="snapshot-card snapshot-card-next">
+          <span class="snapshot-label">Next step</span>
+          <strong class="snapshot-value snapshot-next-value" id="snapshotNextValue">Start reflecting</strong>
+          <p id="snapshotNextDetail">A short Journal entry is enough to begin.</p>
+        </article>
+      </div>
+
+      <p class="snapshot-note" id="snapshotNote">
+        This summary stays on your device and refreshes when you return to the page.
+      </p>
+    </section>
+
     <section class="section about-section" id="about">
       <div class="section-label">About</div>
       <div class="split">
@@ -523,6 +569,7 @@ Growing.
 </a>
 
 <script type="module" src="backup.js"></script>
+<script type="module" src="snapshot.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
