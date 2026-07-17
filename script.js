@@ -339,7 +339,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-  async function generateLocalSummary(text) {
+  async function generateLocalSummary(text, options = {}) {
     const cleanText = text.trim();
    hideCreateJournalEntryButton();
 
@@ -362,14 +362,24 @@ document.addEventListener("keydown", (event) => {
     startThinkingLines();
 
     try {
+      const requestBody = {
+        mode: options.mode === "compare" ? "compare" : "summary",
+        text: cleanText,
+      };
+
+      if (
+        requestBody.mode === "compare" &&
+        Array.isArray(options.papers)
+      ) {
+        requestBody.papers = options.papers.slice(0, 4);
+      }
+
       const response = await fetch(AI_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          text: cleanText
-        })
+        body: JSON.stringify(requestBody)
       });
 
       const data = await response.json();
@@ -1470,7 +1480,26 @@ Abstract: ${shortenText(paper.abstract || "No abstract available.", 1800)}
       updateArticleClearButton();
     }
 
-    generateLocalSummary(comparisonText);
+    const comparisonPapers = papers.map((paper, index) => ({
+      label: `Paper ${index + 1}`,
+      title: paper.title || "Untitled",
+      authors: paper.authors || "Unknown authors",
+      year: paper.year || "",
+      venue: paper.venue || "Unknown source",
+      citedByCount: Number(paper.citedByCount || 0),
+      abstract: shortenText(
+        paper.abstract || "No abstract available.",
+        2400
+      ),
+      concepts: Array.isArray(paper.concepts)
+        ? paper.concepts.slice(0, 6)
+        : [],
+    }));
+
+    generateLocalSummary(comparisonText, {
+      mode: "compare",
+      papers: comparisonPapers,
+    });
     scrollToSummaryOutput();
   }
 
