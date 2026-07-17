@@ -445,6 +445,34 @@ Growing.
     </div>
   </div>
 </section>
+
+    <section class="section backup-section" id="backup">
+      <div class="backup-panel">
+        <div class="backup-copy">
+          <p class="tiny">Local Data Protection</p>
+          <h2>Export Learning Backup</h2>
+          <p id="backupDescription">
+            將 Journal、搜尋歷史、Reading Library、網站偏好與尚未送出的 Journal
+            暫存資料整理成一份版本化 JSON 檔案。
+          </p>
+        </div>
+
+        <div class="backup-actions">
+          <button
+            type="button"
+            class="button primary"
+            id="exportBackupButton"
+            aria-describedby="backupDescription backupStatus"
+          >
+            Export Backup
+          </button>
+          <p class="backup-status" id="backupStatus" role="status" aria-live="polite">
+            資料只會下載到你的裝置，不會上傳到伺服器。
+          </p>
+        </div>
+      </div>
+    </section>
+
     <section class="section projects-section" id="projects">
       <div class="section-label">Projects</div>
       <div class="empty-state">
@@ -494,6 +522,7 @@ Growing.
   Open Gemini
 </a>
 
+<script type="module" src="backup.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

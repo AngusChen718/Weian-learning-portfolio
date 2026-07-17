@@ -2774,4 +2774,4 @@ if (elements.publish) {
   closeEditor();
 renderList();
 consumePendingJournalEntry();
-})();ｂ
+})();
