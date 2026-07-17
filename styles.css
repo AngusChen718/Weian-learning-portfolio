@@ -603,15 +603,27 @@ textarea {
   transform: scale(0.96);
 }
 
+.paper-filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 18px 0 4px;
+}
+
 .reading-filter {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin: 18px 0 4px;
+  margin: 0;
   padding: 6px;
   border-radius: 999px;
   background: rgba(120, 120, 120, 0.08);
   border: 1px solid rgba(120, 120, 120, 0.16);
+}
+
+.paper-filter-row .reading-filter {
+  margin: 0;
 }
 
 .reading-filter button {
@@ -643,6 +655,32 @@ textarea {
   margin-left: 4px;
   opacity: 0.65;
   font-size: 12px;
+}
+
+.paper-sort-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.paper-sort-control select {
+  min-height: 42px;
+  padding: 0 38px 0 14px;
+  border: 1px solid rgba(120, 120, 120, 0.2);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.paper-sort-control select:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
 }
 
 .paper-status {
@@ -1420,6 +1458,12 @@ html.theme-changing .theme-toggle {
 }
 
 @media (max-width: 760px) {
+  .paper-filter-row {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
   .paper-search-header,
   .paper-card-top {
     flex-direction: column;
@@ -1441,6 +1485,14 @@ html.theme-changing .theme-toggle {
 
   .reading-filter button {
     white-space: nowrap;
+  }
+
+  .paper-sort-control {
+    justify-content: space-between;
+  }
+
+  .paper-sort-control select {
+    min-width: 150px;
   }
 
   .paper-score {

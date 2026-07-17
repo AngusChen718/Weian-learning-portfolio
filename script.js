@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const paperResults = document.getElementById("paperResults");
   const paperClearButton = document.getElementById("paperClearButton");
   const readingFilter = document.getElementById("readingFilter");
+  const paperSort = document.getElementById("paperSort");
   const paperLibraryCount = document.getElementById("paperLibraryCount");
   const libraryStatusFilter = document.getElementById("libraryStatusFilter");
   const paperLibraryList = document.getElementById("paperLibraryList");
@@ -96,6 +97,7 @@ const PAPER_LIBRARY_KEY = "weian-paper-library-v1";
  let lastPaperResults = [];
 let currentPaperPage = 1;
 let activeReadingFilter = "all";
+let activePaperSort = "citations-desc";
 let searchHistory = loadSearchHistory();
 let paperLibrary = loadPaperLibrary();
 let selectedPaperKeys = new Set();
@@ -292,6 +294,17 @@ if (articleClearButton) {
       currentPaperPage = 1;
 
       updateReadingFilterUI();
+      renderPaperResults(lastPaperResults);
+    });
+  }
+
+  if (paperSort) {
+    paperSort.addEventListener("change", () => {
+      activePaperSort =
+        paperSort.value === "citations-asc"
+          ? "citations-asc"
+          : "citations-desc";
+      currentPaperPage = 1;
       renderPaperResults(lastPaperResults);
     });
   }
@@ -613,7 +626,9 @@ renderCompareWorkspace();
 
     return String(rawDoi)
       .toLowerCase()
+      .replace(/^doi:\s*/, "")
       .replace(/^https?:\/\/(dx\.)?doi\.org\//, "")
+      .replace(/[?#].*$/, "")
       .trim();
   }
 
@@ -660,6 +675,27 @@ renderCompareWorkspace();
         return Number(b.year || 0) - Number(a.year || 0);
       })
       .slice(0, 50);
+  }
+
+  function sortPapersByCitation(papers) {
+    const direction = activePaperSort === "citations-asc" ? 1 : -1;
+
+    return [...papers].sort((a, b) => {
+      const citationDifference =
+        Number(a.citedByCount || 0) - Number(b.citedByCount || 0);
+
+      if (citationDifference !== 0) {
+        return citationDifference * direction;
+      }
+
+      const yearDifference = Number(b.year || 0) - Number(a.year || 0);
+
+      if (yearDifference !== 0) {
+        return yearDifference;
+      }
+
+      return String(a.title || "").localeCompare(String(b.title || ""));
+    });
   }
 
   function renderPaperSkeletons(count = 5) {
@@ -712,7 +748,9 @@ renderCompareWorkspace();
       return;
     }
 
-    const filteredPapers = filterPapersByReadingLabel(papers);
+    const filteredPapers = sortPapersByCitation(
+      filterPapersByReadingLabel(papers)
+    );
 
     if (!filteredPapers.length) {
       paperStatus.textContent = `目前沒有 ${getFilterDisplayName(activeReadingFilter)} 類型的文獻。`;

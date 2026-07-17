@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Paper Scout QA Harness</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="section">
+      <div class="section-inner">
+        <h1>Paper Scout QA Harness</h1>
+
+        <div class="paper-search-bar">
+          <input id="paperQuery" type="text" value="quality" />
+          <button id="paperSearchButton" type="button">Search Papers</button>
+        </div>
+
+        <button id="paperClearButton" type="button">Clear</button>
+
+        <div class="paper-filter-row">
+          <div class="reading-filter" id="readingFilter">
+            <button type="button" class="active" data-reading-filter="all">
+              All <span class="filter-count">0</span>
+            </button>
+            <button type="button" data-reading-filter="start">
+              Start Here <span class="filter-count">0</span>
+            </button>
+            <button type="button" data-reading-filter="core">
+              Core <span class="filter-count">0</span>
+            </button>
+            <button type="button" data-reading-filter="explore">
+              Explore <span class="filter-count">0</span>
+            </button>
+          </div>
+
+          <label class="paper-sort-control" for="paperSort">
+            <span>Sort by</span>
+            <select id="paperSort">
+              <option value="citations-desc">Most Cited</option>
+              <option value="citations-asc">Least Cited</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="paperStatus" class="paper-status"></div>
+        <div id="paperResults" class="paper-results"></div>
+      </div>
+    </main>
+
+    <script>
+      function createPaper(index, citations) {
+        return {
+          title: `QA Paper ${index}`,
+          year: 2020 + (index % 6),
+          venue: "QA Journal",
+          doi: `10.1234/qa-${index}`,
+          citedByCount: citations,
+          authors: "QA Author",
+          abstract: "Synthetic test record for Paper Scout.",
+          url: `https://example.com/qa-${index}`,
+          priority: "Core",
+          stars: "★★",
+          score: 70,
+          reasons: ["Regression test"],
+          concepts: ["QA"],
+        };
+      }
+
+      const qualityPapers = [
+        createPaper("doi-original", 10),
+        {
+          ...createPaper("doi-duplicate", 20),
+          doi: "doi:10.1234/qa-doi-original?source=test",
+        },
+        {
+          ...createPaper("title-original", 5),
+          doi: "",
+          title: "Shared Study",
+          year: 2022,
+        },
+        {
+          ...createPaper("title-duplicate", 15),
+          doi: "",
+          title: "<b>Shared Study</b>",
+          year: 2022,
+        },
+        createPaper("unique-a", 40),
+        createPaper("unique-b", 30),
+        createPaper("unique-c", 25),
+        createPaper("unique-d", 1),
+      ];
+
+      window.fetch = async (requestUrl) => {
+        const query = new URL(requestUrl).searchParams.get("q");
+        const papers =
+          query === "limit"
+            ? Array.from({ length: 60 }, (_, index) =>
+                createPaper(index, index)
+              )
+            : qualityPapers;
+
+        return new Response(JSON.stringify({ papers }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      };
+    </script>
+    <script src="../script.js"></script>
+  </body>
+</html>

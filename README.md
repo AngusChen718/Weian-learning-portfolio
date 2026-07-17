@@ -1,23 +1,32 @@
-# 陳韋安｜Weian Chen — AI Learning Portfolio
+# Weian Learning Portfolio
 
-A minimal Apple-inspired learning portfolio website.
+A local-first learning portfolio built with Vanilla HTML, CSS, and JavaScript.
 
-## Files
+## Current features
 
-- `index.html` — website structure
-- `styles.css` — visual design
-- `script.js` — dark mode and literature prototype interactions
+- Paper Scout: OpenAlex search, duplicate cleanup, citation sorting, reading filters, pagination, Reading Library, comparison, and AI Summary
+- Journal: published entries and drafts stored in the browser
+- Learning Snapshot: a seven-day overview of Journal and Reading Library activity
+- Language Hub: multiple languages, weekly goals, and short practice records
+- Learning Backup: versioned JSON export for the supported local data
 
-## Deploy to Cloudflare Pages
+## Main files
 
-1. Upload these files to a GitHub repository.
-2. Go to Cloudflare Pages.
-3. Connect the GitHub repository.
-4. Framework preset: None.
-5. Build command: leave empty.
-6. Output directory: `/` or leave default.
-7. Deploy.
+- `index.html`, `styles.css`, `script.js` — homepage, Paper Scout, and AI tools
+- `journal.html` — Journal interface
+- `language.html`, `language.css`, `language.js` — Language Hub
+- `snapshot.js` — Learning Snapshot
+- `backup.js` — local backup export
 
-## Notes
+## Development references
 
-The Literature Hub is currently a prototype. TXT summaries work locally using a simple text extraction method. Real PDF/AI summaries require future API integration.
+- [Changelog](docs/CHANGELOG.md)
+- [Prioritized roadmap](docs/ROADMAP.md)
+- [Deployment checklist](docs/DEPLOY_CHECKLIST.md)
+- [Latest QA report](docs/QA_REPORT.md)
+- [Paper Scout regression harness](tests/paper-scout-harness.html)
+
+## Deployment
+
+The site is deployed as static files on Cloudflare. There is no framework build step.
+Run the checks in `docs/DEPLOY_CHECKLIST.md` before uploading a new version.
