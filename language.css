@@ -9,32 +9,76 @@
 }
 
 .language-hero {
-  max-width: 860px;
-  padding: 36px 0 96px;
+  max-width: 760px;
+  padding: 36px 0 72px;
 }
 
 .language-hero h1 {
-  margin: 18px 0;
-  font-size: clamp(56px, 9vw, 116px);
-  line-height: 0.92;
-  letter-spacing: -0.075em;
+  margin: 20px 0 22px;
+  font-size: clamp(52px, 7.2vw, 96px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.06em;
 }
 
 .language-hero h1 span {
   color: var(--muted);
-  font-size: 0.63em;
+  font-size: 0.6em;
+  font-weight: 500;
+  letter-spacing: -0.05em;
 }
 
 .language-hero > p:not(.eyebrow) {
-  max-width: 650px;
+  max-width: 610px;
   margin: 0;
   color: var(--muted);
-  font-size: 19px;
-  line-height: 1.7;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1.78;
 }
 
 .language-hero .button {
-  margin-top: 30px;
+  min-height: 42px;
+  margin-top: 26px;
+  padding: 0 18px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.language-section.language-control-panel {
+  margin-top: 8px;
+  padding: clamp(24px, 3.5vw, 36px);
+  border-radius: 24px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.055);
+}
+
+.language-control-panel .language-section-heading {
+  margin-bottom: 22px;
+}
+
+.language-control-panel .language-section-heading h2 {
+  font-size: clamp(28px, 3.5vw, 42px);
+}
+
+.language-control-panel .language-tabs {
+  gap: 8px;
+}
+
+.language-control-panel .language-tab {
+  min-height: 36px;
+  padding: 0 13px;
+  font-size: 13px;
+}
+
+.language-control-panel .language-add-form {
+  margin-top: 18px;
+  padding-top: 18px;
+}
+
+.language-control-panel .language-add-form input,
+.language-control-panel .language-add-form .button {
+  min-height: 44px;
 }
 
 .language-section {
@@ -398,7 +442,7 @@
   }
 
   .language-hero {
-    padding-bottom: 64px;
+    padding-bottom: 52px;
   }
 
   .language-section-heading {
