@@ -261,15 +261,16 @@ if (articleClearButton) {
 
       if (paperResults) {
         paperResults.innerHTML = "";
-      }
-
-      if (paperStatus) {
-        paperStatus.textContent = "請輸入關鍵字開始搜尋。";
+        paperResults.setAttribute("aria-busy", "false");
       }
 
       lastPaperResults = [];
       currentPaperPage = 1;
+      activeReadingFilter = "all";
 
+      setPaperStatus("請輸入關鍵字開始搜尋。", "idle");
+      setPaperControlsAvailable(false);
+      updateReadingFilterUI();
       updateClearButton();
       setSearchButtonState("idle");
     });
@@ -343,6 +344,7 @@ if (historyClearButton) {
     searchHistory = [];
     localStorage.removeItem(SEARCH_HISTORY_KEY);
     renderSearchHistory();
+    window.showFeedbackToast?.("Search history cleared", "info");
   });
 }
 
@@ -478,18 +480,75 @@ scrollToSummaryOutput();
       .join("<br>");
   }
 
+  function setPaperStatus(message, state = "idle") {
+    if (!paperStatus) return;
+
+    paperStatus.textContent = message;
+    paperStatus.dataset.state = state;
+  }
+
+  function setPaperControlsAvailable(isAvailable) {
+    if (paperSort) {
+      paperSort.disabled = !isAvailable;
+    }
+  }
+
+  function getPaperSortDisplayName() {
+    return activePaperSort === "citations-asc"
+      ? "引用數低至高"
+      : "引用數高至低";
+  }
+
+  function createPaperSearchError(response, data) {
+    const error = new Error(data?.error || "文獻搜尋失敗。");
+    error.status = response.status;
+    error.code = data?.code || "";
+    error.upstreamStatus = Number(data?.upstreamStatus || 0);
+    return error;
+  }
+
+  function getFriendlyPaperSearchError(error) {
+    if (error?.name === "AbortError" || error?.code === "OPENALEX_TIMEOUT") {
+      return "搜尋時間較久，OpenAlex 目前回應較慢。請稍後再試，或換一組較精簡的關鍵字。";
+    }
+
+    if (
+      error?.status === 503 ||
+      error?.upstreamStatus === 429 ||
+      error?.code === "OPENALEX_UPSTREAM_ERROR"
+    ) {
+      return "文獻服務目前較忙，請稍後再試。你的搜尋關鍵字仍保留在上方。";
+    }
+
+    return "目前無法完成搜尋，請檢查網路後再試一次。你的搜尋關鍵字仍保留在上方。";
+  }
+
+  function renderPaperSearchError(message) {
+    if (!paperResults) return;
+
+    paperResults.setAttribute("aria-busy", "false");
+    paperResults.innerHTML = `
+      <div class="paper-empty paper-empty-error" role="alert">
+        <strong>Search unavailable</strong>
+        <span>${escapeHtml(message)}</span>
+      </div>
+    `;
+  }
+
   async function searchPapers() {
     if (!paperQuery || !paperStatus || !paperResults) return;
 
     const query = paperQuery.value.trim();
 
     if (!query) {
-      paperStatus.textContent = "請先輸入研究主題。";
+      setPaperStatus("請先輸入研究主題。", "error");
       setSearchButtonState("idle");
       return;
     }
 
-    paperStatus.textContent = "正在搜尋文獻，請稍等...";
+    setPaperStatus("正在搜尋 OpenAlex，通常需要幾秒鐘…", "loading");
+    paperResults.setAttribute("aria-busy", "true");
+    setPaperControlsAvailable(false);
     renderPaperSkeletons();
     setSearchButtonState("loading");
 
@@ -502,21 +561,22 @@ scrollToSummaryOutput();
         { signal: searchController.signal }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(data.error || "文獻搜尋失敗。");
+        throw createPaperSearchError(response, data);
       }
 
       lastPaperResults = cleanAndRankPapers(data.papers || []);
-currentPaperPage = 1;
-activeReadingFilter = "all";
+      currentPaperPage = 1;
+      activeReadingFilter = "all";
 
-saveSearchHistory(query, lastPaperResults.length);
+      saveSearchHistory(query, lastPaperResults.length);
 
-updateReadingFilterUI();
-renderPaperResults(lastPaperResults);
-renderCompareWorkspace();
+      setPaperControlsAvailable(lastPaperResults.length > 0);
+      updateReadingFilterUI();
+      renderPaperResults(lastPaperResults);
+      renderCompareWorkspace();
 
       setSearchButtonState("done");
 
@@ -524,15 +584,15 @@ renderCompareWorkspace();
         setSearchButtonState("idle");
       }, 1200);
     } catch (error) {
-      const message =
-        error.name === "AbortError"
-          ? "搜尋逾時，OpenAlex 目前回應較慢，請稍後再試。"
-          : `搜尋失敗：${error.message}`;
+      const message = getFriendlyPaperSearchError(error);
 
-      paperStatus.textContent = message;
+      setPaperStatus(message, "error");
+      renderPaperSearchError(message);
+      setPaperControlsAvailable(lastPaperResults.length > 0);
       setSearchButtonState("idle");
     } finally {
       clearTimeout(searchTimeout);
+      paperResults.setAttribute("aria-busy", "false");
     }
   }
 
@@ -704,7 +764,7 @@ renderCompareWorkspace();
     paperResults.innerHTML = Array.from({ length: count })
       .map(
         () => `
-          <article class="paper-card skeleton-card">
+          <article class="paper-card skeleton-card" aria-hidden="true">
             <div class="skeleton-top">
               <div class="skeleton-content">
                 <div class="skeleton-line skeleton-small"></div>
@@ -738,7 +798,9 @@ renderCompareWorkspace();
     updateReadingFilterUI();
 
     if (!papers.length) {
-      paperStatus.textContent = "找不到相關文獻。";
+      setPaperStatus("找不到相關文獻。", "empty");
+      setPaperControlsAvailable(false);
+      paperResults.setAttribute("aria-busy", "false");
 
       paperResults.innerHTML = `
         <div class="paper-empty">
@@ -753,7 +815,11 @@ renderCompareWorkspace();
     );
 
     if (!filteredPapers.length) {
-      paperStatus.textContent = `目前沒有 ${getFilterDisplayName(activeReadingFilter)} 類型的文獻。`;
+      setPaperStatus(
+        `目前沒有 ${getFilterDisplayName(activeReadingFilter)} 類型的文獻。`,
+        "empty"
+      );
+      paperResults.setAttribute("aria-busy", "false");
 
       paperResults.innerHTML = `
         <div class="paper-empty">
@@ -775,10 +841,18 @@ renderCompareWorkspace();
       startIndex + PAPERS_PER_PAGE
     );
 
+    const sortDisplayName = getPaperSortDisplayName();
+
     if (activeReadingFilter === "all") {
-      paperStatus.textContent = `找到 ${papers.length} 篇文獻，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
+      setPaperStatus(
+        `找到 ${papers.length} 篇文獻 · ${sortDisplayName} · 第 ${currentPaperPage} / ${totalPages} 頁`,
+        "success"
+      );
     } else {
-      paperStatus.textContent = `${getFilterDisplayName(activeReadingFilter)}：${filteredPapers.length} 篇，目前顯示第 ${currentPaperPage} / ${totalPages} 頁。`;
+      setPaperStatus(
+        `${getFilterDisplayName(activeReadingFilter)}：${filteredPapers.length} 篇 · ${sortDisplayName} · 第 ${currentPaperPage} / ${totalPages} 頁`,
+        "success"
+      );
     }
 
     const paperCards = visiblePapers
@@ -880,29 +954,32 @@ renderCompareWorkspace();
       .join("");
 
     const pagination = `
-      <div class="paper-pagination">
+      <nav class="paper-pagination" aria-label="Paper result pages">
         <button
           type="button"
           id="prevPaperPage"
+          aria-label="Previous paper result page"
           ${currentPaperPage === 1 ? "disabled" : ""}
         >
           ← Previous
         </button>
 
-        <span>
+        <span aria-current="page">
           Page ${currentPaperPage} of ${totalPages}
         </span>
 
         <button
           type="button"
           id="nextPaperPage"
+          aria-label="Next paper result page"
           ${currentPaperPage === totalPages ? "disabled" : ""}
         >
           Next →
         </button>
-      </div>
+      </nav>
     `;
 
+    paperResults.setAttribute("aria-busy", "false");
     paperResults.innerHTML = paperCards + pagination;
 
     paperResults.querySelectorAll("[data-action]").forEach((button) => {
@@ -1079,6 +1156,7 @@ ${paper.abstract}
   function togglePaperInLibrary(paper) {
     const key = getPaperKey(paper);
     const savedIndex = paperLibrary.findIndex((item) => item.key === key);
+    const paperTitle = String(paper?.title || "Paper").trim().slice(0, 72);
 
     if (savedIndex >= 0) {
       paperLibrary.splice(savedIndex, 1);
@@ -1110,6 +1188,12 @@ ${paper.abstract}
     if (lastPaperResults.length) {
       renderPaperResults(lastPaperResults);
     }
+
+    window.showFeedbackToast?.(
+      savedIndex >= 0
+        ? `Removed ${paperTitle} from Reading Library`
+        : `Saved ${paperTitle} to Reading Library`
+    );
   }
 
   function renderPaperLibrary() {
@@ -1265,6 +1349,10 @@ ${paper.abstract}
 
     item.updatedAt = new Date().toISOString();
     savePaperLibrary();
+
+    if (field.dataset.libraryField === "status") {
+      window.showFeedbackToast?.(`Reading status: ${item.status.replace("-", " ")}`, "info");
+    }
 
     if (
       field.dataset.libraryField === "status" &&
@@ -2102,7 +2190,72 @@ imagePreview: document.getElementById("entryImagePreview"),
     search: "",
   };
 let editorImages = [];
-  function loadEntries() {
+let journalDetailCloseTimer = null;
+
+function lockJournalDetailPageScroll() {
+  document.documentElement.classList.add("journal-detail-open");
+  document.body.classList.add("journal-detail-open");
+}
+
+function unlockJournalDetailPageScroll() {
+  document.documentElement.classList.remove("journal-detail-open");
+  document.body.classList.remove("journal-detail-open");
+}
+
+function bindJournalDetailScrollContainment(container) {
+  if (!container || container.dataset.scrollContainmentBound === "true") return;
+
+  let lastTouchY = null;
+  const reachesScrollBoundary = (deltaY) => {
+    const maxScrollTop = Math.max(0, container.scrollHeight - container.clientHeight);
+    const atTop = container.scrollTop <= 0;
+    const atBottom = container.scrollTop >= maxScrollTop - 1;
+
+    return (deltaY < 0 && atTop) || (deltaY > 0 && atBottom);
+  };
+
+  container.addEventListener(
+    "wheel",
+    (event) => {
+      if (reachesScrollBoundary(event.deltaY)) event.preventDefault();
+    },
+    { passive: false }
+  );
+
+  container.addEventListener(
+    "touchstart",
+    (event) => {
+      lastTouchY = event.touches[0]?.clientY ?? null;
+    },
+    { passive: true }
+  );
+
+  container.addEventListener(
+    "touchmove",
+    (event) => {
+      const currentTouchY = event.touches[0]?.clientY;
+      if (lastTouchY === null || currentTouchY === undefined) return;
+
+      const scrollDelta = lastTouchY - currentTouchY;
+      if (reachesScrollBoundary(scrollDelta)) event.preventDefault();
+      lastTouchY = currentTouchY;
+    },
+    { passive: false }
+  );
+
+  container.addEventListener("touchend", () => {
+    lastTouchY = null;
+  });
+  container.addEventListener("touchcancel", () => {
+    lastTouchY = null;
+  });
+
+  container.dataset.scrollContainmentBound = "true";
+}
+
+bindJournalDetailScrollContainment(elements.detail);
+
+ function loadEntries() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
       return Array.isArray(saved) && saved.length ? saved : seedEntries;
@@ -2116,6 +2269,11 @@ let editorImages = [];
   }
 
   function showToast(message) {
+    if (typeof window.showFeedbackToast === "function") {
+      window.showFeedbackToast(message);
+      return;
+    }
+
     let toast = document.querySelector(".journal-toast");
 
     if (!toast) {
@@ -2205,6 +2363,9 @@ function closeJournalLightbox() {
  function openJournalDetailModal() {
   if (!elements.detail) return;
 
+  clearTimeout(journalDetailCloseTimer);
+  lockJournalDetailPageScroll();
+
   elements.detail.hidden = false;
 
   if (elements.detailBackdrop) {
@@ -2221,12 +2382,15 @@ function closeJournalDetailModal() {
 
   elements.detail.classList.remove("is-open");
 
-  setTimeout(() => {
+  clearTimeout(journalDetailCloseTimer);
+  journalDetailCloseTimer = setTimeout(() => {
     elements.detail.hidden = true;
 
     if (elements.detailBackdrop) {
       elements.detailBackdrop.hidden = true;
     }
+
+    unlockJournalDetailPageScroll();
   }, 220);
 }
   function openEditor() {
@@ -2555,6 +2719,7 @@ publishedAt:
     saveEntries();
     clearEditor();
     renderList();
+    showToast("Entry deleted");
   }
 function buildPendingJournalContent(pending) {
   const tags = Array.isArray(pending.tags)
