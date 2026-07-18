@@ -668,14 +668,19 @@ textarea {
 }
 
 .paper-sort-control select {
-  min-height: 42px;
-  padding: 0 38px 0 14px;
+  min-height: 40px;
+  padding: 0 36px 0 13px;
   border: 1px solid rgba(120, 120, 120, 0.2);
   border-radius: 999px;
   background: var(--bg);
   color: var(--text);
   font: inherit;
   cursor: pointer;
+}
+
+.paper-sort-control select:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
 }
 
 .paper-sort-control select:focus-visible {
@@ -687,6 +692,22 @@ textarea {
   color: var(--muted);
   font-size: 15px;
   margin: 12px 0 20px;
+}
+
+.paper-status[data-state="loading"] {
+  color: var(--text);
+}
+
+.paper-status[data-state="success"] {
+  color: var(--muted);
+}
+
+.paper-status[data-state="error"] {
+  color: #9f2d24;
+}
+
+:root.dark .paper-status[data-state="error"] {
+  color: #ff9b91;
 }
 
 .paper-results {
@@ -871,6 +892,27 @@ textarea {
   border: 1px dashed var(--line);
   border-radius: 20px;
   color: var(--muted);
+}
+
+.paper-empty-error {
+  display: grid;
+  gap: 8px;
+  border-style: solid;
+  border-color: rgba(159, 45, 36, 0.24);
+  background: rgba(159, 45, 36, 0.045);
+}
+
+.paper-empty-error strong {
+  color: var(--text);
+}
+
+.paper-empty-error span {
+  line-height: 1.65;
+}
+
+:root.dark .paper-empty-error {
+  border-color: rgba(255, 155, 145, 0.26);
+  background: rgba(255, 155, 145, 0.07);
 }
 
 .paper-pagination {
@@ -1493,6 +1535,16 @@ html.theme-changing .theme-toggle {
 
   .paper-sort-control select {
     min-width: 150px;
+  }
+
+  .paper-pagination {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .paper-pagination button {
+    flex: 1 1 0;
+    padding-inline: 12px;
   }
 
   .paper-score {
@@ -9789,6 +9841,45 @@ html.theme-changing *::after {
   opacity: 0.72;
 }
 
+.snapshot-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  margin-top: 18px;
+  padding: 9px 12px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: currentColor;
+  font-size: 13px;
+  font-weight: 760;
+  line-height: 1;
+  text-decoration: none;
+  transition: transform 160ms ease-out, opacity 160ms ease-out;
+}
+
+.snapshot-action:hover,
+.snapshot-action:focus-visible {
+  opacity: 0.76;
+  transform: translateY(-1px);
+}
+
+.snapshot-action:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snapshot-action {
+    transition: opacity 120ms ease-out;
+  }
+
+  .snapshot-action:hover,
+  .snapshot-action:focus-visible,
+  .snapshot-action:active {
+    transform: none;
+  }
+}
+
 .snapshot-note {
   margin: 14px 0 0;
   color: var(--muted);
@@ -9824,4 +9915,231 @@ html.theme-changing *::after {
   .snapshot-card {
     min-height: 160px;
   }
+}
+
+/* ===========================================================================
+   Paper Scout mobile containment
+   Keep off-canvas history and wide controls inside the phone viewport.
+   ========================================================================== */
+
+@media (max-width: 760px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .paper-filter-row,
+  .reading-filter {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .reading-filter {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  #summaryButton,
+  button#summaryButton,
+  .literature-panel #summaryButton {
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+  }
+
+  .history-drawer:not(.is-open) {
+    visibility: hidden;
+  }
+}
+
+/* ===========================================================================
+   Interaction and typography refinement
+   Small, consistent feedback without changing the existing page structure.
+   ========================================================================== */
+
+body {
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+
+.tiny,
+.snapshot-label,
+.paper-workspace-label,
+.language-section .tiny {
+  letter-spacing: 0.1em;
+}
+
+.copy,
+.journal-entry p,
+.paper-card p,
+.language-section-heading > p,
+.language-practice-form > div > p {
+  letter-spacing: 0;
+  line-height: 1.65;
+}
+
+.button,
+.history-trigger,
+.history-item,
+.language-tab,
+.paper-actions button,
+.library-controls button,
+.compare-actions button {
+  transition:
+    transform 160ms ease-out,
+    opacity 160ms ease-out,
+    background 160ms ease-out,
+    border-color 160ms ease-out;
+}
+
+button:not(:disabled):active,
+.button:not([aria-disabled="true"]):active,
+.history-item:active,
+.language-tab:active {
+  transform: scale(0.975);
+}
+
+button:focus-visible,
+.button:focus-visible,
+.history-item:focus-visible,
+.language-tab:focus-visible {
+  outline: 3px solid rgba(0, 113, 227, 0.28);
+  outline-offset: 3px;
+}
+
+.app-feedback-toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(28px, env(safe-area-inset-bottom));
+  z-index: 120;
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 12px 16px;
+  border: 1px solid color-mix(in srgb, var(--line) 74%, transparent);
+  border-radius: 999px;
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.16);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 720;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(12px) scale(0.985);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  transition: opacity 180ms ease-out, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.app-feedback-toast[data-tone="info"] {
+  color: var(--muted);
+}
+
+.app-feedback-toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.history-backdrop {
+  background: rgba(10, 10, 10, 0.16);
+  backdrop-filter: blur(5px) saturate(120%);
+  -webkit-backdrop-filter: blur(5px) saturate(120%);
+  transition: opacity 220ms ease-out;
+}
+
+.history-drawer {
+  border-left-color: color-mix(in srgb, var(--line) 72%, transparent);
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  box-shadow: -22px 0 70px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(30px) saturate(145%);
+  -webkit-backdrop-filter: blur(30px) saturate(145%);
+  transform: translateX(calc(100% + 16px));
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease-out;
+}
+
+.history-drawer.is-open {
+  transform: translateX(0);
+}
+
+:root.dark .history-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+:root.dark .history-drawer {
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  box-shadow: -22px 0 80px rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .history-backdrop {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .history-drawer,
+  .app-feedback-toast {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .history-trigger,
+  .history-item,
+  .language-tab,
+  .paper-actions button,
+  .library-controls button,
+  .compare-actions button,
+  .app-feedback-toast,
+  .history-backdrop {
+    transition-duration: 120ms;
+  }
+
+  button:not(:disabled):active,
+  .button:not([aria-disabled="true"]):active,
+  .history-item:active,
+  .language-tab:active {
+    transform: none;
+  }
+
+  .history-drawer {
+    visibility: hidden;
+    opacity: 0;
+    transform: none;
+    transition: opacity 160ms ease-out, visibility 0s linear 160ms;
+  }
+
+  .history-drawer.is-open {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition-delay: 0s;
+  }
+}
+
+/* Journal detail modal: keep edge scrolling inside the dialog. */
+.journal-detail-modal {
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+html.journal-detail-open,
+body.journal-detail-open {
+  overflow: hidden;
+  overscroll-behavior-y: none;
+}
+
+body.journal-detail-open {
+  touch-action: none;
+}
+
+body.journal-detail-open .journal-detail-modal {
+  touch-action: pan-y;
 }
